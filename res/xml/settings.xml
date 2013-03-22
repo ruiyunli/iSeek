@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+xmlns:android="http://schemas.android.com/apk/res/android">    
+    
+    <PreferenceCategory android:title="@string/set_privateInfo">
+    
+	    <EditTextPreference
+	        android:key="targetPhone"
+	        android:title="Tatget Phone Number"
+	        android:summary="SIM card in GPS"
+	        android:dialogTitle="TargetPhone"	       
+	    />
+   
+    </PreferenceCategory>
+</PreferenceScreen>
