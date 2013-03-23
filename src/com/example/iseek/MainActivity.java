@@ -13,8 +13,10 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.baidu.mapapi.BMapManager;
+import com.baidu.mapapi.map.LocationData;
 import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationOverlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 
 
@@ -22,8 +24,10 @@ public class MainActivity extends Activity {
 	
 	//百度地图
 	BMapManager mBMapMan = null;
-	MapView mMapView = null;
+	static MapView mMapView = null;
 	static MapController mMapController = null;
+	static MyLocationOverlay myLocationOverlay = null;
+	static LocationData tarLocData = null;
 	
 	//接收短信
 	private SMSreceiver sMSreceiver = null;
@@ -56,6 +60,10 @@ public class MainActivity extends Activity {
 		mMapView=(MapView)findViewById(R.id.bmapsView);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
+		//变量初始化
+		tarLocData = new LocationData();
+		myLocationOverlay = new MyLocationOverlay(mMapView);
+		
 		//地图的初始化设置
 		//设置启用内置的缩放控件
 		mMapView.setBuiltInZoomControls(true);		
@@ -64,7 +72,7 @@ public class MainActivity extends Activity {
 		//用给定的经纬度构造一个GeoPoint，单位是微度 (度 * 1E6)
 		GeoPoint point =new GeoPoint((int)(34.12824* 1E6),(int)(108.846676* 1E6));		
 		mMapController.setCenter(point);//设置地图中心点
-		mMapController.setZoom(16);//设置地图zoom级别
+		mMapController.setZoom(19);//设置地图zoom级别
 	}
 	
 	//百度地图重载
@@ -154,9 +162,20 @@ public class MainActivity extends Activity {
 	{
 		System.out.println("Latitude:" + Latitude + "  Longitude:" + Longitude);
 		
-		GeoPoint newPoint =new GeoPoint((int)(Latitude* 1E6),(int)(Longitude* 1E6));		
-		mMapController.setCenter(newPoint);//设置地图中心点
-		mMapController.setZoom(16);//设置地图zoom级别
+		
+		tarLocData.latitude = Latitude;
+		tarLocData.longitude = Longitude;
+		tarLocData.direction = 2.0f;		
+			
+//		mMapController.setCenter(new GeoPoint((int)(Latitude* 1E6),(int)(Longitude* 1E6)));//设置地图中心点
+//		mMapController.setZoom(19);//设置地图zoom级别
+		
+		
+		myLocationOverlay.setData(tarLocData);
+		mMapView.getOverlays().add(myLocationOverlay);
+		mMapView.refresh();
+		mMapController.animateTo(new GeoPoint((int)(Latitude* 1E6),(int)(Longitude* 1E6)));
+		
 	}
 
 }
