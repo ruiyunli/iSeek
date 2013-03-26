@@ -11,9 +11,10 @@ import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import com.baidu.mapapi.BMapManager;
+import com.baidu.mapapi.MKGeneralListener;
 import com.baidu.mapapi.map.LocationData;
+import com.baidu.mapapi.map.MKEvent;
 import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
@@ -37,6 +38,7 @@ public class MainActivity extends Activity {
 	static final int MENU_REFRESH  = 100;
 	static final int MENU_SETTINGS = 200;
 	static final int MENU_EXIT     = 300;
+	static final int MENU_TEST     = 400;
 	
 	//设置存储文件接口
 	SharedPreferences prefs = null;
@@ -46,7 +48,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		mBMapMan=new BMapManager(getApplication());
-		mBMapMan.init("3200A096EA79B20773CAB5CBD68C2E1ADDDE22BB", null);  
+		mBMapMan.init("3200A096EA79B20773CAB5CBD68C2E1ADDDE22BB", new MyGeneralListener());  
 		//注意：请在试用setContentView前初始化BMapManager对象，否则会报错
 		
 		setContentView(R.layout.activity_main);
@@ -70,9 +72,11 @@ public class MainActivity extends Activity {
 		// 得到mMapView的控制权,可以用它控制和驱动平移和缩放
 		mMapController=mMapView.getController();
 		//用给定的经纬度构造一个GeoPoint，单位是微度 (度 * 1E6)
-		GeoPoint point =new GeoPoint((int)(34.12824* 1E6),(int)(108.846676* 1E6));		
+		GeoPoint point =new GeoPoint((int)(34.128064* 1E6),(int)(108.847287* 1E6));		
 		mMapController.setCenter(point);//设置地图中心点
 		mMapController.setZoom(19);//设置地图zoom级别
+		
+		System.out.println("init success");
 	}
 	
 	//百度地图重载
@@ -154,10 +158,41 @@ public class MainActivity extends Activity {
 		else if(item.getOrder() == MENU_EXIT)
 		{
 			finish();
-		}		
+		}
+		else if(item.getOrder() == MENU_TEST)
+		{
+			setNewPosition(34.235697, 108.914238);
+		}
 		return super.onOptionsItemSelected(item);
 	}
 	
+	
+	// 常用事件监听，用来处理通常的网络错误，授权验证错误等
+    class MyGeneralListener implements MKGeneralListener {
+        
+        @Override
+        public void onGetNetworkState(int iError) {
+            if (iError == MKEvent.ERROR_NETWORK_CONNECT) {
+                Toast.makeText(MainActivity.this, "您的网络出错啦！",
+                    Toast.LENGTH_LONG).show();
+            }
+            else if (iError == MKEvent.ERROR_NETWORK_DATA) {
+                Toast.makeText(MainActivity.this, "输入正确的检索条件！",
+                        Toast.LENGTH_LONG).show();
+            }
+            // ...
+        }
+
+        @Override
+        public void onGetPermissionState(int iError) {
+            if (iError ==  MKEvent.ERROR_PERMISSION_DENIED) {
+                //授权Key错误：
+                Toast.makeText(MainActivity.this, 
+                        "请在 DemoApplication.java文件输入正确的授权Key！", Toast.LENGTH_LONG).show();                
+            }
+        }
+    }
+    
 	public static void setNewPosition(double Latitude, double Longitude)
 	{
 		System.out.println("Latitude:" + Latitude + "  Longitude:" + Longitude);

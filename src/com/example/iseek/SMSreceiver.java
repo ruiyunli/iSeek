@@ -59,7 +59,11 @@ public class SMSreceiver extends BroadcastReceiver
 				//此处需要获取之前设置的目的手机号码，然后判断
 				prefSmsRecv = PreferenceManager.getDefaultSharedPreferences(context);
 				String targetPhone = prefSmsRecv.getString("targetPhone","unset");
-				if(targetPhone.equals(mesNumber))
+				
+				System.out.println("mesNumber:" + mesNumber + " targetPhone:" + targetPhone);
+				
+				//有的手机获取号码带有"+86"，但是有的不带有，一起判断
+				if(mesNumber.equals(targetPhone) || mesNumber.equals("+86" + targetPhone))
 				{
 					//取得传来讯息的BODY 
 					mesContext = new String(messages[0].getDisplayMessageBody());
@@ -95,7 +99,11 @@ public class SMSreceiver extends BroadcastReceiver
 					System.out.println("unset-mesContext:" + mesContext);
 					return ;
 				}
-			}    
+			}
+			else
+			{
+				System.out.println("bundle is null");
+			}
    
 			//Toast.makeText(context, sb.toString(), Toast.LENGTH_LONG).show(); 
 		} 

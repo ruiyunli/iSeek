@@ -11,5 +11,15 @@ xmlns:android="http://schemas.android.com/apk/res/android">
 	        android:dialogTitle="TargetPhone"	       
 	    />
    
+    </PreferenceCategory>    
+    
+    <PreferenceCategory android:title="Launch preferences" > 
+        <PreferenceScreen
+            android:title="About"
+            android:summary="About iSeek">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://www.baidu.com" />
+        </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>
