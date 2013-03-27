@@ -2,21 +2,35 @@
 <PreferenceScreen
 xmlns:android="http://schemas.android.com/apk/res/android">    
     
-    <PreferenceCategory android:title="@string/set_privateInfo">
+    <PreferenceCategory android:title="@string/set_privateInfo_cate_title">
     
 	    <EditTextPreference
-	        android:key="targetPhone"
-	        android:title="Tatget Phone Number"
-	        android:summary="SIM card in GPS"
-	        android:dialogTitle="TargetPhone"	       
+	        android:key="@string/set_targetPhone_key"
+	        android:title="@string/set_targetPhone_title"
+	        android:summary="@string/set_targetPhone_summary"
+	        android:dialogTitle="@string/set_targetPhone_dialogTitle"	       
 	    />
-   
+	    <EditTextPreference
+	        android:key="@string/set_sosNumber_key"
+	        android:title="@string/set_sosNumber_title"
+	        android:summary="@string/set_sosNumber_summary"
+	        android:dialogTitle="@string/set_sosNumber_title"	       
+	    />   
     </PreferenceCategory>    
     
-    <PreferenceCategory android:title="Launch preferences" > 
+    <PreferenceCategory android:title="@string/set_saveall_cate_title" > 
         <PreferenceScreen
-            android:title="About"
-            android:summary="About iSeek">
+            android:key="@string/set_saveall_key"
+            android:title="@string/set_saveall_title"
+            android:summary="@string/set_saveall_summary">           
+        </PreferenceScreen>
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="@string/set_about_cate_title" > 
+        <PreferenceScreen
+            android:key="@string/set_about_key"
+            android:title="@string/set_about_title"
+            android:summary="@string/set_about_summary">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="http://www.baidu.com" />

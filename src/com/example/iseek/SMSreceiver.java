@@ -62,50 +62,53 @@ public class SMSreceiver extends BroadcastReceiver
 				
 				System.out.println("mesNumber:" + mesNumber + " targetPhone:" + targetPhone);
 				
-				//有的手机获取号码带有"+86"，但是有的不带有，一起判断
+				//有的手机获取号码带有"+86"，但是有的不带有，判断是否属于这两种情况
 				if(mesNumber.equals(targetPhone) || mesNumber.equals("+86" + targetPhone))
 				{
-					//取得传来讯息的BODY 
+					//获取短信内容
 					mesContext = new String(messages[0].getDisplayMessageBody());
 					
 					System.out.println("mesNumber:" + mesNumber);
 					System.out.println("mesContext:" + mesContext);
 					System.out.println(mesContext.substring(0, 7));
 					
+					//短信头判断，是否匹配
 					if(mesContext.substring(0, 7).equals("W00,051"))
 					{
+						//解析经纬度
 						//For example:
 						//W00,051,34.234442N,108.913805E,1.574Km/h,13-03-21,16:04:43
 						int indexTmp = mesContext.indexOf("N");
 						String Latitude = mesContext.substring(8, 15);//原来是8-17
 						//从N后面开始获取，即为经度
 						String Longitude = mesContext.substring(indexTmp+2, indexTmp+10);//原来是19-29
-						System.out.println("Latitude:" + Latitude + "Longitude:" + Longitude);
-						//设置地图
-						MainActivity.setNewPosition(Double.parseDouble(Latitude),Double.parseDouble(Longitude));//						
+						System.out.println("OnReceive--Latitude:" + Latitude + " Longitude:" + Longitude);
+						//调用MainActivity中的静态函数，设置地图
+						if(isValidGeo(Longitude) && isValidGeo(Latitude))
+							MainActivity.setNewPosition(Double.parseDouble(Latitude),Double.parseDouble(Longitude));						
 
 					}
 					else
 					{
+						//短信头不匹配--为了调试方便，后期将要删掉
 						Toast.makeText(context, "SMS-header Error", Toast.LENGTH_LONG).show();
 					}
 				}
 				else
 				{
-					System.out.println("SMSreceiver:unset targetPhone");
-					
+					//手机号码不匹配
+					System.out.println("SMSreceiver:different targetPhone");					
 					mesContext = new String(messages[0].getDisplayMessageBody());
-					System.out.println("unset-mesNumber:" + mesNumber);
-					System.out.println("unset-mesContext:" + mesContext);
+					System.out.println("diff-mesNumber:" + mesNumber);
+					System.out.println("diff-mesContext:" + mesContext);
 					return ;
 				}
 			}
 			else
 			{
+				//bundle中为空
 				System.out.println("bundle is null");
-			}
-   
-			//Toast.makeText(context, sb.toString(), Toast.LENGTH_LONG).show(); 
+			}   
 		} 
 	} 
 	
@@ -117,13 +120,18 @@ public class SMSreceiver extends BroadcastReceiver
 	}
 	*/
 	
-	//用于手机号码输入的合法性检测，正则表达式
-	public boolean isValidGeo(String str)
+	//用于经纬度的合法性检测
+	public boolean isValidGeo(String geoStr)
 	{
 		boolean isValid = false;
 		
+		double tmp;
+		tmp = Double.parseDouble(geoStr);
 		
+		System.out.println("isValidGeo--str:" + geoStr + " tmp:" + tmp);
 		
+		if((tmp>0) && (tmp<140) )
+			isValid = true;		
 		return isValid;
 	}
 } 
