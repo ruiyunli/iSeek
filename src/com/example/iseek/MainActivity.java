@@ -19,6 +19,7 @@ import com.baidu.mapapi.map.MKEvent;
 import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
+import com.baidu.mapapi.utils.CoordinateConver;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 
 
@@ -120,7 +121,10 @@ public class MainActivity extends Activity {
 		else if(item.getOrder() == StaticVar.MENU_TEST)
 		{
 			//设置更新位置
-			StaticVar.setNewPosition(34.235697, 108.914238);
+			GeoPoint newPoint =new GeoPoint((int)(34.235697* 1E6),(int)(108.914238* 1E6));
+			GeoPoint newPoint2 = CoordinateConver.fromWgs84ToBaidu(newPoint);
+			
+			StaticVar.setNewPosition(newPoint2.getLatitudeE6()/(1E6), newPoint2.getLongitudeE6()/(1E6));
 		}
 		return super.onOptionsItemSelected(item);
 	}

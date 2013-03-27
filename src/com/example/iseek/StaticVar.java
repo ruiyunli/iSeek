@@ -87,9 +87,10 @@ public class StaticVar {
 		
 		myLocationOverlay.setData(StaticVar.tarLocData);
 		MainActivity.mMapView.getOverlays().add(StaticVar.myLocationOverlay);
+		mMapController.setZoom(18);//设置地图zoom级别
 		MainActivity.mMapView.refresh();
 		mMapController.animateTo(new GeoPoint((int)(Latitude* 1E6),(int)(Longitude* 1E6)));
-		mMapController.setZoom(18);//设置地图zoom级别
+		
 	}
 		
 }

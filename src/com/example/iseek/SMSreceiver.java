@@ -1,5 +1,8 @@
 package com.example.iseek;
 
+import com.baidu.mapapi.utils.CoordinateConver;
+import com.baidu.platform.comapi.basestruct.GeoPoint;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.SmsMessage;
+import android.view.inputmethod.CorrectionInfo;
 import android.widget.Toast;
 
 
@@ -71,7 +75,13 @@ public class SMSreceiver extends BroadcastReceiver
 						System.out.println("OnReceive--Latitude:" + Latitude + " Longitude:" + Longitude);
 						//调用MainActivity中的静态函数，设置地图
 						if(isValidGeo(Longitude) && isValidGeo(Latitude))
-							StaticVar.setNewPosition(Double.parseDouble(Latitude),Double.parseDouble(Longitude));						
+						{
+							//WGS84坐标转换为百度坐标
+							GeoPoint tmpPoint = CoordinateConver.fromWgs84ToBaidu(
+									new GeoPoint((int)(Double.parseDouble(Latitude)* 1E6),(int)(Double.parseDouble(Longitude)* 1E6)));
+							//地图设置
+							StaticVar.setNewPosition(tmpPoint.getLatitudeE6()/(1E6),tmpPoint.getLongitudeE6()/(1E6));
+						}
 
 					}
 					else
