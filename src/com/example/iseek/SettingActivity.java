@@ -16,16 +16,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	EditTextPreference prefTargetPhone = null;
 	EditTextPreference prefSosNumber   = null;
 	PreferenceScreen   prefSaveAll     = null;
-	PreferenceScreen   prefAbout       = null;
-	
-	
-	//控件对应的key字符串声明
-	static String prefTargetPhoneKey = null;
-	String prefSosNumberKey   = null;
-	String prefSaveAllKey     = null;
-	String prefAboutKey       = null;
-	
-	
+	PreferenceScreen   prefAbout       = null;	
 	
 
 	@Override
@@ -34,19 +25,13 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		super.onCreate(savedInstanceState);
 		
 		//导入页面资源
-		addPreferencesFromResource(R.xml.settings);
-		
-		//获取控件key字符串
-		prefTargetPhoneKey = getResources().getString(R.string.set_targetPhone_key);
-		prefSosNumberKey   = getResources().getString(R.string.set_sosNumber_key);
-		prefSaveAllKey     = getResources().getString(R.string.set_saveall_key);
-		prefAboutKey       = getResources().getString(R.string.set_about_key);
+		addPreferencesFromResource(R.xml.settings);		
 		
 		//获取控件
-		prefTargetPhone = (EditTextPreference)findPreference(prefTargetPhoneKey);
-		prefSosNumber   = (EditTextPreference)findPreference(prefSosNumberKey);
-		prefSaveAll		= (PreferenceScreen)findPreference(prefSaveAllKey);
-		prefAbout       = (PreferenceScreen)findPreference(prefAboutKey);
+		prefTargetPhone = (EditTextPreference)findPreference(StaticVar.prefTargetPhoneKey);
+		prefSosNumber   = (EditTextPreference)findPreference(StaticVar.prefSosNumberKey);
+		prefSaveAll		= (PreferenceScreen)findPreference(StaticVar.prefSaveAllKey);
+		prefAbout       = (PreferenceScreen)findPreference(StaticVar.prefAboutKey);
 		
 		//绑定监听器
 		prefTargetPhone.setOnPreferenceChangeListener(this);
@@ -56,6 +41,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		
 	}
 
+	//值改变响应函数
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
 		// TODO Auto-generated method stub
@@ -63,19 +49,22 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		return true;
 	}
 
+	//点击响应函数
 	@Override
 	public boolean onPreferenceClick(Preference preference) {
 		// TODO Auto-generated method stub
-		System.out.println("Click--key:" + preference.getKey());
+		System.out.println("Click--key:" + preference.getKey());		
 		
-		String sosNumberValue = MainActivity.prefs.getString(prefSosNumberKey, "unset");
 		
-		if((preference.getKey()==prefSaveAllKey) && (sosNumberValue != "unset"))
+		//如果是saveall控件的话，发送短线到目标gps进行设置
+		if(preference.getKey()==StaticVar.prefSaveAllKey)
 		{
-			
-			MainActivity.SendMessage(SettingActivity.this, MainActivity.SMS_SET_SOS + sosNumberValue);
-		}
-		
+			String sosNumberValue = StaticVar.prefs.getString(StaticVar.prefSosNumberKey, "unset");
+			if(sosNumberValue != "unset")
+			{			
+				StaticVar.SendMessage(SettingActivity.this, StaticVar.SMS_SET_SOS + sosNumberValue);
+			}
+		}		
 		return true;
 	}
 

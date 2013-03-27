@@ -37,6 +37,11 @@
     <string name="set_about_title">About</string>
     <string name="set_about_summary">About iSeek</string>
     
+    <!-- String in toast -->
+    <string name="ToastErrorInternet">Internet Error</string>
+    <string name="ToastErrorSearchData">Search Data Error</string>
+    <string name="ToastErrorMapKey">Please Input Valid Map Key</string>
+    
     <!-- 其他 -->
     <string name="hello_world">Hello world!</string>
 
