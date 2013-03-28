@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
@@ -116,6 +117,16 @@ public class MainActivity extends Activity {
 		else if(item.getOrder() == StaticVar.MENU_EXIT)
 		{
 			finish();
+		}
+		else if(item.getOrder() == StaticVar.MENU_PHONECALL)
+		{
+			//调用系统打电话程序
+			String targetPhone = StaticVar.prefs.getString(StaticVar.prefTargetPhoneKey, "unset");
+			if(!targetPhone.equals("unset"))
+			{
+				Intent intent=new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+targetPhone));
+				startActivity(intent);
+			}
 		}
 		//用于测试
 		else if(item.getOrder() == StaticVar.MENU_TEST)

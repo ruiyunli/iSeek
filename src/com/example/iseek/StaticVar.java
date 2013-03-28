@@ -16,14 +16,15 @@ import android.widget.Toast;
 public class StaticVar {
 
 	//菜单order
-	public static final int MENU_REFRESH  = 100;
-	public static final int MENU_SETTINGS = 200;
-	public static final int MENU_TEST     = 300;
-	public static final int MENU_EXIT     = 400;
+	public static final int MENU_REFRESH   = 100;
+	public static final int MENU_SETTINGS  = 200;
+	public static final int MENU_PHONECALL = 300;
+	public static final int MENU_TEST      = 400;
+	public static final int MENU_EXIT      = 500;
 	
 	//发送短信
 	public static final String SMS_GEO_REQU = "w000000,051";//请求位置
-	public static final String SMS_SET_SOS = "w000000,003,2,1,";//设置sos号码
+	public static final String SMS_SET_SOS = "w000000,003,3,1,";//设置sos号码
 	
 	//接受短信权限设置
 	public static final String SMS_ACTION = "android.provider.Telephony.SMS_RECEIVED";
