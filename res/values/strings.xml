@@ -53,6 +53,14 @@
     <string name="DialogDeliveryOK">Target has received my request!</string>
     <string name="DialogDeliveryNO">Target has not received my request!\nI suggest you press "Refresh" key~</string>
     
+    <!-- 设置SOS number的对话框中字符串 -->
+    <string name="DialogSosTitleOK">Set SOS Number</string>
+    <string name="DialogSosTitleNO">Wrong SOS Number</string>
+    <string name="DialogSosMsgOK">Are you sure set SOS number:</string>
+    <string name="DialogSosMsgNO">Invalid phone number,please try again</string>
+    <string name="DialogSosOk">OK</string>
+    <string name="DialogSosCancel">Cancel</string>
+    
     <!-- 其他 -->
     <string name="hello_world">Hello world!</string>
 

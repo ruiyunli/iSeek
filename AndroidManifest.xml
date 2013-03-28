@@ -56,7 +56,7 @@
             </intent-filter>
         </activity>
         <activity 
-            android:name="com.example.iseek.SettingActivity"
+            android:name="com.example.iseek.ui.SettingActivity"
             android:label="@string/activity_setting"
             >
       	</activity>

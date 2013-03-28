@@ -23,18 +23,20 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
 import com.baidu.mapapi.utils.CoordinateConver;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
+import com.example.iseek.sms.SMSreceiver;
+import com.example.iseek.ui.SettingActivity;
+import com.example.iseek.vars.StaticVar;
 
 
 public class MainActivity extends Activity {
 	
 	//百度地图
 	BMapManager mBMapMan = null;
-	static MapView mMapView = null;	
+	static public MapView mMapView = null;	
 	
-	//接收短信
+	//BroadCastReceiver的相关变量
 	private SMSreceiver sMSreceiver = null;
 	IntentFilter filter = null;	
-	
 	
 	
 	@Override
@@ -42,25 +44,20 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		mBMapMan=new BMapManager(getApplication());
-		mBMapMan.init("3200A096EA79B20773CAB5CBD68C2E1ADDDE22BB", new MyGeneralListener());  
+		mBMapMan.init(StaticVar.BaiduMapKey, new MyGeneralListener());  
 		//注意：请在试用setContentView前初始化BMapManager对象，否则会报错
 		
 		setContentView(R.layout.activity_main);
 		
-		//注册BroadcastReceiver,用于接收短信
-		sMSreceiver = new SMSreceiver();
-		filter = new IntentFilter();
-		filter.addAction(StaticVar.SYSTEM_SMS_ACTION);
-		filter.addAction(StaticVar.COM_SMS_SEND);
-		filter.addAction(StaticVar.COM_SMS_DELIVERY);
-		MainActivity.this.registerReceiver(sMSreceiver,filter);
+		//注册BroadCastReceiver IntentFilter
+		InitBCRRegister();
 
 		//获取百度地图和设置文件
 		mMapView=(MapView)findViewById(R.id.bmapsView);
 		StaticVar.prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		//百度地图初始化
-		mMapInit();	
+		InitMap();	
 		
 		//初始化setting页面控件索引key
 		InitPrefKey();
@@ -71,8 +68,19 @@ public class MainActivity extends Activity {
 		System.out.println("init success");
 	}	
 	
+	//注册BroadcastReceiver,用于接收短信及回执
+	private void InitBCRRegister()
+	{		
+		sMSreceiver = new SMSreceiver();
+		filter = new IntentFilter();
+		filter.addAction(StaticVar.SYSTEM_SMS_ACTION);
+		filter.addAction(StaticVar.COM_SMS_SEND);		//发送状态
+		filter.addAction(StaticVar.COM_SMS_DELIVERY);	//接收回执状态
+		MainActivity.this.registerReceiver(sMSreceiver,filter);
+	}
+	
 	//地图初始化函数
-	public void mMapInit()
+	private void InitMap()
 	{
 		//变量初始化
 		StaticVar.tarLocData = new LocationData();
@@ -95,7 +103,7 @@ public class MainActivity extends Activity {
 	}
 	
 	//用于初始化PreferenceActivity的相关key
-	public void InitPrefKey()
+	private void InitPrefKey()
 	{
 		//获取控件key字符串
 		StaticVar.prefTargetPhoneKey = getResources().getString(R.string.set_targetPhone_key);
@@ -105,7 +113,7 @@ public class MainActivity extends Activity {
 	}
 	
 	//用于初始化Dialog相关的变量
-	public void InitDialog()
+	private void InitDialog()
 	{
 		StaticVar.logMessage = new String("");
 		StaticVar.logDialog = new ProgressDialog(this);		
@@ -162,8 +170,7 @@ public class MainActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-		
+			
 	//百度地图重载
 	@Override
 	protected void onDestroy(){
