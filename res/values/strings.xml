@@ -45,6 +45,14 @@
     <string name="ToastInvalidPhoneNumber">Invalid target phone</string>
     <string name="ToastValidPhoneNumber">Target phone set OK!</string>
     
+    <!-- logDialog中的文字 -->
+    <string name="DialogTitle">Searching...</string>
+    <string name="DialogMsgHeader">I am trying to connect...</string>
+    <string name="DialogSendOK">I have send request success!\nYou need not press "Refresh" key again~</string>
+    <string name="DialogSendNO">I have send request failed!\nI suggest you press "Refresh" key~</string>
+    <string name="DialogDeliveryOK">Target has received my request!</string>
+    <string name="DialogDeliveryNO">Target has not received my request!\nI suggest you press "Refresh" key~</string>
+    
     <!-- 其他 -->
     <string name="hello_world">Hello world!</string>
 

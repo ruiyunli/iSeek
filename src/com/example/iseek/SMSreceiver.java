@@ -3,6 +3,7 @@ package com.example.iseek;
 import com.baidu.mapapi.utils.CoordinateConver;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +24,9 @@ public class SMSreceiver extends BroadcastReceiver
 	{ 
 		// TODO Auto-generated method stub 
 		// 判断传来Intent是否为短信
-		if (intent.getAction().equals(StaticVar.SMS_ACTION)) 
+		
+		System.out.println("OnReceive-Action:" + intent.getAction());
+		if (intent.getAction().equals(StaticVar.SYSTEM_SMS_ACTION)) 
 		{ 
 			String mesNumber;
 			String mesContext;
@@ -34,6 +37,9 @@ public class SMSreceiver extends BroadcastReceiver
 			//判断Intent是有资料
 			if (bundle != null) 
 			{ 
+				//用于测试，马上删掉----成功了~
+//				MainActivity.logDialog.dismiss();
+				
 				System.out.println("bundle is not null!");
 				
 				//pdus为 android内建短信参数 identifier
@@ -76,6 +82,8 @@ public class SMSreceiver extends BroadcastReceiver
 						//调用MainActivity中的静态函数，设置地图
 						if(isValidGeo(Longitude) && isValidGeo(Latitude))
 						{
+							//符合要求，则关闭logDialog
+							StaticVar.logDialog.dismiss();
 							//WGS84坐标转换为百度坐标
 							GeoPoint tmpPoint = CoordinateConver.fromWgs84ToBaidu(
 									new GeoPoint((int)(Double.parseDouble(Latitude)* 1E6),(int)(Double.parseDouble(Longitude)* 1E6)));
@@ -106,6 +114,44 @@ public class SMSreceiver extends BroadcastReceiver
 				System.out.println("bundle is null");
 			}   
 		} 
+		
+		
+		
+		//这一段代码很多字符串还需要自己去在string中搞定	
+		
+		
+		else if (intent.getAction().equals(StaticVar.COM_SMS_SEND))
+		{
+			if(getResultCode()== Activity.RESULT_OK)
+			{
+
+//			    Toast.makeText(context, "送出成功!!" , Toast.LENGTH_SHORT).show();
+			    StaticVar.logMessage = StaticVar.logMessage + "\n" + context.getResources().getText(R.string.DialogSendOK);
+			    StaticVar.logDialog.setMessage(StaticVar.logMessage);			    
+			}
+			else
+			{
+//				Toast.makeText(context, "送出失败!!" , Toast.LENGTH_SHORT).show();
+				StaticVar.logMessage = StaticVar.logMessage + "\n" + context.getResources().getText(R.string.DialogSendOK);
+			    StaticVar.logDialog.setMessage(StaticVar.logMessage);
+			}
+		}
+		else if (intent.getAction().equals(StaticVar.COM_SMS_DELIVERY))
+		{
+			System.out.println("收到发送回执");
+			if(getResultCode()== Activity.RESULT_OK)
+			{
+//			    Toast.makeText(context, "对方已经成功接收!!" , Toast.LENGTH_SHORT).show();
+			    StaticVar.logMessage = StaticVar.logMessage + "\n" + context.getResources().getText(R.string.DialogDeliveryOK);
+			    StaticVar.logDialog.setMessage(StaticVar.logMessage);
+			}
+			else
+			{
+//				Toast.makeText(context, "对方接收失败!!" , Toast.LENGTH_SHORT).show();
+				StaticVar.logMessage = StaticVar.logMessage + "\n" + context.getResources().getText(R.string.DialogDeliveryNO);
+			    StaticVar.logDialog.setMessage(StaticVar.logMessage);
+			}
+		}
 	} 
 	
 

@@ -2,6 +2,7 @@ package com.example.iseek;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -32,7 +33,9 @@ public class MainActivity extends Activity {
 	
 	//接收短信
 	private SMSreceiver sMSreceiver = null;
-	IntentFilter filter = null;		
+	IntentFilter filter = null;	
+	
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +50,9 @@ public class MainActivity extends Activity {
 		//注册BroadcastReceiver,用于接收短信
 		sMSreceiver = new SMSreceiver();
 		filter = new IntentFilter();
-		filter.addAction(StaticVar.SMS_ACTION);
+		filter.addAction(StaticVar.SYSTEM_SMS_ACTION);
+		filter.addAction(StaticVar.COM_SMS_SEND);
+		filter.addAction(StaticVar.COM_SMS_DELIVERY);
 		MainActivity.this.registerReceiver(sMSreceiver,filter);
 
 		//获取百度地图和设置文件
@@ -60,17 +65,11 @@ public class MainActivity extends Activity {
 		//初始化setting页面控件索引key
 		InitPrefKey();
 		
+		//初始化ProgressDialog
+		InitDialog();
+		
 		System.out.println("init success");
-	}
-	
-	public void InitPrefKey()
-	{
-		//获取控件key字符串
-		StaticVar.prefTargetPhoneKey = getResources().getString(R.string.set_targetPhone_key);
-		StaticVar.prefSosNumberKey   = getResources().getString(R.string.set_sosNumber_key);
-		StaticVar.prefSaveAllKey     = getResources().getString(R.string.set_saveall_key);
-		StaticVar.prefAboutKey       = getResources().getString(R.string.set_about_key);
-	}
+	}	
 	
 	//地图初始化函数
 	public void mMapInit()
@@ -95,6 +94,28 @@ public class MainActivity extends Activity {
 		StaticVar.mMapController.setZoom(18);//设置地图zoom级别
 	}
 	
+	//用于初始化PreferenceActivity的相关key
+	public void InitPrefKey()
+	{
+		//获取控件key字符串
+		StaticVar.prefTargetPhoneKey = getResources().getString(R.string.set_targetPhone_key);
+		StaticVar.prefSosNumberKey   = getResources().getString(R.string.set_sosNumber_key);
+		StaticVar.prefSaveAllKey     = getResources().getString(R.string.set_saveall_key);
+		StaticVar.prefAboutKey       = getResources().getString(R.string.set_about_key);
+	}
+	
+	//用于初始化Dialog相关的变量
+	public void InitDialog()
+	{
+		StaticVar.logMessage = new String("");
+		StaticVar.logDialog = new ProgressDialog(this);		
+		StaticVar.logDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		StaticVar.logDialog.setMessage(getResources().getText(R.string.DialogMsgHeader));
+		StaticVar.logDialog.setTitle(getResources().getText(R.string.DialogTitle));
+		//logDialog.setProgress(0);
+		//logDialog.setMax(100);
+	}
+	
 	//MENU响应函数
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -104,7 +125,9 @@ public class MainActivity extends Activity {
 		if(item.getOrder()== StaticVar.MENU_REFRESH)
 		{
 			//发送gps位置请求短信
-			StaticVar.SendMessage(MainActivity.this, StaticVar.SMS_GEO_REQU);		       
+			StaticVar.logMessage = (String) getResources().getText(R.string.DialogMsgHeader);
+			StaticVar.SendMessage(MainActivity.this, StaticVar.SMS_GEO_REQU);
+			StaticVar.logDialog.show();
 		}
 		//设置按钮响应
 		else if(item.getOrder() == StaticVar.MENU_SETTINGS)
@@ -140,9 +163,7 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	
-	
-	
+		
 	//百度地图重载
 	@Override
 	protected void onDestroy(){
@@ -150,11 +171,11 @@ public class MainActivity extends Activity {
 	        if(mBMapMan!=null){
 	                mBMapMan.destroy();
 	                mBMapMan=null;
-	        }
-	        
+	        }	        
 	        MainActivity.this.unregisterReceiver(sMSreceiver);
 	        super.onDestroy();
 	}
+	
 	//百度地图重载
 	@Override
 	protected void onPause(){
@@ -164,6 +185,7 @@ public class MainActivity extends Activity {
 	        }
 	        super.onPause();
 	}
+	
 	//百度地图重载
 	@Override
 	protected void onResume(){
@@ -173,7 +195,6 @@ public class MainActivity extends Activity {
 	        }
 	        super.onResume();
 	}
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

@@ -67,6 +67,12 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 				return false;
 			}
 		}
+		else if(preference.getKey() == StaticVar.prefSosNumberKey)
+		{
+			//判断符合手机号码，则打开dialog，确认发送短信
+			
+			
+		}
 		
 		return true;
 	}
@@ -95,7 +101,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	}	
 	
 	public boolean isMobileNumber(String mobiles){
-		  Pattern p=Pattern.compile("^((13[0-9])|18[0,5-9]|15[0-3,5-9])\\d{8}$");//Patterns are compiled regular expressions;
+		  Pattern p=Pattern.compile("^(((13[0-9])|18[0,5-9]|15[0-3,5-9])\\d{8})|(10086)$");//Patterns are compiled regular expressions;
 		  Matcher m=p.matcher(mobiles);//matcher:The result of applying a Pattern to a given input;
 		  System.out.println(m.matches()+ "---");//Tries to match the Pattern against the entire region ,true if (and only if) the Pattern matches the entire region.
 		  return m.matches();
