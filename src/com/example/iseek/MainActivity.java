@@ -23,8 +23,8 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
 import com.baidu.mapapi.utils.CoordinateConver;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
+import com.example.iseek.setting.SettingActivity;
 import com.example.iseek.sms.SMSreceiver;
-import com.example.iseek.ui.SettingActivity;
 import com.example.iseek.vars.StaticVar;
 
 
@@ -35,10 +35,13 @@ public class MainActivity extends Activity {
 	static public MapView mMapView = null;	
 	
 	//BroadCastReceiver的相关变量
-	private SMSreceiver sMSreceiver = null;
-	IntentFilter filter = null;	
+	private SMSreceiver mainReceiver = null;
+	private IntentFilter mainFilter = null;
 	
-	
+	//logDialog中的变量
+	public static ProgressDialog mainProDialog = null;
+	public static String mainLogMessage = null;
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,13 +57,13 @@ public class MainActivity extends Activity {
 
 		//获取百度地图和设置文件
 		mMapView=(MapView)findViewById(R.id.bmapsView);
-		StaticVar.prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
 		
 		//百度地图初始化
 		InitMap();	
 		
 		//初始化setting页面控件索引key
-		InitPrefKey();
+		InitPrefs();
 		
 		//初始化ProgressDialog
 		InitDialog();
@@ -71,12 +74,12 @@ public class MainActivity extends Activity {
 	//注册BroadcastReceiver,用于接收短信及回执
 	private void InitBCRRegister()
 	{		
-		sMSreceiver = new SMSreceiver();
-		filter = new IntentFilter();
-		filter.addAction(StaticVar.SYSTEM_SMS_ACTION);
-		filter.addAction(StaticVar.COM_SMS_SEND);		//发送状态
-		filter.addAction(StaticVar.COM_SMS_DELIVERY);	//接收回执状态
-		MainActivity.this.registerReceiver(sMSreceiver,filter);
+		mainReceiver = new SMSreceiver();
+		mainFilter = new IntentFilter();
+		mainFilter.addAction(StaticVar.SYSTEM_SMS_ACTION);
+		mainFilter.addAction(StaticVar.COM_SMS_SEND_REFRESH);
+		mainFilter.addAction(StaticVar.COM_SMS_DELIVERY_REFRESH);
+		MainActivity.this.registerReceiver(mainReceiver,mainFilter);		
 	}
 	
 	//地图初始化函数
@@ -99,27 +102,30 @@ public class MainActivity extends Activity {
 		//用给定的经纬度构造一个GeoPoint，单位是微度 (度 * 1E6)
 		GeoPoint point =new GeoPoint((int)(34.128064* 1E6),(int)(108.847287* 1E6));		
 		StaticVar.mMapController.setCenter(point);//设置地图中心点
-		StaticVar.mMapController.setZoom(18);//设置地图zoom级别
+		StaticVar.mMapController.setZoom(17);//设置地图zoom级别
 	}
 	
 	//用于初始化PreferenceActivity的相关key
-	private void InitPrefKey()
+	private void InitPrefs()
 	{
 		//获取控件key字符串
 		StaticVar.prefTargetPhoneKey = getResources().getString(R.string.set_targetPhone_key);
-		StaticVar.prefSosNumberKey   = getResources().getString(R.string.set_sosNumber_key);
-		StaticVar.prefSaveAllKey     = getResources().getString(R.string.set_saveall_key);
+		StaticVar.prefSosNumberKey   = getResources().getString(R.string.set_sosNumber_key);		
 		StaticVar.prefAboutKey       = getResources().getString(R.string.set_about_key);
+		
+		//获取prefs和editor
+		StaticVar.prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		StaticVar.prefsEditor = StaticVar.prefs.edit();
 	}
 	
 	//用于初始化Dialog相关的变量
 	private void InitDialog()
 	{
-		StaticVar.logMessage = new String("");
-		StaticVar.logDialog = new ProgressDialog(this);		
-		StaticVar.logDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		StaticVar.logDialog.setMessage(getResources().getText(R.string.DialogMsgHeader));
-		StaticVar.logDialog.setTitle(getResources().getText(R.string.DialogTitle));
+		mainLogMessage = (String) getResources().getText(R.string.DialogMsgHeader);
+		mainProDialog  = new ProgressDialog(this);		
+		mainProDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		mainProDialog.setMessage(mainLogMessage);
+		mainProDialog.setTitle(getResources().getText(R.string.DialogTitle));
 		//logDialog.setProgress(0);
 		//logDialog.setMax(100);
 	}
@@ -133,9 +139,11 @@ public class MainActivity extends Activity {
 		if(item.getOrder()== StaticVar.MENU_REFRESH)
 		{
 			//发送gps位置请求短信
-			StaticVar.logMessage = (String) getResources().getText(R.string.DialogMsgHeader);
-			StaticVar.SendMessage(MainActivity.this, StaticVar.SMS_GEO_REQU);
-			StaticVar.logDialog.show();
+			StaticVar.SendMessage(MainActivity.this, StaticVar.SMS_TEST, StaticVar.COM_SMS_SEND_REFRESH, 
+					StaticVar.COM_SMS_DELIVERY_REFRESH);
+			mainLogMessage = (String) getResources().getText(R.string.DialogMsgHeader);
+			mainProDialog.setMessage(mainLogMessage);
+			mainProDialog.show();
 		}
 		//设置按钮响应
 		else if(item.getOrder() == StaticVar.MENU_SETTINGS)
@@ -179,7 +187,7 @@ public class MainActivity extends Activity {
 	                mBMapMan.destroy();
 	                mBMapMan=null;
 	        }	        
-	        MainActivity.this.unregisterReceiver(sMSreceiver);
+	        MainActivity.this.unregisterReceiver(mainReceiver);
 	        super.onDestroy();
 	}
 	

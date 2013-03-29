@@ -6,13 +6,16 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.MainActivity;
+import com.example.iseek.sms.SMSreceiver;
 
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.widget.Toast;
 
 public class StaticVar {
@@ -29,16 +32,19 @@ public class StaticVar {
 	
 	//发送短信
 	public static final String SMS_GEO_REQU = "w000000,051";//请求位置
-	public static final String SMS_SET_SOS = "w000000,003,3,1,";//设置sos号码
-	
+	public static final String SMS_TEST     = "CXGPRS";
+	public static final String SMS_SET_SOS  = "w000000,003,3,1,";//设置sos号码
+		
 	//接受短信权限设置-发送成功广播
-	public static final String SYSTEM_SMS_ACTION = "android.provider.Telephony.SMS_RECEIVED";
-	public static final String COM_SMS_SEND     = "com.example.iseek.sms_send";
-	public static final String COM_SMS_DELIVERY = "com.example.iseek.sms_delivery";
+	public static final String SYSTEM_SMS_ACTION        = "android.provider.Telephony.SMS_RECEIVED";
+	public static final String COM_SMS_SEND_REFRESH     = "com.example.iseek.sms_send_refresh";
+	public static final String COM_SMS_DELIVERY_REFRESH = "com.example.iseek.sms_delivery_refresh";
+	public static final String COM_SMS_SEND_SOS         = "com.example.iseek.sms_send_sos";
+	public static final String COM_SMS_DELIVERY_SOS     = "com.example.iseek.sms_delivery_sos";
 		
 	//设置存储文件接口
 	public static SharedPreferences prefs = null;
-	public static String prefsSosNumStr = null;
+	public static SharedPreferences.Editor prefsEditor = null;	//没用上！！！！！
 	
 	//百度地图	
 	public static MapController mMapController = null;
@@ -48,20 +54,24 @@ public class StaticVar {
 	//控件对应的key字符串声明
 	public static String prefTargetPhoneKey = null;
 	public static String prefSosNumberKey   = null;
-	public static String prefSaveAllKey     = null;
 	public static String prefAboutKey       = null;	
 	
 	//短信头解析字符串
 	public static final String SMS_Header_LOC_SUCCESS = "W00,051";
 	
-	//logDialog中的变量
-	public static ProgressDialog logDialog = null;
-	public static String logMessage = null;
+	
+	
+	//读取通讯录
+	public static final int PICK_CONTACT_REQUEST_TargetPhone = 1;
+	public static final int PICK_CONTACT_REQUEST_SosPhone    = 2;
+	
+	//调试TAG
+	public static final String LOG_TAG = "iSeekD";
 
 	
 	
 	//短信发送函数
-	public static void SendMessage(Context context, String mesContext)
+	public static void SendMessage(Context context, String mesContext, String sentIntentStr , String deliveryIntentStr)
 	{
 		//获取手机号码		
 		
@@ -79,9 +89,17 @@ public class StaticVar {
 	    try 
 	    { 
 	    	//发送短信
-		    PendingIntent mPIsend     = PendingIntent.getBroadcast(context, 0, new Intent(COM_SMS_SEND), 0);
-		    PendingIntent mPIdelivery = PendingIntent.getBroadcast(context, 0, new Intent(COM_SMS_DELIVERY), 0);
+	    	PendingIntent mPIsend = null;
+	    	PendingIntent mPIdelivery = null;
+	    	if(sentIntentStr != null)
+		        mPIsend = PendingIntent.getBroadcast(context, 0, new Intent(sentIntentStr), 0);
+	    	if(deliveryIntentStr != null)
+	    		mPIdelivery = PendingIntent.getBroadcast(context, 0, new Intent(deliveryIntentStr), 0);
+	    	
 		    smsManager.sendTextMessage(strDestAddress, null, strMessage, mPIsend, mPIdelivery);
+		    
+		    logPrint('D', "number:" + strDestAddress + " context:" + strMessage);
+		    logPrint('D', "send message success");
 	    } 
 	    catch(Exception e) 
 	    {
@@ -107,6 +125,21 @@ public class StaticVar {
 		MainActivity.mMapView.refresh();
 		mMapController.animateTo(new GeoPoint((int)(Latitude* 1E6),(int)(Longitude* 1E6)));
 		
+	}
+	
+	//调试信息输出
+	public static void logPrint(char type ,String logContext)
+	{
+		switch (type)
+		{
+			case 'D':
+				Log.d(LOG_TAG, logContext);
+				break;
+			case 'E':
+				Log.e(LOG_TAG, logContext);
+			default :
+				Log.e(LOG_TAG, "LOG_TAG Error!");
+		}
 	}
 		
 }

@@ -41,17 +41,24 @@
     <!-- String in toast -->
     <string name="ToastErrorInternet">Internet Error</string>
     <string name="ToastErrorSearchData">Search Data Error</string>
-    <string name="ToastErrorMapKey">Please Input Valid Map Key</string>
-    <string name="ToastInvalidPhoneNumber">Invalid target phone</string>
-    <string name="ToastValidPhoneNumber">Target phone set OK!</string>
+    <string name="ToastErrorMapKey">Please Input Valid Map Key</string>    
+    <string name="ToastTargetSetOK">Target phone set OK!</string>
+    <string name="ToastSosSetOK">SOS number set OK!</string>
+    <string name="ToastInvalidPhoneNumber">Invalid phone number</string>
     
     <!-- logDialog中的文字 -->
-    <string name="DialogTitle">Searching...</string>
-    <string name="DialogMsgHeader">I am trying to connect...</string>
-    <string name="DialogSendOK">I have send request success!\nYou need not press "Refresh" key again~</string>
-    <string name="DialogSendNO">I have send request failed!\nI suggest you press "Refresh" key~</string>
-    <string name="DialogDeliveryOK">Target has received my request!</string>
-    <string name="DialogDeliveryNO">Target has not received my request!\nI suggest you press "Refresh" key~</string>
+    <string name="DialogTitle">iSeeking...</string>
+    <string name="DialogMsgHeader">正在努力连接中...</string>
+    <string name="DialogSendOK">成功发送请求</string>
+    <string name="DialogSendNO">请求发送失败，请重试</string>
+    <string name="DialogDeliveryOK">目标已经成功接收请求，正在处理中，请耐心等待1-2分钟...</string>
+    <string name="DialogDeliveryNO">目标没有接收到请求，请重试</string>
+    
+    <string name="DialogSosSendOK">成功发送设置信号</string>
+    <string name="DialogSosSendNO">设置信号发送失败，请重试</string>
+    <string name="DialogSosDeliveryOK">设置成功!</string>
+    <string name="DialogSosDeliveryNO">设置故障!</string>
+    
     
     <!-- 设置SOS number的对话框中字符串 -->
     <string name="DialogSosTitleOK">Set SOS Number</string>

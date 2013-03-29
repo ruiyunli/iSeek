@@ -2,28 +2,19 @@
 <PreferenceScreen
 xmlns:android="http://schemas.android.com/apk/res/android">    
     
-    <PreferenceCategory android:title="@string/set_privateInfo_cate_title">
-    
+    <PreferenceCategory android:title="@string/set_privateInfo_cate_title">    
 	    <EditTextPreference
 	        android:key="@string/set_targetPhone_key"
 	        android:title="@string/set_targetPhone_title"
 	        android:summary="@string/set_targetPhone_summary"
-	        android:dialogTitle="@string/set_targetPhone_dialogTitle"	       
+	        android:dialogTitle="@string/set_targetPhone_dialogTitle"       
 	    />
 	    <EditTextPreference
 	        android:key="@string/set_sosNumber_key"
 	        android:title="@string/set_sosNumber_title"
 	        android:summary="@string/set_sosNumber_summary"
-	        android:dialogTitle="@string/set_sosNumber_title"	       
+	        android:dialogTitle="@string/set_sosNumber_dialogTitle"
 	    />   
-    </PreferenceCategory>    
-    
-    <PreferenceCategory android:title="@string/set_saveall_cate_title" > 
-        <PreferenceScreen
-            android:key="@string/set_saveall_key"
-            android:title="@string/set_saveall_title"
-            android:summary="@string/set_saveall_summary">           
-        </PreferenceScreen>
     </PreferenceCategory>
     
     <PreferenceCategory android:title="@string/set_about_cate_title" > 
