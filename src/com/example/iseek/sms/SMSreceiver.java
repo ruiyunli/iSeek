@@ -72,7 +72,7 @@ public class SMSreceiver extends BroadcastReceiver
 		if (bundle != null) 
 		{ 
 		
-			System.out.println("bundle is not null!");
+			StaticVar.logPrint('D', "bundle is not null!");
 			
 			//pdus为 android内建短信参数 identifier
 			//透过bundle.get("")并传一个包含pdus的对象
@@ -86,16 +86,16 @@ public class SMSreceiver extends BroadcastReceiver
 
 			String targetPhone = StaticVar.prefs.getString(
 					StaticVar.prefTargetPhoneKey,"unset");			
-			System.out.println("mesNumber:" + mesNumber + " targetPhone:" + targetPhone);
+			StaticVar.logPrint('D', "mesNumber:" + mesNumber + " targetPhone:" + targetPhone);
 			
 			//有的手机获取号码带有"+86"，但是有的不带有，判断是否属于这两种情况
 			if(mesNumber.equals(targetPhone) || mesNumber.equals("+86" + targetPhone))
 			{
 			
 				mesContext = new String(messages[0].getDisplayMessageBody());				
-				System.out.println("mesNumber:" + mesNumber);
-				System.out.println("mesContext:" + mesContext);
-				System.out.println(mesContext.substring(0, 7));
+				StaticVar.logPrint('D', "mesNumber:" + mesNumber);
+				StaticVar.logPrint('D', "mesContext:" + mesContext);
+				StaticVar.logPrint('D', "SMS header:" + mesContext.substring(0, 7));
 				
 				//短信头判断，是否匹配
 				if(mesContext.substring(0, 7).equals(StaticVar.SMS_Header_LOC_SUCCESS))
@@ -108,7 +108,7 @@ public class SMSreceiver extends BroadcastReceiver
 					
 					//从N后面开始获取，即为经度
 					String Longitude = mesContext.substring(indexTmp+2, indexTmp+10);//原来是19-29
-					System.out.println("OnReceive--Latitude:" + Latitude + " Longitude:" + Longitude);
+					StaticVar.logPrint('D', "OnReceive--Latitude:" + Latitude + " Longitude:" + Longitude);
 					
 					//调用MainActivity中的静态函数，设置地图
 					if(isValidGeo(Longitude) && isValidGeo(Latitude))
@@ -130,21 +130,22 @@ public class SMSreceiver extends BroadcastReceiver
 					//短信头不匹配--为了调试方便，后期将要删掉
 					Toast.makeText(context, "SMS-header Error", Toast.LENGTH_LONG).show();
 				}
+				abortBroadcast();
 			}
 			else
 			{
 				//手机号码不匹配
-				System.out.println("SMSreceiver:different targetPhone");					
+				StaticVar.logPrint('D', "SMSreceiver:different targetPhone");					
 				mesContext = new String(messages[0].getDisplayMessageBody());
-				System.out.println("diff-mesNumber:" + mesNumber);
-				System.out.println("diff-mesContext:" + mesContext);
+				StaticVar.logPrint('D', "diff-mesNumber:" + mesNumber);
+				StaticVar.logPrint('D', "diff-mesContext:" + mesContext);
 				return ;
 			}
 		}
 		else
 		{
 			//bundle中为空
-			System.out.println("bundle is null");
+			StaticVar.logPrint('D', "bundle is null");
 		}   
 	}
 	
@@ -176,7 +177,7 @@ public class SMSreceiver extends BroadcastReceiver
 		double tmp;
 		tmp = Double.parseDouble(geoStr);
 		
-		System.out.println("isValidGeo--str:" + geoStr + " tmp:" + tmp);
+		StaticVar.logPrint('D', "isValidGeo--str:" + geoStr + " tmp:" + tmp);
 		
 		if((tmp>0) && (tmp<140) )
 			isValid = true;		
