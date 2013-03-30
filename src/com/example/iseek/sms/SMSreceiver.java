@@ -1,5 +1,7 @@
 package com.example.iseek.sms;
 
+import java.util.Set;
+
 import com.baidu.mapapi.utils.CoordinateConver;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.MainActivity;
@@ -31,36 +33,48 @@ public class SMSreceiver extends BroadcastReceiver
 		//系统接收到短信，解析
 		if (intent.getAction().equals(StaticVar.SYSTEM_SMS_ACTION)) 
 		{ 
-			ReceiveMessageCase(context, intent);
+			ReceiveMsgCase(context, intent);
 		}		
 		//接收到refresh发送状态广播
 		else if (intent.getAction().equals(StaticVar.COM_SMS_SEND_REFRESH))
 		{
-			MainActivity.mainLogMessage = ReceiveStateCase(MainActivity.mainProDialog,MainActivity.mainLogMessage, 
+			MainActivity.mainLogMessage = ReceiveDialogUpdate(MainActivity.mainProDialog,MainActivity.mainLogMessage, 
 					(String)context.getResources().getText(R.string.DialogSendOK), StaticVar.COM_SMS_SEND_REFRESH);
 		}
 		//接收到refresh发送回执广播
 		else if (intent.getAction().equals(StaticVar.COM_SMS_DELIVERY_REFRESH))
 		{
-			MainActivity.mainLogMessage = ReceiveStateCase(MainActivity.mainProDialog, MainActivity.mainLogMessage, 
+			MainActivity.mainLogMessage = ReceiveDialogUpdate(MainActivity.mainProDialog, MainActivity.mainLogMessage, 
 					(String)context.getResources().getText(R.string.DialogDeliveryOK), StaticVar.COM_SMS_DELIVERY_REFRESH);
 		}
 		//接收到sos设置发送状态广播
 		else if(intent.getAction().equals(StaticVar.COM_SMS_SEND_SOS))
 		{
-			SettingActivity.setLogMessage = ReceiveStateCase(SettingActivity.setProDialog, SettingActivity.setLogMessage, 
-					(String)context.getResources().getText(R.string.DialogSosSendOK), StaticVar.COM_SMS_SEND_SOS);
+			SettingActivity.setLogMessage = ReceiveDialogUpdate(SettingActivity.setProDialog, SettingActivity.setLogMessage, 
+					(String)context.getResources().getText(R.string.DialogSosSendGpsOK), StaticVar.COM_SMS_SEND_SOS);
 		}
 		//接收到sos设置发送回执广播
 		else if(intent.getAction().equals(StaticVar.COM_SMS_DELIVERY_SOS))
 		{
-			SettingActivity.setLogMessage = ReceiveStateCase(SettingActivity.setProDialog, SettingActivity.setLogMessage,
-					(String)context.getResources().getText(R.string.DialogSosDeliveryOK),StaticVar.COM_SMS_DELIVERY_SOS);
+			SettingActivity.setLogMessage = ReceiveDialogUpdate(SettingActivity.setProDialog, SettingActivity.setLogMessage,
+					(String)context.getResources().getText(R.string.DialogSosDeliveryGpsOK),StaticVar.COM_SMS_DELIVERY_SOS);
+		}
+		//接收到sos手机号的通知发送状态广播
+		else if(intent.getAction().equals(StaticVar.COM_SMS_SEND_SOS_TAR))
+		{
+			SettingActivity.setLogMessage = ReceiveDialogUpdate(SettingActivity.setProDialog, SettingActivity.setLogMessage, 
+					(String)context.getResources().getText(R.string.DialogSosSendTarOK), StaticVar.COM_SMS_SEND_SOS_TAR);
+		}
+		//接收到sos手机号的通知回执广播
+		else if(intent.getAction().equals(StaticVar.COM_SMS_DELIVERY_SOS_TAR))
+		{
+			SettingActivity.setLogMessage = ReceiveDialogUpdate(SettingActivity.setProDialog, SettingActivity.setLogMessage, 
+					(String)context.getResources().getText(R.string.DialogSosDeliveryTarOK), StaticVar.COM_SMS_DELIVERY_SOS_TAR);
 		}
 	}
 	
 	//对系统接收短信进行过滤和解析
-	private void ReceiveMessageCase(Context context, Intent intent)
+	private void ReceiveMsgCase(Context context, Intent intent)
 	{
 		String mesNumber;
 		String mesContext;
@@ -97,40 +111,24 @@ public class SMSreceiver extends BroadcastReceiver
 				StaticVar.logPrint('D', "mesContext:" + mesContext);
 				StaticVar.logPrint('D', "SMS header:" + mesContext.substring(0, 7));
 				
-				//短信头判断，是否匹配
+				//短信头--定位成功短信
 				if(mesContext.substring(0, 7).equals(StaticVar.SMS_Header_LOC_SUCCESS))
+				{					
+					ReceiveMsgCaseLocOK(mesContext);
+				}
+				//短信头--设置sos号码的gps回复短息
+				else if(mesContext.substring(0, 7).equals(StaticVar.SMS_Header_SET_SOS_OK))
 				{
-					//解析经纬度
-					//For example:
-					//W00,051,34.234442N,108.913805E,1.574Km/h,13-03-21,16:04:43
-					int indexTmp = mesContext.indexOf("N");
-					String Latitude = mesContext.substring(8, 16);//原来是8-17
-					
-					//从N后面开始获取，即为经度
-					String Longitude = mesContext.substring(indexTmp+2, indexTmp+10);//原来是19-29
-					StaticVar.logPrint('D', "OnReceive--Latitude:" + Latitude + " Longitude:" + Longitude);
-					
-					//调用MainActivity中的静态函数，设置地图
-					if(isValidGeo(Longitude) && isValidGeo(Latitude))
-					{
-						//符合要求，则关闭logDialog
-						MainActivity.mainProDialog.dismiss();
-						
-						//WGS84坐标转换为百度坐标
-//						CoordinateConver.fromGcjToBaidu   --  GCJ-20(中文谷歌地图)到百度坐标系 
-//						CoordinateConver.fromWgs84ToBaidu --  WGS81到百度坐标系转换
-						GeoPoint tmpPoint = CoordinateConver.fromGcjToBaidu(new GeoPoint((int)(Double.parseDouble(Latitude)* 1E6),
-								(int)(Double.parseDouble(Longitude)* 1E6)));
-						
-						StaticVar.setNewPosition(tmpPoint.getLatitudeE6()/(1E6),tmpPoint.getLongitudeE6()/(1E6));
-					}
+					ReceiveMsgCaseSetSosOK(context, mesContext);
 				}
 				else
 				{
 					//短信头不匹配--为了调试方便，后期将要删掉
 					Toast.makeText(context, "SMS-header Error", Toast.LENGTH_LONG).show();
 				}
-				abortBroadcast();
+				
+				//不再广播消息，取消保存
+				//abortBroadcast();
 			}
 			else
 			{
@@ -149,8 +147,47 @@ public class SMSreceiver extends BroadcastReceiver
 		}   
 	}
 	
+	private void ReceiveMsgCaseLocOK(String msgContext)
+	{
+		//解析经纬度
+		//For example:
+		//W00,051,34.234442N,108.913805E,1.574Km/h,13-03-21,16:04:43
+		int indexTmp = msgContext.indexOf("N");
+		String Latitude = msgContext.substring(8, 16);//原来是8-17
+		
+		//从N后面开始获取，即为经度
+		String Longitude = msgContext.substring(indexTmp+2, indexTmp+10);//原来是19-29
+		StaticVar.logPrint('D', "OnReceive--Latitude:" + Latitude + " Longitude:" + Longitude);
+		
+		//调用MainActivity中的静态函数，设置地图
+		if(isValidGeo(Longitude) && isValidGeo(Latitude))
+		{
+			//符合要求，则关闭logDialog
+			MainActivity.mainProDialog.dismiss();
+			
+			//WGS84坐标转换为百度坐标
+//			CoordinateConver.fromGcjToBaidu   --  GCJ-20(中文谷歌地图)到百度坐标系 
+//			CoordinateConver.fromWgs84ToBaidu --  WGS81到百度坐标系转换
+			GeoPoint tmpPoint = CoordinateConver.fromGcjToBaidu(new GeoPoint((int)(Double.parseDouble(Latitude)* 1E6),
+					(int)(Double.parseDouble(Longitude)* 1E6)));
+			
+			StaticVar.setNewPosition(tmpPoint.getLatitudeE6()/(1E6),tmpPoint.getLongitudeE6()/(1E6));
+		}
+	}
+	
+	//更新对话框内容
+	private void ReceiveMsgCaseSetSosOK(Context context, String msgContext)
+	{
+		StaticVar.logPrint('D', msgContext.substring(8));
+		if(msgContext.substring(8).equals(StaticVar.SMS_BODY_SET_SOS_OK))
+		{
+			ReceiveDialogUpdate(SettingActivity.setProDialog, SettingActivity.setLogMessage, 
+					(String)context.getResources().getText(R.string.DialogSosFeedBackGpsOK), msgContext.substring(8));
+		}
+	}
+	
 	//实现对短信发送状态以及短信回执的处理
-	private String ReceiveStateCase(ProgressDialog progressDialog, String logMessage, 
+	private String ReceiveDialogUpdate(ProgressDialog progressDialog, String logMessage, 
 			String strLogAppend, String strCase)
 	{
 		

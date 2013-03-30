@@ -61,11 +61,18 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		prefSosNumber.setOnPreferenceChangeListener(this);
 		prefAbout.setOnPreferenceClickListener(this);
 		
+		prefTargetPhone.setSummary(StaticVar.prefs.getString(StaticVar.prefTargetPhoneKey, 
+				(String) this.getResources().getText(R.string.set_targetPhone_summary)));
+		prefSosNumber.setSummary(StaticVar.prefs.getString(StaticVar.prefSosNumberKey, 
+				(String) this.getResources().getText(R.string.set_sosNumber_summary)));
+		
 		//注册广播监听
 		setReceiver = new SMSreceiver();
 		setFilter = new IntentFilter();
 		setFilter.addAction(StaticVar.COM_SMS_DELIVERY_SOS);
 		setFilter.addAction(StaticVar.COM_SMS_SEND_SOS);
+		setFilter.addAction(StaticVar.COM_SMS_DELIVERY_SOS_TAR);
+		setFilter.addAction(StaticVar.COM_SMS_SEND_SOS_TAR);
 		SettingActivity.this.registerReceiver(setReceiver, setFilter);
 		
 		//progressDialog初始化
@@ -88,7 +95,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		// TODO Auto-generated method stub
 		
 			
-		System.out.println("Change--key:" + preference.getKey() + "--newValue:" + newValue);
+		StaticVar.logPrint('D', "Change--key:" + preference.getKey() + "--newValue:" + newValue);
 			
 		//TargetPhone设置
 		if(preference.getKey() == StaticVar.prefTargetPhoneKey)
@@ -111,17 +118,28 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		{
 			//判断符合手机号码，则打开dialog，确认发送短信			
 			if(isMobileNumber((String) newValue))
-			{			
-				//测试用
-				//Toast.makeText(SettingActivity.this, "sos number valid", Toast.LENGTH_LONG).show();
+			{	
+				//未设置targetPhone的时候不发送设置信号
+				if(isMobileNumber(StaticVar.prefs.getString(StaticVar.prefTargetPhoneKey, "unset")))
+				{
+					StaticVar.SendMessage(SettingActivity.this, null, StaticVar.SMS_SET_SOS + newValue, 
+							StaticVar.COM_SMS_SEND_SOS, StaticVar.COM_SMS_DELIVERY_SOS);
+					StaticVar.SendMessage(SettingActivity.this, (String)newValue, prefTargetPhone.getSummary() + StaticVar.SMS_SET_SOS_TAR , 
+							StaticVar.COM_SMS_SEND_SOS_TAR, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
 				
-				StaticVar.SendMessage(SettingActivity.this, StaticVar.SMS_SET_SOS, StaticVar.COM_SMS_SEND_SOS, StaticVar.COM_SMS_DELIVERY_SOS);
 				
-				prefSosNumber.setSummary((CharSequence) newValue);
-				
-				setLogMessage = (String) getResources().getText(R.string.DialogMsgHeader);
-				setProDialog.setMessage(setLogMessage);
-				setProDialog.show();
+					prefSosNumber.setSummary((CharSequence) newValue);
+					
+					setLogMessage = (String) getResources().getText(R.string.DialogMsgHeader);
+					setProDialog.setMessage(setLogMessage);
+					setProDialog.show();
+					return true;
+				}
+				else
+				{
+					//提示输入target number
+					Toast.makeText(this, this.getResources().getText(R.string.ToastTargetSetEmpty), Toast.LENGTH_LONG).show();
+				}
 				return false;
 			}
 			else
@@ -138,7 +156,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	public boolean onPreferenceClick(Preference preference) {
 		// TODO Auto-generated method stub
 		
-		System.out.println("Click--key:" + preference.getKey());			
+		StaticVar.logPrint('D', "Click--key:" + preference.getKey());			
 		
 		return true;
 	}	

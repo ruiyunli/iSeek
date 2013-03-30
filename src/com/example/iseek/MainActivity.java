@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
 		//初始化ProgressDialog
 		InitDialog();
 		
-		System.out.println("init success");
+		StaticVar.logPrint('D', "init success");
 	}	
 	
 	//注册BroadcastReceiver,用于接收短信及回执
@@ -90,7 +90,7 @@ public class MainActivity extends Activity {
 		StaticVar.myLocationOverlay = new MyLocationOverlay(mMapView);
 		
 		mMapView.setTraffic(true);
-		//mMapView.setSatellite(true);
+//		mMapView.setSatellite(true);
 		
 		//地图的初始化设置
 		//设置启用内置的缩放控件
@@ -102,7 +102,7 @@ public class MainActivity extends Activity {
 		//用给定的经纬度构造一个GeoPoint，单位是微度 (度 * 1E6)
 		GeoPoint point =new GeoPoint((int)(34.128064* 1E6),(int)(108.847287* 1E6));		
 		StaticVar.mMapController.setCenter(point);//设置地图中心点
-		StaticVar.mMapController.setZoom(17);//设置地图zoom级别
+		StaticVar.mMapController.setZoom(12);//设置地图zoom级别
 	}
 	
 	//用于初始化PreferenceActivity的相关key
@@ -139,11 +139,13 @@ public class MainActivity extends Activity {
 		if(item.getOrder()== StaticVar.MENU_REFRESH)
 		{
 			//发送gps位置请求短信
-			StaticVar.SendMessage(MainActivity.this, StaticVar.SMS_TEST, StaticVar.COM_SMS_SEND_REFRESH, 
-					StaticVar.COM_SMS_DELIVERY_REFRESH);
-			mainLogMessage = (String) getResources().getText(R.string.DialogMsgHeader);
-			mainProDialog.setMessage(mainLogMessage);
-			mainProDialog.show();
+			if(StaticVar.SendMessage(MainActivity.this, null, StaticVar.SMS_GEO_REQU, StaticVar.COM_SMS_SEND_REFRESH, 
+					StaticVar.COM_SMS_DELIVERY_REFRESH))
+			{
+				mainLogMessage = (String) getResources().getText(R.string.DialogMsgHeader);
+				mainProDialog.setMessage(mainLogMessage);
+				mainProDialog.show();
+			}
 		}
 		//设置按钮响应
 		else if(item.getOrder() == StaticVar.MENU_SETTINGS)

@@ -34,6 +34,7 @@ public class StaticVar {
 	public static final String SMS_GEO_REQU = "w000000,051";//请求位置
 	public static final String SMS_TEST     = "CXGPRS";
 	public static final String SMS_SET_SOS  = "w000000,003,3,1,";//设置sos号码
+	public static final String SMS_SET_SOS_TAR  = "用户已经将您的号码绑定为SOS紧急呼叫号码<iSeek>";//设置sos号码
 		
 	//接受短信权限设置-发送成功广播
 	public static final String SYSTEM_SMS_ACTION        = "android.provider.Telephony.SMS_RECEIVED";
@@ -41,6 +42,8 @@ public class StaticVar {
 	public static final String COM_SMS_DELIVERY_REFRESH = "com.example.iseek.sms_delivery_refresh";
 	public static final String COM_SMS_SEND_SOS         = "com.example.iseek.sms_send_sos";
 	public static final String COM_SMS_DELIVERY_SOS     = "com.example.iseek.sms_delivery_sos";
+	public static final String COM_SMS_SEND_SOS_TAR         = "com.example.iseek.sms_send_sos_tar";
+	public static final String COM_SMS_DELIVERY_SOS_TAR     = "com.example.iseek.sms_delivery_sos_tar";
 		
 	//设置存储文件接口
 	public static SharedPreferences prefs = null;
@@ -58,7 +61,11 @@ public class StaticVar {
 	
 	//短信头解析字符串
 	public static final String SMS_Header_LOC_SUCCESS = "W00,051";
+	public static final String SMS_Header_GPS_NOT_FIX = "W12,051";
+	public static final String SMS_Header_SET_SOS_OK  = "W01,003";
 	
+	//短信体
+	public static final String SMS_BODY_SET_SOS_OK  = "Set phone number  OK";//居然是两个空格，坑
 	
 	
 	//读取通讯录
@@ -71,16 +78,24 @@ public class StaticVar {
 	
 	
 	//短信发送函数
-	public static void SendMessage(Context context, String mesContext, String sentIntentStr , String deliveryIntentStr)
+	public static boolean SendMessage(Context context, String destNumber, String mesContext, String sentIntentStr , String deliveryIntentStr)
 	{
-		//获取手机号码		
+		//获取手机号码	
+		String strDestAddress = null;
 		
-		String strDestAddress = StaticVar.prefs.getString(prefTargetPhoneKey, "unset");
-
-		if(strDestAddress.equals("unset"))
+		if(destNumber != null)
 		{
-			Toast.makeText(context, "Please Set Phone Number" , Toast.LENGTH_SHORT).show();
-			return ;
+			strDestAddress = destNumber;
+		}
+		else
+		{
+			strDestAddress = StaticVar.prefs.getString(prefTargetPhoneKey, "unset");
+	
+			if(strDestAddress.equals("unset"))
+			{				
+				Toast.makeText(context, "Please Set Phone Number" , Toast.LENGTH_SHORT).show();				
+				return false;
+			}
 		}
 		
 		//默认指令，gps回传经度和纬度
@@ -100,17 +115,19 @@ public class StaticVar {
 		    
 		    logPrint('D', "number:" + strDestAddress + " context:" + strMessage);
 		    logPrint('D', "send message success");
+		    return true;
 	    } 
 	    catch(Exception e) 
 	    {
 	    	e.printStackTrace();
 	    }
+	    return false;
 	    //Toast.makeText(context, "送出成功!!" , Toast.LENGTH_SHORT).show();
 	}
 	
 	public static void setNewPosition(double Latitude, double Longitude)
 	{
-		System.out.println("Latitude:" + Latitude + "  Longitude:" + Longitude);
+		StaticVar.logPrint('D', "Latitude:" + Latitude + "  Longitude:" + Longitude);
 		
 		
 		tarLocData.latitude = Latitude;
