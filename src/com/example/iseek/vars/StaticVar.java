@@ -4,6 +4,7 @@ import com.baidu.mapapi.map.LocationData;
 import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
+import com.baidu.mapapi.utils.CoordinateConvert;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.MainActivity;
 import com.example.iseek.sms.SMSreceiver;
@@ -49,10 +50,7 @@ public class StaticVar {
 	public static SharedPreferences prefs = null;
 	public static SharedPreferences.Editor prefsEditor = null;	//没用上！！！！！
 	
-	//百度地图	
-	public static MapController mMapController = null;
-	public static MyLocationOverlay myLocationOverlay = null;
-	public static LocationData tarLocData = null;
+	
 	
 	//控件对应的key字符串声明
 	public static String prefTargetPhoneKey = null;
@@ -125,22 +123,22 @@ public class StaticVar {
 	    //Toast.makeText(context, "送出成功!!" , Toast.LENGTH_SHORT).show();
 	}
 	
-	public static void setNewPosition(double Latitude, double Longitude)
+	public static void setNewPosition(GeoPoint newPoint)
 	{
-		StaticVar.logPrint('D', "Latitude:" + Latitude + "  Longitude:" + Longitude);
+		
+		GeoPoint baiduPoint = CoordinateConvert.fromWgs84ToBaidu(newPoint);
+		StaticVar.logPrint('D', "Latitude:" + baiduPoint.getLatitudeE6() + "  Longitude:" + baiduPoint.getLongitudeE6());
 		
 		
-		tarLocData.latitude = Latitude;
-		tarLocData.longitude = Longitude;
-		tarLocData.direction = 2.0f;		
-			
-//		mMapController.setCenter(new GeoPoint((int)(Latitude* 1E6),(int)(Longitude* 1E6)));//设置地图中心点
+		MainActivity.tarLocData.latitude  = baiduPoint.getLatitudeE6()/(1E6);
+		MainActivity.tarLocData.longitude = baiduPoint.getLongitudeE6()/(1E6);
+		MainActivity.tarLocData.accuracy  = (float) 31.181425;
+		MainActivity.tarLocData.direction = -1.0f;	
 		
-		myLocationOverlay.setData(StaticVar.tarLocData);
-		MainActivity.mMapView.getOverlays().add(StaticVar.myLocationOverlay);
-		mMapController.setZoom(18);//设置地图zoom级别
+		MainActivity.myLocationOverlay.setData(MainActivity.tarLocData);
+		MainActivity.mMapController.setZoom(12);
 		MainActivity.mMapView.refresh();
-		mMapController.animateTo(new GeoPoint((int)(Latitude* 1E6),(int)(Longitude* 1E6)));
+		MainActivity.mMapController.animateTo(new GeoPoint((int)(baiduPoint.getLatitudeE6()),(int)(baiduPoint.getLongitudeE6())));
 		
 	}
 	

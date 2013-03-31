@@ -1,16 +1,13 @@
 package com.example.iseek;
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -18,10 +15,12 @@ import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.MKGeneralListener;
 import com.baidu.mapapi.map.LocationData;
 import com.baidu.mapapi.map.MKEvent;
+import com.baidu.mapapi.map.MKMapViewListener;
 import com.baidu.mapapi.map.MapController;
+import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
-import com.baidu.mapapi.utils.CoordinateConver;
+import com.baidu.mapapi.utils.CoordinateConvert;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.setting.SettingActivity;
 import com.example.iseek.sms.SMSreceiver;
@@ -31,7 +30,7 @@ import com.example.iseek.vars.StaticVar;
 public class MainActivity extends Activity {
 	
 	//百度地图
-	BMapManager mBMapMan = null;
+	
 	static public MapView mMapView = null;	
 	
 	//BroadCastReceiver的相关变量
@@ -41,13 +40,22 @@ public class MainActivity extends Activity {
 	//logDialog中的变量
 	public static ProgressDialog mainProDialog = null;
 	public static String mainLogMessage = null;
+	
+	//百度地图	
+	public static MapController mMapController = null;
+	public static MyLocationOverlay myLocationOverlay = null;
+	public static LocationData tarLocData = null;
+	MKMapViewListener mMapListener = null;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		mBMapMan=new BMapManager(getApplication());
-		mBMapMan.init(StaticVar.BaiduMapKey, new MyGeneralListener());  
+		IseekApplication app = (IseekApplication)this.getApplication();
+        if (app.mBMapManager == null) {
+            app.mBMapManager = new BMapManager(this);
+            app.mBMapManager.init(StaticVar.BaiduMapKey, new IseekApplication.MyGeneralListener());
+        }
 		//注意：请在试用setContentView前初始化BMapManager对象，否则会报错
 		
 		setContentView(R.layout.activity_main);
@@ -84,25 +92,60 @@ public class MainActivity extends Activity {
 	
 	//地图初始化函数
 	private void InitMap()
-	{
-		//变量初始化
-		StaticVar.tarLocData = new LocationData();
-		StaticVar.myLocationOverlay = new MyLocationOverlay(mMapView);
-		
-		mMapView.setTraffic(true);
-//		mMapView.setSatellite(true);
-		
-		//地图的初始化设置
-		//设置启用内置的缩放控件
-		mMapView.setBuiltInZoomControls(true);		
-		// 得到mMapView的控制权,可以用它控制和驱动平移和缩放
-		
-		
-		StaticVar.mMapController=mMapView.getController();
-		//用给定的经纬度构造一个GeoPoint，单位是微度 (度 * 1E6)
-		GeoPoint point =new GeoPoint((int)(34.128064* 1E6),(int)(108.847287* 1E6));		
-		StaticVar.mMapController.setCenter(point);//设置地图中心点
-		StaticVar.mMapController.setZoom(12);//设置地图zoom级别
+	{		
+		mMapController = mMapView.getController();
+
+		GeoPoint centerpt = new GeoPoint((int)(34.128064* 1E6),(int)(108.847287* 1E6));
+		mMapController.setCenter(centerpt);
+        mMapView.setLongClickable(true);
+        //mMapController.setMapClickEnable(true);
+       // mMapView.setSatellite(false);       
+        mMapController.enableClick(true);
+        mMapController.setZoom(12);        
+        mMapView.displayZoomControls(true);
+//        mMapView.setTraffic(true);
+        mMapView.setSatellite(true);
+        mMapView.setDoubleClickZooming(true);
+        mMapView.setOnTouchListener(null);
+        
+        //变量初始化
+  		tarLocData = new LocationData();
+  		myLocationOverlay = new MyLocationOverlay(mMapView);
+  		myLocationOverlay.setData(tarLocData);		
+  		mMapView.getOverlays().add(MainActivity.myLocationOverlay);
+  		myLocationOverlay.enableCompass();
+  		mMapView.refresh();
+        
+        mMapListener = new MKMapViewListener() {			
+    		@Override
+    		public void onMapMoveFinish() {
+    			// 在此处理地图移动完成消息回调
+    		}
+    		
+    		@Override
+    		public void onClickMapPoi(MapPoi mapPoiInfo) {
+    			String title = "";
+    			if (mapPoiInfo != null){
+    				title = mapPoiInfo.strText;
+    				Toast.makeText(MainActivity.this,title,Toast.LENGTH_SHORT).show();
+    				mMapController.animateTo(mapPoiInfo.geoPt);
+    			}
+    		}		
+
+    		@Override
+    		public void onMapAnimationFinish() {
+    			// 在此处理地图动画完成回调
+
+    		}
+
+    		@Override
+    		public void onGetCurrentMap(Bitmap arg0) {
+    			// TODO Auto-generated method stub
+    			
+    		}
+    	};
+        
+        mMapView.regMapViewListener(IseekApplication.getInstance().mBMapManager, mMapListener);
 	}
 	
 	//用于初始化PreferenceActivity的相关key
@@ -173,33 +216,35 @@ public class MainActivity extends Activity {
 		else if(item.getOrder() == StaticVar.MENU_TEST)
 		{
 			//设置更新位置
-			GeoPoint newPoint =new GeoPoint((int)(34.235697* 1E6),(int)(108.914238* 1E6));
-			GeoPoint newPoint2 = CoordinateConver.fromWgs84ToBaidu(newPoint);
+			GeoPoint newPoint =new GeoPoint((int)(34.235697* 1E6),(int)(108.914238* 1E6));			
 			
-			StaticVar.setNewPosition(newPoint2.getLatitudeE6()/(1E6), newPoint2.getLongitudeE6()/(1E6));
+			StaticVar.setNewPosition(newPoint);
 		}
 		return super.onOptionsItemSelected(item);
 	}
 			
 	//百度地图重载
 	@Override
-	protected void onDestroy(){
-		mMapView.destroy();
-	        if(mBMapMan!=null){
-	                mBMapMan.destroy();
-	                mBMapMan=null;
-	        }	        
-	        MainActivity.this.unregisterReceiver(mainReceiver);
-	        super.onDestroy();
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		IseekApplication app = (IseekApplication)this.getApplication();
+		if (app.mBMapManager != null) {
+			app.mBMapManager.destroy();
+			app.mBMapManager = null;
+		}
+		super.onDestroy();
+		System.exit(0);
 	}
 	
 	//百度地图重载
 	@Override
 	protected void onPause(){
 	        mMapView.onPause();
-	        if(mBMapMan!=null){
-	                mBMapMan.stop();
-	        }
+	        IseekApplication app = (IseekApplication)this.getApplication();
+			if (app.mBMapManager != null) {
+				app.mBMapManager.stop();
+				app.mBMapManager = null;
+			}
 	        super.onPause();
 	}
 	
@@ -207,9 +252,11 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume(){
 	        mMapView.onResume();
-	        if(mBMapMan!=null){
-	                mBMapMan.start();
-	        }
+	        IseekApplication app = (IseekApplication)this.getApplication();
+			if (app.mBMapManager != null) {
+				app.mBMapManager.start();
+				app.mBMapManager = null;
+			}
 	        super.onResume();
 	}
 

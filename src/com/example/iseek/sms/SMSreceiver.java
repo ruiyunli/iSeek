@@ -1,14 +1,12 @@
 package com.example.iseek.sms;
 
-import java.util.Set;
 
-import com.baidu.mapapi.utils.CoordinateConver;
+import com.baidu.mapapi.utils.CoordinateConvert;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.MainActivity;
 import com.example.iseek.R;
 import com.example.iseek.setting.SettingActivity;
 import com.example.iseek.vars.StaticVar;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -16,7 +14,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
-import android.util.Log;
 import android.widget.Toast;
 
 
@@ -128,7 +125,7 @@ public class SMSreceiver extends BroadcastReceiver
 				}
 				
 				//不再广播消息，取消保存
-				//abortBroadcast();
+				abortBroadcast();
 			}
 			else
 			{
@@ -168,10 +165,9 @@ public class SMSreceiver extends BroadcastReceiver
 			//WGS84坐标转换为百度坐标
 //			CoordinateConver.fromGcjToBaidu   --  GCJ-20(中文谷歌地图)到百度坐标系 
 //			CoordinateConver.fromWgs84ToBaidu --  WGS81到百度坐标系转换
-			GeoPoint tmpPoint = CoordinateConver.fromGcjToBaidu(new GeoPoint((int)(Double.parseDouble(Latitude)* 1E6),
-					(int)(Double.parseDouble(Longitude)* 1E6)));
+			GeoPoint tmpPoint = new GeoPoint((int)(Double.parseDouble(Latitude)* 1E6), (int)(Double.parseDouble(Longitude)* 1E6));
 			
-			StaticVar.setNewPosition(tmpPoint.getLatitudeE6()/(1E6),tmpPoint.getLongitudeE6()/(1E6));
+			StaticVar.setNewPosition(tmpPoint);
 		}
 	}
 	
