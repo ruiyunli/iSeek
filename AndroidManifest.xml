@@ -42,13 +42,13 @@
         android:anyDensity="true"/>
     
     <application
-        android:name=".IseekApplication"
+        android:name="com.izzz.iseek.map.IseekApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.iseek.MainActivity"
+            android:name="com.izzz.iseek.map.MainActivity"
             android:label="@string/app_name" 
             android:screenOrientation="sensor"
         	android:configChanges="orientation|keyboardHidden">
@@ -59,7 +59,7 @@
             </intent-filter>
         </activity>
         <activity 
-            android:name="com.example.iseek.setting.SettingActivity"
+            android:name="com.izzz.iseek.setting.SettingActivity"
             android:label="@string/activity_setting"
             >
       	</activity>

@@ -38,6 +38,10 @@
     <string name="set_about_title">About</string>
     <string name="set_about_summary">About iSeek</string>
     
+    <!-- Category other keys -->
+    <string name="set_origin_latitude_key">originLatitude</string>
+    <string name="set_origin_longitude_key">originLongitude</string>
+    
     <!-- String in toast -->
     <string name="ToastErrorInternet">Internet Error</string>
     <string name="ToastErrorSearchData">Search Data Error</string>
@@ -64,6 +68,8 @@
     <string name="DialogSosSendTarNO">SOS:通知发送失败</string>
     <string name="DialogSosDeliveryTarOK">SOS:成功接收通知!</string>
     <string name="DialogSosDeliveryTarNO">SOS:通知接收故障!</string>
+    
+    <string name="DialogAlarmGot">连接超时，请重试</string>
     
     
     <!-- 设置SOS number的对话框中字符串 -->
