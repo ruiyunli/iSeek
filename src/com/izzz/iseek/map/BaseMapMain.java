@@ -10,10 +10,17 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
+import android.view.View.OnTouchListener;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.MKGeneralListener;
 import com.baidu.mapapi.map.LocationData;
@@ -26,6 +33,7 @@ import com.baidu.mapapi.map.MyLocationOverlay;
 import com.baidu.mapapi.map.OverlayItem;
 import com.baidu.mapapi.utils.CoordinateConvert;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
+import com.baidu.platform.comapi.map.Projection;
 import com.example.iseek.R;
 import com.izzz.iseek.setting.SettingActivity;
 import com.izzz.iseek.sms.SMSreceiver;
@@ -33,12 +41,12 @@ import com.izzz.iseek.sms.SMSsender;
 import com.izzz.iseek.vars.StaticVar;
 
 
-public class MainActivity extends Activity {
+public class BaseMapMain extends Activity {
 	
 	IseekApplication app = null;
 	
 	//百度地图	
-	static public MapView mMapView = null;	
+	public static MapView mMapView = null;	
 	
 	//BroadCastReceiver的相关变量
 	private SMSreceiver mainReceiver = null;
@@ -52,7 +60,22 @@ public class MainActivity extends Activity {
 	public static MapController mMapController = null;
 	public static MyLocationOverlay myLocationOverlay = null;
 	public static LocationData tarLocData = null;
-	MKMapViewListener mMapListener = null;
+
+	
+	//校准用变量
+	public static CorrectionOverlay correctionOverlay = null;
+	public static GeoPoint corrPoint = null;
+	public static OverlayItem corrItem = null;
+	
+	//标志位-添加校准层
+	public static boolean ADD_LAYER_FLAG = false;
+	
+	//测试用输出testView
+	public static TextView logText  = null;
+	public ImageButton btnMoveUp    = null;
+	public ImageButton btnMoveDown  = null;
+	public ImageButton btnMoveLeft  = null;
+	public ImageButton btnMoveRight = null;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +90,15 @@ public class MainActivity extends Activity {
 		
 		setContentView(R.layout.activity_main);
 		
+		logText = (TextView)findViewById(R.id.logText);
+		
+		//初始化imagebutton变量
+		InitCorrButton();
+		
 		//注册BroadCastReceiver IntentFilter
 		InitBCRRegister();
 
-		//获取百度地图和设置文件
+		//获取百度地图
 		mMapView=(MapView)findViewById(R.id.bmapsView);		
 		
 		//百度地图初始化
@@ -92,10 +120,13 @@ public class MainActivity extends Activity {
 		mainFilter.addAction(StaticVar.COM_SMS_SEND_REFRESH);
 		mainFilter.addAction(StaticVar.COM_SMS_DELIVERY_REFRESH);
 		mainFilter.addAction(StaticVar.COM_ALARM_REFRESH);
-		MainActivity.this.registerReceiver(mainReceiver,mainFilter);		
+		BaseMapMain.this.registerReceiver(mainReceiver,mainFilter);		
 	}
 	
 	//地图初始化函数
+	/**
+	 * 
+	 */
 	private void InitMap()
 	{		
 		String latitude  = null;
@@ -103,6 +134,7 @@ public class MainActivity extends Activity {
 		GeoPoint centerpt = null;
 		mMapController = mMapView.getController();
 		
+		//打开上次保存的地点
 		latitude  = app.prefs.getString(app.prefOriginLatitude, "unset");
 		longitude = app.prefs.getString(app.prefOriginLongitude, "unset");
 		if((latitude != "unset") &&	(longitude != "unset"))
@@ -117,66 +149,28 @@ public class MainActivity extends Activity {
 		 
 		mMapController.setCenter(centerpt);
         mMapView.setLongClickable(true);
-        //mMapController.setMapClickEnable(true);
-       // mMapView.setSatellite(false);       
-        mMapController.enableClick(true);
-        
-        mMapController.setZoom(12);        
+        mMapController.enableClick(true);        
+        mMapController.setZoom(15);        
         mMapView.displayZoomControls(true);
-//        mMapView.setTraffic(true);
+//      mMapView.setTraffic(true);
         mMapView.setSatellite(true);
         mMapView.setDoubleClickZooming(true);
-        mMapView.setOnTouchListener(null);
         
-        //变量初始化
+        //MyLocationOverlay层
   		tarLocData = new LocationData();
   		myLocationOverlay = new MyLocationOverlay(mMapView);
-  		myLocationOverlay.setData(tarLocData);		
-  		mMapView.getOverlays().add(MainActivity.myLocationOverlay);
+  		myLocationOverlay.setData(tarLocData);
+  		mMapView.getOverlays().add(myLocationOverlay);
   		myLocationOverlay.enableCompass();
   		mMapView.refresh();		
-  	
+  		
+  		//CorrectionOverlay层
+        correctionOverlay = new CorrectionOverlay(getResources().getDrawable(R.drawable.icon_mapselect));
+      
+        mMapView.regMapViewListener(IseekApplication.getInstance().mBMapManager, new BaseMKMapViewListener(BaseMapMain.this));
         
-        
-        mMapListener = new MKMapViewListener() {			
-    		@Override
-    		public void onMapMoveFinish() {
-    			// 在此处理地图移动完成消息回调
-    			if(StaticVar.DEBUG_ENABLE)
-    				StaticVar.logPrint('D', "onMapMoveFinish()");
-    		}
-    		
-    		@Override
-    		public void onClickMapPoi(MapPoi mapPoiInfo) {
-    			String title = "";
-    			if(StaticVar.DEBUG_ENABLE)
-    				StaticVar.logPrint('D', "onClickMapPoi()");
-    			if (mapPoiInfo != null){
-    				title = mapPoiInfo.strText + "--Lat:" + mapPoiInfo.geoPt.getLatitudeE6() + " Lon:" +mapPoiInfo.geoPt.getLongitudeE6();
-    				Toast.makeText(MainActivity.this,title,Toast.LENGTH_LONG).show();
-    				mMapController.animateTo(mapPoiInfo.geoPt);
-    			}
-    		}		
-
-    		@Override
-    		public void onMapAnimationFinish() {
-    			// 在此处理地图动画完成回调
-    			if(StaticVar.DEBUG_ENABLE)
-    				StaticVar.logPrint('D', "onMapAnimationFinish()");
-
-    		}
-
-    		@Override
-    		public void onGetCurrentMap(Bitmap arg0) {
-    			// TODO Auto-generated method stub
-    			
-    		}
-    	};
-        
-        mMapView.regMapViewListener(IseekApplication.getInstance().mBMapManager, mMapListener);
+        mMapView.setOnTouchListener(new BaseOnTouchListener());
 	}
-	
-	
 	
 	//用于初始化Dialog相关的变量
 	private void InitDialog()
@@ -188,23 +182,107 @@ public class MainActivity extends Activity {
 		mainProDialog.setTitle(getResources().getText(R.string.DialogTitle));
 	}
 	
+	public void InitCorrButton()
+	{
+		btnMoveUp    = (ImageButton)findViewById(R.id.btnMoveUp);
+		btnMoveDown  = (ImageButton)findViewById(R.id.btnMoveDown);
+		btnMoveLeft  = (ImageButton)findViewById(R.id.btnMoveLeft);
+		btnMoveRight = (ImageButton)findViewById(R.id.btnMoveRight);
+
+		btnMoveUp.setOnClickListener(new MoveUpListener());
+		btnMoveDown.setOnClickListener(new MoveDownListener());
+		btnMoveLeft.setOnClickListener(new MoveLeftListener());
+		btnMoveRight.setOnClickListener(new MoveRightListener());
+		
+		btnMoveUp.setVisibility(View.INVISIBLE);
+		btnMoveDown.setVisibility(View.INVISIBLE);
+		btnMoveLeft.setVisibility(View.INVISIBLE);
+		btnMoveRight.setVisibility(View.INVISIBLE);
+		
+	}
+	
+	//微调共用函数
+	private void MoveCorration(int direction)
+	{
+		switch(direction)
+		{
+		case StaticVar.MOVE_CORR_UP:
+			corrPoint.setLatitudeE6(corrPoint.getLatitudeE6() + StaticVar.CORR_STEP);
+			break;
+		case StaticVar.MOVE_CORR_DOWN:
+			corrPoint.setLatitudeE6(corrPoint.getLatitudeE6() - StaticVar.CORR_STEP);
+			break;
+		case StaticVar.MOVE_CORR_LEFT:
+			corrPoint.setLongitudeE6(corrPoint.getLongitudeE6() - StaticVar.CORR_STEP);
+			break;
+		case StaticVar.MOVE_CORR_RIGHT:
+			corrPoint.setLongitudeE6(corrPoint.getLongitudeE6() + StaticVar.CORR_STEP);
+			break;
+		}
+		corrItem =new OverlayItem(corrPoint, "title", "snippet");
+		correctionOverlay.refreshItem(corrItem);
+		mMapView.refresh();
+		logText.setText("x: unknown" + " y: unknown" 
+                + '\n' + " latitude: " + corrPoint.getLatitudeE6()
+                +" longitude: " + corrPoint.getLongitudeE6());
+	}
+	//校准时的微调按钮--向上
+	class MoveUpListener implements OnClickListener
+	{
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			MoveCorration(StaticVar.MOVE_CORR_UP);
+		}
+		
+	}
+	//校准时的微调按钮--向下
+	class MoveDownListener implements OnClickListener
+	{
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			MoveCorration(StaticVar.MOVE_CORR_DOWN);
+		}
+	}
+	//校准时的微调按钮--向左
+	class MoveLeftListener implements OnClickListener
+	{
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub			
+			MoveCorration(StaticVar.MOVE_CORR_LEFT);		
+		}
+	}
+	//校准时的微调按钮--向下
+	class MoveRightListener implements OnClickListener
+	{
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub			
+			MoveCorration(StaticVar.MOVE_CORR_RIGHT);		
+		}
+	}
+	
+	
 	//设置新的坐标
 	public static void setNewPosition(GeoPoint newPoint)
 	{
-		
+		//gps坐标系到百度坐标系的转化
 		GeoPoint baiduPoint = CoordinateConvert.fromWgs84ToBaidu(newPoint);
 		
 		if(StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', "Latitude:" + baiduPoint.getLatitudeE6() + "  Longitude:" + baiduPoint.getLongitudeE6());
 		
+		logText.setText("Latitude:" + baiduPoint.getLatitudeE6() + "  Longitude:" + baiduPoint.getLongitudeE6());
 		
 		tarLocData.latitude  = baiduPoint.getLatitudeE6()/(1E6);
 		tarLocData.longitude = baiduPoint.getLongitudeE6()/(1E6);
 		tarLocData.accuracy  = (float) 31.181425;
 		tarLocData.direction = -1.0f;	
 		
-		myLocationOverlay.setData(MainActivity.tarLocData);
-		mMapController.setZoom(12);
+		myLocationOverlay.setData(tarLocData);
+		mMapController.setZoom(16);
 		mMapView.refresh();
 		mMapController.animateTo(new GeoPoint((int)(baiduPoint.getLatitudeE6()),(int)(baiduPoint.getLongitudeE6())));
 		
@@ -219,12 +297,13 @@ public class MainActivity extends Activity {
 		if(item.getOrder()== StaticVar.MENU_REFRESH)
 		{
 			//发送gps位置请求短信
-			if(SMSsender.SendMessage(MainActivity.this, null, StaticVar.SMS_GEO_REQU, StaticVar.COM_SMS_SEND_REFRESH, 
+			if(SMSsender.SendMessage(BaseMapMain.this, null, StaticVar.SMS_GEO_REQU, StaticVar.COM_SMS_SEND_REFRESH, 
 					StaticVar.COM_SMS_DELIVERY_REFRESH))
 			{
 				mainLogMessage = (String) getResources().getText(R.string.DialogMsgHeader);
 				mainProDialog.setMessage(mainLogMessage);
 				mainProDialog.show();
+//				StaticVar.MAIN_DIALOG_ENABLE = true;
 				
 				IseekApplication.alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
 				Intent intent = new Intent(StaticVar.COM_ALARM_REFRESH);
@@ -240,7 +319,7 @@ public class MainActivity extends Activity {
 		else if(item.getOrder() == StaticVar.MENU_SETTINGS)
 		{
 			Intent intent = new Intent();
-			intent.setClass(MainActivity.this, SettingActivity.class);
+			intent.setClass(BaseMapMain.this, SettingActivity.class);
 			startActivity(intent);
 		}
 		//退出按钮响应
@@ -265,6 +344,33 @@ public class MainActivity extends Activity {
 			GeoPoint newPoint =new GeoPoint((int)(34.235697* 1E6),(int)(108.914238* 1E6));			
 			
 			setNewPosition(newPoint);
+		}
+		//校准使能
+		else if(item.getOrder() == StaticVar.MENU_CORR)
+		{
+			StaticVar.CORRECTION_ENABLE = !StaticVar.CORRECTION_ENABLE;
+			if(StaticVar.CORRECTION_ENABLE)
+			{
+				item.setTitle("UnCorration");
+				
+				btnMoveUp.setVisibility(View.VISIBLE);
+				btnMoveDown.setVisibility(View.VISIBLE);
+				btnMoveLeft.setVisibility(View.VISIBLE);
+				btnMoveRight.setVisibility(View.VISIBLE);
+			}
+			else
+			{
+				item.setTitle("Corration");
+				btnMoveUp.setVisibility(View.INVISIBLE);
+				btnMoveDown.setVisibility(View.INVISIBLE);
+				btnMoveLeft.setVisibility(View.INVISIBLE);
+				btnMoveRight.setVisibility(View.INVISIBLE);
+				
+				//去掉校准层
+				mMapView.getOverlays().remove(correctionOverlay);
+				mMapView.refresh();
+				ADD_LAYER_FLAG = false;
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -312,33 +418,4 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
-	// 常用事件监听，用来处理通常的网络错误，授权验证错误等
-    class MyGeneralListener implements MKGeneralListener {
-        //网络问题
-        @Override
-        public void onGetNetworkState(int iError) {
-        	//网络连接
-            if (iError == MKEvent.ERROR_NETWORK_CONNECT) {
-                Toast.makeText(MainActivity.this, R.string.ToastErrorInternet,
-                    Toast.LENGTH_LONG).show();
-            }
-            //检索内容
-            else if (iError == MKEvent.ERROR_NETWORK_DATA) {
-                Toast.makeText(MainActivity.this, R.string.ToastErrorSearchData,
-                        Toast.LENGTH_LONG).show();
-            }
-            // ...
-        }
-
-        //key问题
-        @Override
-        public void onGetPermissionState(int iError) {
-            if (iError ==  MKEvent.ERROR_PERMISSION_DENIED) {
-                //授权Key错误：
-                Toast.makeText(MainActivity.this, 
-                        R.string.ToastErrorMapKey, Toast.LENGTH_LONG).show();                
-            }
-        }
-    }
 }

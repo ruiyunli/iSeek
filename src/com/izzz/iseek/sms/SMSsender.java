@@ -11,8 +11,15 @@ import com.izzz.iseek.vars.StaticVar;
 
 public class SMSsender {
 
-	//短信发送函数
-	//当destNumber为null时，表示发送到targetPhone
+	/**
+	 * 
+	 * @param context			:dialog所在的context
+	 * @param destNumber		:目标手机号码，null表示发送到targetPhone
+	 * @param mesContext		:短信内容
+	 * @param sentIntentStr		:初始化sent Intent的字符串
+	 * @param deliveryIntentStr	:初始化delivery Intent的字符串
+	 * @return					try中发送成功，返回true，否则返回false
+	 */
 	public static boolean SendMessage(Context context, String destNumber, String mesContext, String sentIntentStr , String deliveryIntentStr)
 	{	
 		//获取手机号码	

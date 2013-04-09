@@ -4,14 +4,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity" >
+    tools:context=".BaseMapMain" >
 
+    
+    <TextView 
+        android:id="@+id/logText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="log output"
+        />
+    
     <com.baidu.mapapi.map.MapView
         android:id="@+id/bmapsView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/logText"
         android:clickable="true" />
 
+    <ImageButton
+	    android:id="@+id/btnMoveRight"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"	    
+	    android:layout_alignParentBottom="true"
+	    android:layout_alignParentRight="true"
+	    android:layout_marginBottom="100dp"
+	    android:layout_marginRight="20dp"
+	    android:src="@drawable/icon_moveright" />
+
+	<ImageButton
+	    android:id="@+id/btnMoveUp"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@id/btnMoveRight"
+	    android:layout_toLeftOf="@id/btnMoveRight"
+	    android:src="@drawable/icon_moveup" />
+	
+	<ImageButton
+	    android:id="@+id/btnMoveLeft"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignTop="@id/btnMoveRight"
+	    android:layout_toLeftOf="@id/btnMoveUp"
+	    android:src="@drawable/icon_moveleft" />
+	
+	<ImageButton
+	    android:id="@+id/btnMoveDown"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/btnMoveLeft"
+	    android:layout_toLeftOf="@id/btnMoveRight"
+	    android:src="@drawable/icon_movedown" />
+	
 </RelativeLayout>

@@ -7,7 +7,7 @@ import com.baidu.mapapi.map.MyLocationOverlay;
 import com.baidu.mapapi.utils.CoordinateConvert;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.izzz.iseek.map.IseekApplication;
-import com.izzz.iseek.map.MainActivity;
+import com.izzz.iseek.map.BaseMapMain;
 import com.izzz.iseek.sms.SMSreceiver;
 
 import android.app.PendingIntent;
@@ -27,7 +27,8 @@ public class StaticVar {
 	
 	//调试设置
 	public static boolean DEBUG_ENABLE = true;
-	
+	public static boolean CORRECTION_ENABLE = false;
+//	public static boolean MAIN_DIALOG_ENABLE = false;
 
 	
 	//菜单order
@@ -35,7 +36,14 @@ public class StaticVar {
 	public static final int MENU_PHONECALL = 200;
 	public static final int MENU_SETTINGS  = 300;	
 	public static final int MENU_TEST      = 400;
-	public static final int MENU_EXIT      = 500;
+	public static final int MENU_CORR      = 500;
+	public static final int MENU_EXIT      = 600;
+	
+	//校准微调方向
+	public static final int MOVE_CORR_UP     = 1;
+	public static final int MOVE_CORR_DOWN   = 2;
+	public static final int MOVE_CORR_LEFT   = 3;
+	public static final int MOVE_CORR_RIGHT  = 4;
 	
 	//发送短信
 	public static final String SMS_GEO_REQU = "w000000,051";//请求位置
@@ -55,7 +63,7 @@ public class StaticVar {
 	public static final String COM_ALARM_SOS_SET   			= "com.izzz.iseek.alarm_sos_set";
 	
 	//闹钟时间
-	public static final int ALARM_TIME = 5*1000;
+	public static final long ALARM_TIME = 3*60*1000;
 		
 	
 	
@@ -78,57 +86,11 @@ public class StaticVar {
 	
 	//调试TAG
 	public static final String LOG_TAG = "iSeekD";
-
-	/*
-	//短信发送函数
-	//当destNumber为null时，表示发送到targetPhone
-	public static boolean SendMessage(Context context, String destNumber, String mesContext, String sentIntentStr , String deliveryIntentStr)
-	{	
-		//获取手机号码	
-		String strDestAddress = null;
-		
-		if(destNumber != null)
-		{
-			strDestAddress = destNumber;
-		}
-		else
-		{
-			strDestAddress = IseekApplication.getInstance().prefs.getString(IseekApplication.getInstance().prefTargetPhoneKey, "unset");
 	
-			if(strDestAddress.equals("unset"))
-			{				
-				Toast.makeText(context, "Please Set Phone Number" , Toast.LENGTH_SHORT).show();				
-				return false;
-			}
-		}
-		
-		//默认指令，gps回传经度和纬度
-	    String strMessage = mesContext; 		  
-	    SmsManager smsManager = SmsManager.getDefault();		     
-	    try 
-	    { 
-	    	//发送短信
-	    	PendingIntent mPIsend = null;
-	    	PendingIntent mPIdelivery = null;
-	    	if(sentIntentStr != null)
-		        mPIsend = PendingIntent.getBroadcast(context, 0, new Intent(sentIntentStr), 0);
-	    	if(deliveryIntentStr != null)
-	    		mPIdelivery = PendingIntent.getBroadcast(context, 0, new Intent(deliveryIntentStr), 0);
-	    	
-		    smsManager.sendTextMessage(strDestAddress, null, strMessage, mPIsend, mPIdelivery);
-		    
-		    logPrint('D', "number:" + strDestAddress + " context:" + strMessage);
-		    logPrint('D', "send message success");
-		    return true;
-	    } 
-	    catch(Exception e) 
-	    {
-	    	e.printStackTrace();
-	    }
-	    return false;
-	    //Toast.makeText(context, "送出成功!!" , Toast.LENGTH_SHORT).show();
-	}
-*/
+	//校准微调步长
+	public static final int CORR_STEP = 10;
+
+	
 	//调试信息输出
 	public static void logPrint(char type ,String logContext)
 	{

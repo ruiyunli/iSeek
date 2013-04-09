@@ -6,7 +6,7 @@ import com.example.iseek.R;
 import com.example.iseek.R.string;
 import com.example.iseek.R.xml;
 import com.izzz.iseek.map.IseekApplication;
-import com.izzz.iseek.map.MainActivity;
+import com.izzz.iseek.map.BaseMapMain;
 import com.izzz.iseek.sms.SMSreceiver;
 import com.izzz.iseek.sms.SMSsender;
 import com.izzz.iseek.vars.StaticVar;

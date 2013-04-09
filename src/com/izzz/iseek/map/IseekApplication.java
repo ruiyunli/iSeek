@@ -36,6 +36,9 @@ public class IseekApplication extends Application {
   	//ÄÖÁåÏà¹Ø
   	public static AlarmManager alarmManager = null;
 	public static PendingIntent alarmPI = null;
+	
+	
+	
     
 	@Override
 	public void onCreate() {
