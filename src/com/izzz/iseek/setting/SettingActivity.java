@@ -7,6 +7,7 @@ import com.example.iseek.R.string;
 import com.example.iseek.R.xml;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.base.BaseMapMain;
+import com.izzz.iseek.dialog.LogDialog;
 import com.izzz.iseek.sms.SMSreceiver;
 import com.izzz.iseek.sms.SMSsender;
 import com.izzz.iseek.vars.StaticVar;
@@ -47,8 +48,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	SMSreceiver setReceiver = null;
 	IntentFilter setFilter  = null;
 	
-	public static ProgressDialog setProDialog = null;
-	public static String setLogMessage = null;
+	public static LogDialog settingDialog = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +60,15 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		//导入页面资源
 		addPreferencesFromResource(R.xml.settings);		
 		
-		
-		
+		settingDialog = new LogDialog(SettingActivity.this, R.string.DialogMsgHeader, R.string.DialogTitle);
+		settingDialog.enable();
+
+		Initprefs();	//初始化prefs
+		InitBCR();		//注册广播
+	}
+
+	private void Initprefs()
+	{
 		//获取控件
 		prefTargetPhone = (EditTextPreference)findPreference(app.prefTargetPhoneKey);
 		prefSosNumber   = (EditTextPreference)findPreference(app.prefSosNumberKey);		
@@ -76,24 +83,21 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 				(String) this.getResources().getText(R.string.set_targetPhone_summary)));
 		prefSosNumber.setSummary(app.prefs.getString(app.prefSosNumberKey, 
 				(String) this.getResources().getText(R.string.set_sosNumber_summary)));
-		
+				
+	}
+	
+	private void InitBCR()
+	{
 		//注册广播监听
 		setReceiver = new SMSreceiver();
 		setFilter = new IntentFilter();
-		setFilter.addAction(StaticVar.COM_SMS_DELIVERY_SOS);
-		setFilter.addAction(StaticVar.COM_SMS_SEND_SOS);
+		setFilter.addAction(StaticVar.COM_SMS_DELIVERY_SOS_GPS);
+		setFilter.addAction(StaticVar.COM_SMS_SEND_SOS_GPS);
 		setFilter.addAction(StaticVar.COM_SMS_DELIVERY_SOS_TAR);
 		setFilter.addAction(StaticVar.COM_SMS_SEND_SOS_TAR);
 		setFilter.addAction(StaticVar.COM_ALARM_SOS_SET);
 		SettingActivity.this.registerReceiver(setReceiver, setFilter);
-		
-		//progressDialog初始化
-		setProDialog = new ProgressDialog(this);		
-		setProDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);		
-		setProDialog.setTitle(getResources().getText(R.string.DialogTitle));
-		
 	}
-
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
@@ -101,6 +105,68 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		SettingActivity.this.unregisterReceiver(setReceiver);
 	}
 
+	private boolean ChangeTargetPhone(String phoneNum)
+	{
+		//正则表达式判断是否合法手机号码
+		if(isMobileNumber(phoneNum))
+		{
+			Toast.makeText(SettingActivity.this, R.string.ToastTargetSetOK, Toast.LENGTH_LONG).show();
+			prefTargetPhone.setSummary((CharSequence) phoneNum);
+			return true;			
+		}
+		else
+		{
+			Toast.makeText(SettingActivity.this, R.string.ToastInvalidPhoneNumber, Toast.LENGTH_LONG).show();
+			return false;
+		}
+	}
+	
+	private boolean ChangeSosPhone(String phoneNum)
+	{
+		//判断符合手机号码，则打开dialog，确认发送短信			
+		if(isMobileNumber(phoneNum))
+		{	
+			//未设置targetPhone的时候不发送设置信号
+			if(isMobileNumber(app.prefs.getString(app.prefTargetPhoneKey, "unset")))
+			{
+				//给gps发送短信
+				SMSsender.SendMessage(SettingActivity.this, null, StaticVar.SMS_SET_SOS + phoneNum, 
+						StaticVar.COM_SMS_SEND_SOS_GPS, StaticVar.COM_SMS_DELIVERY_SOS_GPS);
+				//给关联sos号码发送短信
+				SMSsender.SendMessage(SettingActivity.this, phoneNum, prefTargetPhone.getSummary() + StaticVar.SMS_SET_SOS_TAR , 
+						StaticVar.COM_SMS_SEND_SOS_TAR, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
+			
+				prefSosNumber.setSummary((CharSequence) phoneNum);
+				
+				settingDialog.proMessage = (String) getResources().getText(R.string.DialogMsgHeader);
+				settingDialog.proLogDialog.setMessage(settingDialog.proMessage);
+				settingDialog.showLog();
+				
+				IseekApplication.alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+				Intent intent = new Intent(StaticVar.COM_ALARM_SOS_SET);
+				IseekApplication.alarmPI = PendingIntent.getBroadcast(this,0,intent,0);
+				IseekApplication.alarmManager.set(AlarmManager.RTC_WAKEUP, 
+						System.currentTimeMillis() + StaticVar.ALARM_TIME, IseekApplication.alarmPI);
+				
+				if(StaticVar.DEBUG_ENABLE)
+					StaticVar.logPrint('D', "alarm for sos set start ok!");
+				
+				return true;
+			}
+			else
+			{
+				//提示输入target number
+				Toast.makeText(this, this.getResources().getText(R.string.ToastTargetSetEmpty), Toast.LENGTH_LONG).show();
+				return false;
+			}			
+		}
+		else
+		{
+			Toast.makeText(SettingActivity.this, R.string.ToastInvalidPhoneNumber, Toast.LENGTH_LONG).show();
+			return false;
+		}
+	}
+	
 	//值改变响应函数
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -112,64 +178,12 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		//TargetPhone设置
 		if(preference.getKey() == app.prefTargetPhoneKey)
 		{
-			//正则表达式判断是否合法手机号码
-			if(isMobileNumber((String)newValue))
-			{
-				Toast.makeText(SettingActivity.this, R.string.ToastTargetSetOK, Toast.LENGTH_LONG).show();
-				prefTargetPhone.setSummary((CharSequence) newValue);
-				return true;			
-			}
-			else
-			{
-				Toast.makeText(SettingActivity.this, R.string.ToastInvalidPhoneNumber, Toast.LENGTH_LONG).show();
-				return false;
-			}
+			return ChangeTargetPhone((String) newValue);
 		}
 		//SOSphone设置
 		else if(preference.getKey() == app.prefSosNumberKey)
 		{
-			//判断符合手机号码，则打开dialog，确认发送短信			
-			if(isMobileNumber((String) newValue))
-			{	
-				//未设置targetPhone的时候不发送设置信号
-				if(isMobileNumber(app.prefs.getString(app.prefTargetPhoneKey, "unset")))
-				{
-					//给gps发送短信
-					SMSsender.SendMessage(SettingActivity.this, null, StaticVar.SMS_SET_SOS + newValue, 
-							StaticVar.COM_SMS_SEND_SOS, StaticVar.COM_SMS_DELIVERY_SOS);
-					//给关联sos号码发送短信
-					SMSsender.SendMessage(SettingActivity.this, (String)newValue, prefTargetPhone.getSummary() + StaticVar.SMS_SET_SOS_TAR , 
-							StaticVar.COM_SMS_SEND_SOS_TAR, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
-				
-				
-					prefSosNumber.setSummary((CharSequence) newValue);					
-					setLogMessage = (String) getResources().getText(R.string.DialogMsgHeader);
-					setProDialog.setMessage(setLogMessage);
-					setProDialog.show();
-					
-					IseekApplication.alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-					Intent intent = new Intent(StaticVar.COM_ALARM_SOS_SET);
-					IseekApplication.alarmPI = PendingIntent.getBroadcast(this,0,intent,0);
-					IseekApplication.alarmManager.set(AlarmManager.RTC_WAKEUP, 
-							System.currentTimeMillis() + StaticVar.ALARM_TIME, IseekApplication.alarmPI);
-					
-					if(StaticVar.DEBUG_ENABLE)
-						StaticVar.logPrint('D', "alarm for sos set start ok!");
-					
-					return true;
-				}
-				else
-				{
-					//提示输入target number
-					Toast.makeText(this, this.getResources().getText(R.string.ToastTargetSetEmpty), Toast.LENGTH_LONG).show();
-				}
-				return false;
-			}
-			else
-			{
-				Toast.makeText(SettingActivity.this, R.string.ToastInvalidPhoneNumber, Toast.LENGTH_LONG).show();
-				return false;
-			}			
+			return ChangeSosPhone((String)newValue);		
 		}
 		return false;		 
 	}
@@ -186,10 +200,10 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	
 	//判断是否为手机号码
 	public boolean isMobileNumber(String mobiles){
-		  Pattern p=Pattern.compile("^(((13[0-9])|18[0,5-9]|15[0-3,5-9])\\d{8})|(10086)$");
+		  Pattern p=Pattern.compile("^(((13[0-9])|18[0,5-9]|15[0-3,5-9])\\d{8})|(10086)|(10001)$");
 		  Matcher m=p.matcher(mobiles);
 		  if(StaticVar.DEBUG_ENABLE)
-			  StaticVar.logPrint('D', m.matches()+ "---");
+			  StaticVar.logPrint('D', "match result:" + m.matches());
 		  return m.matches();
 	}
 

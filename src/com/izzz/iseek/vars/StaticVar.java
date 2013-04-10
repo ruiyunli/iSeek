@@ -32,7 +32,9 @@ public class StaticVar {
 	//标志位-添加校准层
 	public static boolean ADD_LAYER_FLAG = false;
 //	public static boolean MAIN_DIALOG_ENABLE = false;
-
+	
+	//退出使能
+	public static boolean EXIT_ENABLE = false;
 	
 	//菜单order
 	public static final int MENU_REFRESH   = 100;
@@ -58,15 +60,16 @@ public class StaticVar {
 	public static final String SYSTEM_SMS_ACTION           	= "android.provider.Telephony.SMS_RECEIVED";
 	public static final String COM_SMS_SEND_REFRESH        	= "com.izzz.iseek.sms_send_refresh";
 	public static final String COM_SMS_DELIVERY_REFRESH    	= "com.izzz.iseek.sms_delivery_refresh";
-	public static final String COM_SMS_SEND_SOS            	= "com.izzz.iseek.sms_send_sos";
-	public static final String COM_SMS_DELIVERY_SOS        	= "com.izzz.iseek.sms_delivery_sos";
+	public static final String COM_SMS_SEND_SOS_GPS         = "com.izzz.iseek.sms_send_sos";
+	public static final String COM_SMS_DELIVERY_SOS_GPS     = "com.izzz.iseek.sms_delivery_sos";
 	public static final String COM_SMS_SEND_SOS_TAR        	= "com.izzz.iseek.sms_send_sos_tar";
 	public static final String COM_SMS_DELIVERY_SOS_TAR    	= "com.izzz.iseek.sms_delivery_sos_tar";
 	public static final String COM_ALARM_REFRESH   			= "com.izzz.iseek.alarm_refresh";
 	public static final String COM_ALARM_SOS_SET   			= "com.izzz.iseek.alarm_sos_set";
+	public static final String COM_ALARM_BACK_EXIT 			= "com.izzz.iseek.alarm_back_exit";
 	
 	//闹钟时间
-	public static final long ALARM_TIME = 3*60*1000;
+	public static final long ALARM_TIME = 3*1000;
 		
 	
 	

@@ -9,11 +9,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.map.LocationData;
 import com.baidu.mapapi.map.MapController;
@@ -46,8 +49,7 @@ public class BaseMapMain extends Activity {
 	private IntentFilter mainFilter = null;
 	
 	//logDialog中的变量
-	public static ProgressDialog baseProDialog = null;
-	public static String baseLogMessage = null;
+	public static LogDialog baseDialog;
 	
 	//百度地图	
 	public static MapController mMapController = null;
@@ -84,11 +86,12 @@ public class BaseMapMain extends Activity {
 		
 		mMapView=(MapView)findViewById(R.id.bmapsView);		
 		logText = (TextView)findViewById(R.id.logText);
+		baseDialog = new LogDialog(BaseMapMain.this, R.string.DialogMsgHeader, R.string.DialogTitle);
 		
 		InitCorrButton();	//初始化imagebutton变量		
 		InitBCRRegister();	//注册BroadCastReceiver IntentFilter
 		InitMap();			//百度地图初始化			
-		InitDialog();
+//		InitDialog();
 		if(StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', "init success");
 	}	
@@ -102,6 +105,7 @@ public class BaseMapMain extends Activity {
 		mainFilter.addAction(StaticVar.COM_SMS_SEND_REFRESH);
 		mainFilter.addAction(StaticVar.COM_SMS_DELIVERY_REFRESH);
 		mainFilter.addAction(StaticVar.COM_ALARM_REFRESH);
+		mainFilter.addAction(StaticVar.COM_ALARM_BACK_EXIT);
 		BaseMapMain.this.registerReceiver(mainReceiver,mainFilter);		
 	}
 	
@@ -149,16 +153,6 @@ public class BaseMapMain extends Activity {
         mMapView.regMapViewListener(IseekApplication.getInstance().mBMapManager, new MapMKMapViewListener(BaseMapMain.this));
         //onTouchListener响应函数
         mMapView.setOnTouchListener(new MapOnTouchListener());
-	}
-	
-	//用于初始化Dialog相关的变量
-	private void InitDialog()
-	{
-		baseLogMessage = (String) getResources().getText(R.string.DialogMsgHeader);
-		baseProDialog  = new ProgressDialog(this);		
-		baseProDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		baseProDialog.setMessage(baseLogMessage);
-		baseProDialog.setTitle(getResources().getText(R.string.DialogTitle));
 	}
 	
 	//校准微调按钮初始化
@@ -210,10 +204,11 @@ public class BaseMapMain extends Activity {
 		if(SMSsender.SendMessage(BaseMapMain.this, null, StaticVar.SMS_GEO_REQU, StaticVar.COM_SMS_SEND_REFRESH, 
 				StaticVar.COM_SMS_DELIVERY_REFRESH))
 		{
-			baseLogMessage = (String) getResources().getText(R.string.DialogMsgHeader);
-			baseProDialog.setMessage(baseLogMessage);
-			baseProDialog.show();
-//			StaticVar.MAIN_DIALOG_ENABLE = true;
+
+			baseDialog.proMessage = (String) getResources().getText(R.string.DialogMsgHeader);
+			baseDialog.proLogDialog.setMessage(baseDialog.proMessage);
+			baseDialog.enable();
+			baseDialog.showLog();
 			
 			IseekApplication.alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
 			Intent intent = new Intent(StaticVar.COM_ALARM_REFRESH);
@@ -350,4 +345,35 @@ public class BaseMapMain extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		
+		if(keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			if(StaticVar.EXIT_ENABLE)
+			{
+				if (app.mBMapManager != null) {
+					app.mBMapManager.destroy();
+					app.mBMapManager = null;
+				}
+				System.exit(0);
+				
+			}
+			StaticVar.EXIT_ENABLE = true;
+			IseekApplication.alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+			Intent intent = new Intent(StaticVar.COM_ALARM_BACK_EXIT);
+			IseekApplication.alarmPI = PendingIntent.getBroadcast(this,0,intent,0);
+			IseekApplication.alarmManager.set(AlarmManager.RTC_WAKEUP, 
+					System.currentTimeMillis() + 5*1000, IseekApplication.alarmPI);
+			Toast.makeText(BaseMapMain.this, R.string.ToastExitWarning, Toast.LENGTH_LONG).show();
+			
+			return false;
+		}
+			
+		return super.onKeyDown(keyCode, event);
+	}
+	
+	
 }

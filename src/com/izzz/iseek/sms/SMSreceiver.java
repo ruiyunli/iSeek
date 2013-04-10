@@ -1,10 +1,13 @@
 package com.izzz.iseek.sms;
 
 
+import java.util.Set;
+
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.R;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.base.BaseMapMain;
+import com.izzz.iseek.dialog.LogDialog;
 import com.izzz.iseek.setting.SettingActivity;
 import com.izzz.iseek.vars.StaticVar;
 
@@ -32,60 +35,79 @@ public class SMSreceiver extends BroadcastReceiver
 		if (intent.getAction().equals(StaticVar.SYSTEM_SMS_ACTION)) 
 		{ 
 			ReceiveMsgCase(context, intent);
-		}		
+		}	
 		//接收到refresh发送状态广播
 		else if (intent.getAction().equals(StaticVar.COM_SMS_SEND_REFRESH))
 		{
-			BaseMapMain.baseLogMessage = ReceiveDialogUpdate(BaseMapMain.baseProDialog,BaseMapMain.baseLogMessage, 
-					(String)context.getResources().getText(R.string.DialogSendOK), StaticVar.COM_SMS_SEND_REFRESH);
+			DialogRefresh(BaseMapMain.baseDialog, R.string.DialogSendOK, StaticVar.COM_SMS_SEND_REFRESH);
 		}
 		//接收到refresh发送回执广播
 		else if (intent.getAction().equals(StaticVar.COM_SMS_DELIVERY_REFRESH))
 		{
-			BaseMapMain.baseLogMessage = ReceiveDialogUpdate(BaseMapMain.baseProDialog, BaseMapMain.baseLogMessage, 
-					(String)context.getResources().getText(R.string.DialogDeliveryOK), StaticVar.COM_SMS_DELIVERY_REFRESH);
+			DialogRefresh(BaseMapMain.baseDialog, R.string.DialogDeliveryOK, StaticVar.COM_SMS_DELIVERY_REFRESH);
 		}
+		
 		//接收到sos设置发送状态广播
-		else if(intent.getAction().equals(StaticVar.COM_SMS_SEND_SOS))
+		else if(intent.getAction().equals(StaticVar.COM_SMS_SEND_SOS_GPS))
 		{
-			SettingActivity.setLogMessage = ReceiveDialogUpdate(SettingActivity.setProDialog, SettingActivity.setLogMessage, 
-					(String)context.getResources().getText(R.string.DialogSosSendGpsOK), StaticVar.COM_SMS_SEND_SOS);
+			DialogRefresh(SettingActivity.settingDialog, R.string.DialogSosSendGpsOK, StaticVar.COM_SMS_SEND_SOS_GPS);
+			
 		}
 		//接收到sos设置发送回执广播
-		else if(intent.getAction().equals(StaticVar.COM_SMS_DELIVERY_SOS))
+		else if(intent.getAction().equals(StaticVar.COM_SMS_DELIVERY_SOS_GPS))
 		{
-			SettingActivity.setLogMessage = ReceiveDialogUpdate(SettingActivity.setProDialog, SettingActivity.setLogMessage,
-					(String)context.getResources().getText(R.string.DialogSosDeliveryGpsOK),StaticVar.COM_SMS_DELIVERY_SOS);
+			DialogRefresh(SettingActivity.settingDialog, R.string.DialogSosDeliveryGpsOK, StaticVar.COM_SMS_DELIVERY_SOS_GPS);
 		}
 		//接收到sos手机号的通知发送状态广播
 		else if(intent.getAction().equals(StaticVar.COM_SMS_SEND_SOS_TAR))
 		{
-			SettingActivity.setLogMessage = ReceiveDialogUpdate(SettingActivity.setProDialog, SettingActivity.setLogMessage, 
-					(String)context.getResources().getText(R.string.DialogSosSendTarOK), StaticVar.COM_SMS_SEND_SOS_TAR);
+			DialogRefresh(SettingActivity.settingDialog, R.string.DialogSosSendTarOK, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
 		}
 		//接收到sos手机号的通知回执广播
 		else if(intent.getAction().equals(StaticVar.COM_SMS_DELIVERY_SOS_TAR))
 		{
-			SettingActivity.setLogMessage = ReceiveDialogUpdate(SettingActivity.setProDialog, SettingActivity.setLogMessage, 
-					(String)context.getResources().getText(R.string.DialogSosDeliveryTarOK), StaticVar.COM_SMS_DELIVERY_SOS_TAR);
+			DialogRefresh(SettingActivity.settingDialog, R.string.DialogSosDeliveryTarOK, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
 		}
 		//接收到refresh闹钟广播
 		else if(intent.getAction().equals(StaticVar.COM_ALARM_REFRESH))
 		{
-			if(StaticVar.DEBUG_ENABLE)
-				StaticVar.logPrint('D', "alarm got!");
-			BaseMapMain.baseLogMessage = ReceiveDialogUpdate(BaseMapMain.baseProDialog, BaseMapMain.baseLogMessage, 
-					(String)context.getResources().getString(R.string.DialogAlarmGot), StaticVar.COM_ALARM_REFRESH);
+			DialogRefresh(BaseMapMain.baseDialog, R.string.DialogAlarmGot, StaticVar.COM_ALARM_REFRESH);
 		}
 		//接收到sos set闹钟广播
 		else if(intent.getAction().equals(StaticVar.COM_ALARM_SOS_SET))
 		{
-			if(StaticVar.DEBUG_ENABLE)
-				StaticVar.logPrint('D', "alarm got!");
-			SettingActivity.setLogMessage = ReceiveDialogUpdate(SettingActivity.setProDialog, SettingActivity.setLogMessage, 
-					(String)context.getResources().getString(R.string.DialogAlarmGot), StaticVar.COM_ALARM_SOS_SET);
+			DialogRefresh(SettingActivity.settingDialog, R.string.DialogAlarmGot, StaticVar.COM_ALARM_SOS_SET);
 		}
+		//接收到返回退出设置闹钟广播
+		else if(intent.getAction().equals(StaticVar.COM_ALARM_BACK_EXIT))
+		{
+			StaticVar.EXIT_ENABLE = false;
+		}
+		
 	}
+		
+	/**
+	 * 更新log输出页面的通用接口--message处理
+	 * @param logDialog
+	 * @param strAppendId
+	 * @param strCase
+	 */
+	private void DialogRefresh(LogDialog logDialog, int strAppendId, String strCase)
+	{
+		if( getResultCode() == Activity.RESULT_OK || 
+			strCase == StaticVar.COM_ALARM_REFRESH)
+		{
+			if(StaticVar.DEBUG_ENABLE)
+				StaticVar.logPrint('D', "receive sucess in " + strCase);
+			logDialog.DialogUpdate(strAppendId);
+		}
+		else
+		{
+			if(StaticVar.DEBUG_ENABLE)
+				StaticVar.logPrint('D', "error in receive:" + strCase);
+		}
+	}	
+	
 	
 	//对系统接收短信进行过滤和解析
 	private void ReceiveMsgCase(Context context, Intent intent)
@@ -199,7 +221,9 @@ public class SMSreceiver extends BroadcastReceiver
 			
 			//符合要求，则取消闹钟关闭logDialog
 			IseekApplication.alarmManager.cancel(IseekApplication.alarmPI);
-			BaseMapMain.baseProDialog.dismiss();
+			
+			BaseMapMain.baseDialog.dismissLog();
+			BaseMapMain.baseDialog.disable();
 			
 			//WGS84坐标转换为百度坐标
 //			CoordinateConver.fromGcjToBaidu   --  GCJ-20(中文谷歌地图)到百度坐标系 
@@ -217,14 +241,14 @@ public class SMSreceiver extends BroadcastReceiver
 			StaticVar.logPrint('D', msgContext.substring(8));
 		if(msgContext.substring(8).equals(StaticVar.SMS_BODY_SET_SOS_OK))
 		{
-			ReceiveDialogUpdate(SettingActivity.setProDialog, SettingActivity.setLogMessage, 
-					(String)context.getResources().getText(R.string.DialogSosFeedBackGpsOK), msgContext.substring(8));
+		//	ReceiveDialogUpdate(SettingActivity.setProDialog, SettingActivity.setLogMessage, 
+			//		(String)context.getResources().getText(R.string.DialogSosFeedBackGpsOK), msgContext.substring(8));
 		}
 	}
-	
+	/*
 	//实现对短信发送状态以及短信回执的dialog界面处理
-	private String ReceiveDialogUpdate(ProgressDialog progressDialog, String logMessage, 
-			String strLogAppend, String strCase)
+	private void DialogUpdate(LogDialog progressDialog, int strAppendId,
+			String strCase)
 	{
 		
 		if(getResultCode()== Activity.RESULT_OK || strCase == StaticVar.COM_ALARM_REFRESH
@@ -232,18 +256,20 @@ public class SMSreceiver extends BroadcastReceiver
 		{
 			if(StaticVar.DEBUG_ENABLE)
 				StaticVar.logPrint('D', "receive success flag for " + strCase);
-			logMessage = logMessage + "\n" + strLogAppend;
-		    progressDialog.setMessage(logMessage);
-		    progressDialog.show();
+			
+			progressDialog.proMessage = progressDialog.proMessage + "\n" 
+				+ progressDialog.mContext.getResources().getString(strAppendId);
+			
+		    progressDialog.proLogDialog.setMessage(progressDialog.proMessage);
+		    progressDialog.showLog();
 		}
 		else
 		{
 			if(StaticVar.DEBUG_ENABLE)
 				StaticVar.logPrint('E', "Error in case " + strCase);
-		}
-		return logMessage;
+		}		
 	}
-
+*/
 	
 	//用于经纬度的合法性检测
 	public boolean isValidGeo(String geoStr)

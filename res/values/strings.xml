@@ -50,6 +50,7 @@
     <string name="ToastSosSetOK">SOS number set OK!</string>
     <string name="ToastInvalidPhoneNumber">Invalid phone number</string>
     <string name="ToastTargetSetEmpty">Please set Target Number</string>
+    <string name="ToastExitWarning">Press Back Again to Exit</string>
     
     <!-- logDialog中的文字 -->
     <string name="DialogTitle">iSeeking...</string>
