@@ -1,4 +1,4 @@
-package com.izzz.iseek.map;
+package com.izzz.iseek.app;
 
 import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.MKGeneralListener;
@@ -22,7 +22,7 @@ public class IseekApplication extends Application {
 	//地图相关
 	private static IseekApplication mInstance = null;
     public boolean m_bKeyRight = true;
-    BMapManager mBMapManager = null;
+    public BMapManager mBMapManager = null;
     
     //控件对应的key字符串声明
   	public static String prefTargetPhoneKey  = null;
@@ -96,7 +96,7 @@ public class IseekApplication extends Application {
 	}
 	
 	// 常用事件监听，用来处理通常的网络错误，授权验证错误等
-    static class MyGeneralListener implements MKGeneralListener {
+    public static class MyGeneralListener implements MKGeneralListener {
         
         @Override
         public void onGetNetworkState(int iError) {

@@ -8,11 +8,11 @@ import com.baidu.mapapi.map.MKMapViewListener;
 import com.baidu.mapapi.map.MapPoi;
 import com.izzz.iseek.vars.StaticVar;
 
-public class BaseMKMapViewListener implements MKMapViewListener{
+public class MapMKMapViewListener implements MKMapViewListener{
 
 		Context mContext;
 			
-		public BaseMKMapViewListener(Context mContext) {
+		public MapMKMapViewListener(Context mContext) {
 			super();
 			this.mContext = mContext;
 		}

@@ -3,8 +3,8 @@ package com.izzz.iseek.sms;
 
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.R;
-import com.izzz.iseek.map.IseekApplication;
-import com.izzz.iseek.map.BaseMapMain;
+import com.izzz.iseek.app.IseekApplication;
+import com.izzz.iseek.base.BaseMapMain;
 import com.izzz.iseek.setting.SettingActivity;
 import com.izzz.iseek.vars.StaticVar;
 
@@ -36,13 +36,13 @@ public class SMSreceiver extends BroadcastReceiver
 		//接收到refresh发送状态广播
 		else if (intent.getAction().equals(StaticVar.COM_SMS_SEND_REFRESH))
 		{
-			BaseMapMain.mainLogMessage = ReceiveDialogUpdate(BaseMapMain.mainProDialog,BaseMapMain.mainLogMessage, 
+			BaseMapMain.baseLogMessage = ReceiveDialogUpdate(BaseMapMain.baseProDialog,BaseMapMain.baseLogMessage, 
 					(String)context.getResources().getText(R.string.DialogSendOK), StaticVar.COM_SMS_SEND_REFRESH);
 		}
 		//接收到refresh发送回执广播
 		else if (intent.getAction().equals(StaticVar.COM_SMS_DELIVERY_REFRESH))
 		{
-			BaseMapMain.mainLogMessage = ReceiveDialogUpdate(BaseMapMain.mainProDialog, BaseMapMain.mainLogMessage, 
+			BaseMapMain.baseLogMessage = ReceiveDialogUpdate(BaseMapMain.baseProDialog, BaseMapMain.baseLogMessage, 
 					(String)context.getResources().getText(R.string.DialogDeliveryOK), StaticVar.COM_SMS_DELIVERY_REFRESH);
 		}
 		//接收到sos设置发送状态广播
@@ -74,7 +74,7 @@ public class SMSreceiver extends BroadcastReceiver
 		{
 			if(StaticVar.DEBUG_ENABLE)
 				StaticVar.logPrint('D', "alarm got!");
-			BaseMapMain.mainLogMessage = ReceiveDialogUpdate(BaseMapMain.mainProDialog, BaseMapMain.mainLogMessage, 
+			BaseMapMain.baseLogMessage = ReceiveDialogUpdate(BaseMapMain.baseProDialog, BaseMapMain.baseLogMessage, 
 					(String)context.getResources().getString(R.string.DialogAlarmGot), StaticVar.COM_ALARM_REFRESH);
 		}
 		//接收到sos set闹钟广播
@@ -199,7 +199,7 @@ public class SMSreceiver extends BroadcastReceiver
 			
 			//符合要求，则取消闹钟关闭logDialog
 			IseekApplication.alarmManager.cancel(IseekApplication.alarmPI);
-			BaseMapMain.mainProDialog.dismiss();
+			BaseMapMain.baseProDialog.dismiss();
 			
 			//WGS84坐标转换为百度坐标
 //			CoordinateConver.fromGcjToBaidu   --  GCJ-20(中文谷歌地图)到百度坐标系 

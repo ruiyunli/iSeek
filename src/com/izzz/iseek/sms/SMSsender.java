@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
-import com.izzz.iseek.map.IseekApplication;
+import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.vars.StaticVar;
 
 public class SMSsender {

@@ -6,8 +6,8 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
 import com.baidu.mapapi.utils.CoordinateConvert;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
-import com.izzz.iseek.map.IseekApplication;
-import com.izzz.iseek.map.BaseMapMain;
+import com.izzz.iseek.app.IseekApplication;
+import com.izzz.iseek.base.BaseMapMain;
 import com.izzz.iseek.sms.SMSreceiver;
 
 import android.app.PendingIntent;
@@ -28,6 +28,9 @@ public class StaticVar {
 	//调试设置
 	public static boolean DEBUG_ENABLE = true;
 	public static boolean CORRECTION_ENABLE = false;
+	
+	//标志位-添加校准层
+	public static boolean ADD_LAYER_FLAG = false;
 //	public static boolean MAIN_DIALOG_ENABLE = false;
 
 	

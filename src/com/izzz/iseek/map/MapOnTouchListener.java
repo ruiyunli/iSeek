@@ -3,13 +3,14 @@ package com.izzz.iseek.map;
 import com.baidu.mapapi.map.OverlayItem;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.baidu.platform.comapi.map.Projection;
+import com.izzz.iseek.base.BaseMapMain;
 import com.izzz.iseek.vars.StaticVar;
 
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
-public class BaseOnTouchListener implements OnTouchListener{
+public class MapOnTouchListener implements OnTouchListener{
 
 	private GeoPoint corrPoint;
 	private OverlayItem corrItem;
@@ -40,10 +41,10 @@ public class BaseOnTouchListener implements OnTouchListener{
         		corrItem = new OverlayItem(corrPoint, "title", "snippet");
         		//corrItem.setMarker(getResources().getDrawable(R.drawable.icon_marka));
         		//初次调用，添加校准层
-        		if(!BaseMapMain.ADD_LAYER_FLAG)	
+        		if(!StaticVar.ADD_LAYER_FLAG)	
         		{
         			BaseMapMain.mMapView.getOverlays().add(BaseMapMain.correctionOverlay);
-        			BaseMapMain.ADD_LAYER_FLAG = true;
+        			StaticVar.ADD_LAYER_FLAG = true;
         		}
         		BaseMapMain.correctionOverlay.refreshItem(corrItem);
         		BaseMapMain.mMapView.refresh();
