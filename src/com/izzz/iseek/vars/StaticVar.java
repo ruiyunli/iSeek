@@ -8,7 +8,7 @@ import com.baidu.mapapi.utils.CoordinateConvert;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.base.BaseMapMain;
-import com.izzz.iseek.sms.SMSreceiver;
+import com.izzz.iseek.receiver.SMSreceiver;
 
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -31,10 +31,6 @@ public class StaticVar {
 	
 	//标志位-添加校准层
 	public static boolean ADD_LAYER_FLAG = false;
-//	public static boolean MAIN_DIALOG_ENABLE = false;
-	
-	//退出使能
-	public static boolean EXIT_ENABLE = false;
 	
 	//菜单order
 	public static final int MENU_REFRESH   = 100;

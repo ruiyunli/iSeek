@@ -1,11 +1,8 @@
 package com.izzz.iseek.map;
 
-import java.util.ArrayList;
-import java.util.List;
 import android.graphics.drawable.Drawable;
 import com.baidu.mapapi.map.ItemizedOverlay;
 import com.baidu.mapapi.map.OverlayItem;
-import com.baidu.platform.comapi.basestruct.GeoPoint;
 
 public class CorrectionOverlay extends ItemizedOverlay<OverlayItem>{
 

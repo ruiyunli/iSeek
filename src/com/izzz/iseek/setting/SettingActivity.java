@@ -8,8 +8,8 @@ import com.example.iseek.R.xml;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.base.BaseMapMain;
 import com.izzz.iseek.dialog.LogDialog;
-import com.izzz.iseek.sms.SMSreceiver;
-import com.izzz.iseek.sms.SMSsender;
+import com.izzz.iseek.receiver.SMSreceiver;
+import com.izzz.iseek.receiver.SMSsender;
 import com.izzz.iseek.vars.StaticVar;
 
 import android.app.AlarmManager;

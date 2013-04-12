@@ -1,16 +1,10 @@
 package com.izzz.iseek.dialog;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.view.KeyEvent;
-
-import com.example.iseek.R;
-import com.izzz.iseek.base.BaseMapMain;
-import com.izzz.iseek.vars.StaticVar;
-
 
 public class LogDialog {
 

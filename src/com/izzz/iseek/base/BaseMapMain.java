@@ -31,15 +31,15 @@ import com.izzz.iseek.dialog.LogDialog;
 import com.izzz.iseek.map.MapMKMapViewListener;
 import com.izzz.iseek.map.MapOnTouchListener;
 import com.izzz.iseek.map.CorrectionOverlay;
+import com.izzz.iseek.receiver.SMSreceiver;
+import com.izzz.iseek.receiver.SMSsender;
 import com.izzz.iseek.setting.SettingActivity;
-import com.izzz.iseek.sms.SMSreceiver;
-import com.izzz.iseek.sms.SMSsender;
 import com.izzz.iseek.vars.StaticVar;
 
 
 public class BaseMapMain extends Activity {
 	
-	IseekApplication app = null;
+	public static IseekApplication app = null;
 	
 	//百度地图	
 	public static MapView mMapView = null;	
@@ -65,11 +65,16 @@ public class BaseMapMain extends Activity {
 	//测试用输出testView 
 	public static TextView logText  = null;
 	
+	//视图切换
+	public static ImageButton btnViewSelect = null; 
 	//微调button
 	public static ImageButton btnMoveUp    = null;
 	public static ImageButton btnMoveDown  = null;
 	public static ImageButton btnMoveLeft  = null;
 	public static ImageButton btnMoveRight = null;
+	
+	//用于退出时间记录
+	long lastTime = 0; 
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +93,9 @@ public class BaseMapMain extends Activity {
 		logText = (TextView)findViewById(R.id.logText);
 		baseDialog = new LogDialog(BaseMapMain.this, R.string.DialogMsgHeader, R.string.DialogTitle);
 		
+		btnViewSelect = (ImageButton)findViewById(R.id.btnViewSelect);
+		btnViewSelect.setOnClickListener(new BaseOnClickListener());
+		
 		InitCorrButton();	//初始化imagebutton变量		
 		InitBCRRegister();	//注册BroadCastReceiver IntentFilter
 		InitMap();			//百度地图初始化			
@@ -105,7 +113,6 @@ public class BaseMapMain extends Activity {
 		mainFilter.addAction(StaticVar.COM_SMS_SEND_REFRESH);
 		mainFilter.addAction(StaticVar.COM_SMS_DELIVERY_REFRESH);
 		mainFilter.addAction(StaticVar.COM_ALARM_REFRESH);
-		mainFilter.addAction(StaticVar.COM_ALARM_BACK_EXIT);
 		BaseMapMain.this.registerReceiver(mainReceiver,mainFilter);		
 	}
 	
@@ -118,8 +125,8 @@ public class BaseMapMain extends Activity {
 		mMapController = mMapView.getController();
 		
 		//打开上次保存的地点
-		latitude  = app.prefs.getString(app.prefOriginLatitude, "unset");
-		longitude = app.prefs.getString(app.prefOriginLongitude, "unset");
+		latitude  = IseekApplication.prefs.getString(IseekApplication.prefOriginLatitude, "unset");
+		longitude = IseekApplication.prefs.getString(IseekApplication.prefOriginLongitude, "unset");
 		if((latitude != "unset") &&	(longitude != "unset"))
 		{
 			//保存方式为1E6
@@ -224,7 +231,7 @@ public class BaseMapMain extends Activity {
 	private void MenuPhoneCall()
 	{
 		//调用系统打电话程序
-		String targetPhone = app.prefs.getString(app.prefTargetPhoneKey, "unset");
+		String targetPhone = IseekApplication.prefs.getString(IseekApplication.prefTargetPhoneKey, "unset");
 		if(!targetPhone.equals("unset"))
 		{
 			Intent intent=new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+targetPhone));
@@ -346,34 +353,26 @@ public class BaseMapMain extends Activity {
 		return true;
 	}
 
+	//3秒内连按两次返回退出应用
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub		
 		
-		if(keyCode == KeyEvent.KEYCODE_BACK)
-		{
-			if(StaticVar.EXIT_ENABLE)
+		if(keyCode == KeyEvent.KEYCODE_BACK)		{
+			if((System.currentTimeMillis() - lastTime) < 3000)
 			{
-				if (app.mBMapManager != null) {
-					app.mBMapManager.destroy();
-					app.mBMapManager = null;
-				}
-				System.exit(0);
-				
+				return super.onKeyDown(keyCode, event);
 			}
-			StaticVar.EXIT_ENABLE = true;
-			IseekApplication.alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-			Intent intent = new Intent(StaticVar.COM_ALARM_BACK_EXIT);
-			IseekApplication.alarmPI = PendingIntent.getBroadcast(this,0,intent,0);
-			IseekApplication.alarmManager.set(AlarmManager.RTC_WAKEUP, 
-					System.currentTimeMillis() + 5*1000, IseekApplication.alarmPI);
-			Toast.makeText(BaseMapMain.this, R.string.ToastExitWarning, Toast.LENGTH_LONG).show();
-			
+			else
+				lastTime = System.currentTimeMillis();		
+			Toast.makeText(BaseMapMain.this, R.string.ToastCorrPressFirst, Toast.LENGTH_LONG).show();
 			return false;
 		}
 			
 		return super.onKeyDown(keyCode, event);
 	}
+	
+	
 	
 	
 }

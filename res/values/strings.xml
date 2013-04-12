@@ -51,6 +51,7 @@
     <string name="ToastInvalidPhoneNumber">Invalid phone number</string>
     <string name="ToastTargetSetEmpty">Please set Target Number</string>
     <string name="ToastExitWarning">Press Back Again to Exit</string>
+    <string name="ToastCorrPressFirst">Please Select a Point First</string>
     
     <!-- logDialog中的文字 -->
     <string name="DialogTitle">iSeeking...</string>
@@ -80,6 +81,10 @@
     <string name="DialogSosMsgNO">Invalid phone number,please try again</string>
     <string name="DialogSosOk">OK</string>
     <string name="DialogSosCancel">Cancel</string>
+    
+    <!-- imageButton description -->
+    <string name="ImageViewTraffic">Traffic</string>
+    <string name="ImageViewSatellite">Satellite</string>
     
     <!-- 其他 -->
     <string name="hello_world">Hello world!</string>
