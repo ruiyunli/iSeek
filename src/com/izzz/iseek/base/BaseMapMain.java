@@ -3,7 +3,6 @@ package com.izzz.iseek.base;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -13,6 +12,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,9 +29,9 @@ import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.R;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.dialog.LogDialog;
+import com.izzz.iseek.map.CorrectionOverlay;
 import com.izzz.iseek.map.MapMKMapViewListener;
 import com.izzz.iseek.map.MapOnTouchListener;
-import com.izzz.iseek.map.CorrectionOverlay;
 import com.izzz.iseek.receiver.SMSreceiver;
 import com.izzz.iseek.receiver.SMSsender;
 import com.izzz.iseek.setting.SettingActivity;
@@ -86,8 +87,14 @@ public class BaseMapMain extends Activity {
             app.mBMapManager.init(StaticVar.BaiduMapKey, new IseekApplication.MyGeneralListener());
         }
 		//注意：请在试用setContentView前初始化BMapManager对象，否则会报错
-		
+        
+        //去掉标题栏
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //去掉状态栏
+//        getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN , WindowManager.LayoutParams. FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_main);
+		
+		
 		
 		mMapView=(MapView)findViewById(R.id.bmapsView);		
 		logText = (TextView)findViewById(R.id.logText);
@@ -141,7 +148,7 @@ public class BaseMapMain extends Activity {
         mMapView.setLongClickable(true);
         mMapController.enableClick(true);        
         mMapController.setZoom(15);        
-        mMapView.displayZoomControls(true);
+        mMapView.setBuiltInZoomControls(true);
 //      mMapView.setTraffic(true);
         mMapView.setSatellite(true);
         mMapView.setDoubleClickZooming(true);
@@ -365,7 +372,7 @@ public class BaseMapMain extends Activity {
 			}
 			else
 				lastTime = System.currentTimeMillis();		
-			Toast.makeText(BaseMapMain.this, R.string.ToastCorrPressFirst, Toast.LENGTH_LONG).show();
+			Toast.makeText(BaseMapMain.this, R.string.ToastExitWarning, Toast.LENGTH_LONG).show();
 			return false;
 		}
 			
