@@ -85,6 +85,9 @@ public class BaseMapMain extends Activity {
 	
 	//用于退出时间记录
 	long lastTime = 0; 
+	
+	//发送短信接口
+	SMSsender baseSMSsender = null;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,22 +100,12 @@ public class BaseMapMain extends Activity {
         }
 		//注意：请在试用setContentView前初始化BMapManager对象，否则会报错
         
-        //去掉标题栏
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //去掉状态栏
-//        getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN , WindowManager.LayoutParams. FLAG_FULLSCREEN);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_main);		
 		
-		
-		
-		mMapView=(MapView)findViewById(R.id.bmapsView);		
 		logText = (TextView)findViewById(R.id.logText);
+		baseSMSsender = new SMSsender(BaseMapMain.this);
 		baseDialog = new LogDialog(BaseMapMain.this, R.string.DialogMsgHeader, R.string.DialogTitle);
 		
-		btnViewSelect = (ImageButton)findViewById(R.id.btnViewSelect);
-		btnViewSelect.setOnClickListener(new BaseOnClickListener());
-		
-			
 		InitBCRRegister();	//注册BroadCastReceiver IntentFilter
 		InitMap();			//百度地图初始化		
 		InitCorrButton();	//初始化imagebutton变量	
@@ -122,7 +115,7 @@ public class BaseMapMain extends Activity {
 			StaticVar.logPrint('D', "init success");
 	}	
 	
-	//注册BroadcastReceiver,用于接收短信及回执
+	//注册BroadcastReceiver,用于接收短信、回执及闹钟
 	private void InitBCRRegister()
 	{		
 		mainReceiver = new SMSreceiver();
@@ -140,6 +133,8 @@ public class BaseMapMain extends Activity {
 		String latitude  = null;
 		String longitude = null;
 		GeoPoint centerpt = null;
+		
+		mMapView=(MapView)findViewById(R.id.bmapsView);	
 		mMapController = mMapView.getController();
 		
 		//打开上次保存的地点
@@ -160,8 +155,8 @@ public class BaseMapMain extends Activity {
         mMapController.enableClick(true);        
         mMapController.setZoom(15);        
 //        mMapView.setBuiltInZoomControls(true);
-//      mMapView.setTraffic(true);
-        mMapView.setSatellite(true);
+        mMapView.setTraffic(true);
+//        mMapView.setSatellite(true);
         mMapView.setDoubleClickZooming(true);
         
         //MyLocationOverlay层
@@ -178,6 +173,10 @@ public class BaseMapMain extends Activity {
         mMapView.regMapViewListener(IseekApplication.getInstance().mBMapManager, new MapMKMapViewListener(BaseMapMain.this));
         //onTouchListener响应函数
         mMapView.setOnTouchListener(new MapOnTouchListener());
+        
+        //视图切换
+        btnViewSelect = (ImageButton)findViewById(R.id.btnViewSelect);
+		btnViewSelect.setOnClickListener(new BaseOnClickListener());
 	}
 	
 	//校准微调按钮初始化
@@ -237,7 +236,7 @@ public class BaseMapMain extends Activity {
 	private void MenuRefresh()
 	{
 		//发送gps位置请求短信
-		if(SMSsender.SendMessage(BaseMapMain.this, null, StaticVar.SMS_GEO_REQU, StaticVar.COM_SMS_SEND_REFRESH, 
+		if(baseSMSsender.SendMessage( null, StaticVar.SMS_GEO_REQU, StaticVar.COM_SMS_SEND_REFRESH, 
 				StaticVar.COM_SMS_DELIVERY_REFRESH))
 		{
 
@@ -336,6 +335,13 @@ public class BaseMapMain extends Activity {
 		}		
 	}
 	
+	/*
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
@@ -371,7 +377,7 @@ public class BaseMapMain extends Activity {
 		
 		return super.onOptionsItemSelected(item);
 	}
-			
+			*/
 	//百度地图重载
 	@Override
 	protected void onDestroy() {
@@ -409,12 +415,7 @@ public class BaseMapMain extends Activity {
 	        super.onResume();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
+	
 
 	//3秒内连按两次返回退出应用
 	@Override

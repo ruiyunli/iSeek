@@ -56,6 +56,7 @@
     <string name="ToastSosSetOK">SOS number set OK!</string>
     <string name="ToastInvalidPhoneNumber">Invalid phone number</string>
     <string name="ToastTargetSetEmpty">Please set Target Number</string>
+    <string name="ToastSosSetEmpty">Please set Target Number</string>
     <string name="ToastExitWarning">Press Back Again to Exit</string>
     <string name="ToastCorrPressFirst">Please Select a Point First</string>
     
@@ -92,8 +93,9 @@
     <string name="BtnTraffic">Traffic</string>
     <string name="BtnSatellite">Satellite</string>
     <string name="BtnMenuCall">Call</string>
-    <string name="BtnMenuSettings">Call</string>
+    <string name="BtnMenuSettings">Settings</string>
     <string name="BtnMenuSeekGps">Seek GPS</string>
+    
     
     <!-- 关于页面 -->
     <string name="AboutCopyRight0">iSeek for Android V1.0</string>
@@ -103,6 +105,8 @@
     
     <!-- 其他 -->
     <string name="hello_world">Hello world!</string>
+    <string name="OK">OK</string>
+    <string name="CANCLE">CANCLE</string>
     
 
 </resources>

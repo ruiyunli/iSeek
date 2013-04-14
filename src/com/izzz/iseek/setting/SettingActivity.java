@@ -52,6 +52,9 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	
 	public static LogDialog settingDialog = null;
 	
+	//发送短信接口
+	private SMSsender settingSMSsender = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -64,6 +67,8 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		
 		settingDialog = new LogDialog(SettingActivity.this, R.string.DialogMsgHeader, R.string.DialogTitle);
 		settingDialog.enable();
+		
+		settingSMSsender = new SMSsender(SettingActivity.this);
 
 		Initprefs();	//初始化prefs
 		InitBCR();		//注册广播
@@ -136,47 +141,39 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	private boolean ChangeSosPhone(String phoneNum)
 	{
 		//判断符合手机号码，则打开dialog，确认发送短信			
-		if(isMobileNumber(phoneNum))
-		{	
-			//未设置targetPhone的时候不发送设置信号
-			if(isMobileNumber(IseekApplication.prefs.getString(IseekApplication.prefTargetPhoneKey, "unset")))
-			{
-				//给gps发送短信
-				SMSsender.SendMessage(SettingActivity.this, null, StaticVar.SMS_SET_SOS + phoneNum, 
-						StaticVar.COM_SMS_SEND_SOS_GPS, StaticVar.COM_SMS_DELIVERY_SOS_GPS);
-				//给关联sos号码发送短信
-				SMSsender.SendMessage(SettingActivity.this, phoneNum, prefTargetPhone.getSummary() + StaticVar.SMS_SET_SOS_TAR , 
-						StaticVar.COM_SMS_SEND_SOS_TAR, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
-			
-				prefSosNumber.setSummary((CharSequence) phoneNum);
-				
-				settingDialog.proMessage = (String) getResources().getText(R.string.DialogMsgHeader);
-				settingDialog.proLogDialog.setMessage(settingDialog.proMessage);
-				settingDialog.showLog();
-				
-				IseekApplication.alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-				Intent intent = new Intent(StaticVar.COM_ALARM_SOS_SET);
-				IseekApplication.alarmPI = PendingIntent.getBroadcast(this,0,intent,0);
-				IseekApplication.alarmManager.set(AlarmManager.RTC_WAKEUP, 
-						System.currentTimeMillis() + StaticVar.ALARM_TIME, IseekApplication.alarmPI);
-				
-				if(StaticVar.DEBUG_ENABLE)
-					StaticVar.logPrint('D', "alarm for sos set start ok!");
-				
-				return true;
-			}
-			else
-			{
-				//提示输入target number
-				Toast.makeText(this, this.getResources().getText(R.string.ToastTargetSetEmpty), Toast.LENGTH_LONG).show();
-				return false;
-			}			
-		}
-		else
+		if(!isMobileNumber(phoneNum))
 		{
 			Toast.makeText(SettingActivity.this, R.string.ToastInvalidPhoneNumber, Toast.LENGTH_LONG).show();
 			return false;
 		}
+		
+		//给gps发送短信
+		if(settingSMSsender.SendMessage(null, StaticVar.SMS_SET_SOS + phoneNum, 
+				StaticVar.COM_SMS_SEND_SOS_GPS, StaticVar.COM_SMS_DELIVERY_SOS_GPS))
+		{
+			//给关联sos号码发送短信
+			settingSMSsender.SendMessage(phoneNum, prefTargetPhone.getSummary() + StaticVar.SMS_SET_SOS_TAR , 
+					StaticVar.COM_SMS_SEND_SOS_TAR, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
+		
+			prefSosNumber.setSummary((CharSequence) phoneNum);
+			
+			settingDialog.proMessage = (String) getResources().getText(R.string.DialogMsgHeader);
+			settingDialog.proLogDialog.setMessage(settingDialog.proMessage);
+			settingDialog.showLog();
+			
+			IseekApplication.alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+			Intent intent = new Intent(StaticVar.COM_ALARM_SOS_SET);
+			IseekApplication.alarmPI = PendingIntent.getBroadcast(this,0,intent,0);
+			IseekApplication.alarmManager.set(AlarmManager.RTC_WAKEUP, 
+					System.currentTimeMillis() + StaticVar.ALARM_TIME, IseekApplication.alarmPI);
+			
+			if(StaticVar.DEBUG_ENABLE)
+				StaticVar.logPrint('D', "alarm for sos set start ok!");
+			
+			return true;
+		}		
+		return false;
+		
 	}
 	
 	//值改变响应函数
@@ -229,7 +226,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	
 	//判断是否为手机号码
 	public boolean isMobileNumber(String mobiles){
-		  Pattern p=Pattern.compile("^(((13[0-9])|18[0,5-9]|15[0-3,5-9])\\d{8})|(10086)|(10001)$");
+		  Pattern p=Pattern.compile("^(((13[0-9])|18[0,5-9]|15[0-3,5-9])\\d{8})|(10086)|(10001)|(5555)|(5556)$");
 		  Matcher m=p.matcher(mobiles);
 		  if(StaticVar.DEBUG_ENABLE)
 			  StaticVar.logPrint('D', "match result:" + m.matches());

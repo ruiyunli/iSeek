@@ -11,8 +11,7 @@
         android:id="@+id/logText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="log output"
-        />
+        android:text="log output" />
     
     <com.baidu.mapapi.map.MapView
         android:id="@+id/bmapsView"
@@ -25,6 +24,7 @@
 		android:id="@+id/LinearLayoutMenu"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:orientation="horizontal"
 		android:layout_alignParentBottom="true" >
         <ImageButton 
             android:id="@+id/btnMenuCall"
@@ -33,8 +33,7 @@
 			android:layout_height="fill_parent"
 			android:src="@android:drawable/ic_menu_call"
 			android:background="@drawable/btn_menu"
-			android:contentDescription="@string/BtnMenuCall"
-            />
+			android:contentDescription="@string/BtnMenuCall" />
         <Button 
             android:id="@+id/btnMenuRefresh"
 			android:layout_weight="2"
@@ -42,8 +41,7 @@
 			android:layout_height="fill_parent"
 			android:textColor="@color/white"
 			android:text="@string/BtnMenuSeekGps"
-			android:background="@drawable/btn_menu"
-            />
+			android:background="@drawable/btn_menu" />
         <ImageButton 
             android:id="@+id/btnMenuSettings"
 			android:layout_weight="1"
@@ -51,13 +49,13 @@
 			android:layout_height="fill_parent"
 			android:src="@android:drawable/ic_menu_preferences"
 			android:background="@drawable/btn_menu"
-			android:contentDescription="@string/BtnMenuSettings"
-            />
+			android:contentDescription="@string/BtnMenuSettings" />
     </LinearLayout>
 
     <LinearLayout 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_alignTop="@id/bmapsView" >
         <Button 
             android:id="@+id/btnCorrCancle"
@@ -66,9 +64,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/btn_menu"
             android:textColor="@color/white"
-          	android:text="CANCLE"
-          	android:visibility="gone"
-            />
+          	android:text="@string/CANCLE"
+          	android:visibility="gone" />
         <Button 
             android:id="@+id/btnCorrOk"
             android:layout_weight="1"
@@ -76,9 +73,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/btn_menu"
             android:textColor="@color/white"
-            android:text="OK"
-            android:visibility="gone"
-            />
+            android:text="@string/OK"
+            android:visibility="gone" />
     </LinearLayout>
     
     <ImageButton 
@@ -90,47 +86,44 @@
         android:layout_alignRight="@id/bmapsView"
 		android:layout_alignTop="@id/bmapsView"
 		android:layout_marginRight="40dp"
-		android:layout_marginTop="40dp"
-        />
+		android:layout_marginTop="40dp" />
 
  
-	    <ImageButton
-		    android:id="@+id/btnMoveRight"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"	    
-		    android:layout_alignParentRight="true"
-		    android:layout_alignParentBottom="true"
-		    android:layout_marginBottom="100dp"
-	    	android:layout_marginRight="20dp"		    
-		    android:background="@drawable/btn_moveright"
-		    android:visibility="gone" />
+    <ImageButton
+	    android:id="@+id/btnMoveRight"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"	    
+	    android:layout_alignParentRight="true"
+	    android:layout_alignParentBottom="true"
+	    android:layout_marginBottom="100dp"
+    	android:layout_marginRight="20dp"		    
+	    android:background="@drawable/btn_moveright"
+	    android:visibility="gone" />
+
+	<ImageButton
+	    android:id="@+id/btnMoveUp"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@id/btnMoveRight"
+	    android:layout_toLeftOf="@id/btnMoveRight"
+	    android:background="@drawable/btn_moveup" 
+	    android:visibility="gone" />
 	
-		<ImageButton
-		    android:id="@+id/btnMoveUp"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_above="@id/btnMoveRight"
-		    android:layout_toLeftOf="@id/btnMoveRight"
-		    android:background="@drawable/btn_moveup" 
-		    android:visibility="gone" />
-		
-		<ImageButton
-		    android:id="@+id/btnMoveLeft"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_alignTop="@id/btnMoveRight"
-		    android:layout_toLeftOf="@id/btnMoveUp"
-		    android:background="@drawable/btn_moveleft" 
-		    android:visibility="gone" />
-		
-		<ImageButton
-		    android:id="@+id/btnMoveDown"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_below="@id/btnMoveLeft"
-		    android:layout_toLeftOf="@id/btnMoveRight"
-		    android:background="@drawable/btn_movedown" 
-		    android:visibility="gone" />
+	<ImageButton
+	    android:id="@+id/btnMoveLeft"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignTop="@id/btnMoveRight"
+	    android:layout_toLeftOf="@id/btnMoveUp"
+	    android:background="@drawable/btn_moveleft" 
+	    android:visibility="gone" />
 	
-	
+	<ImageButton
+	    android:id="@+id/btnMoveDown"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/btnMoveLeft"
+	    android:layout_toLeftOf="@id/btnMoveRight"
+	    android:background="@drawable/btn_movedown" 
+	    android:visibility="gone" />
 </RelativeLayout>

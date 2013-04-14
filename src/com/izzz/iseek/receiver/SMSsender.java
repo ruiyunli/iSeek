@@ -6,40 +6,44 @@ import android.content.Intent;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
+import com.example.iseek.R;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.vars.StaticVar;
 
 public class SMSsender {
 
+	private Context mContext = null;
+	
+	public SMSsender(Context mContext) {
+		this.mContext = mContext;
+	}
+
 	/**
 	 * 
-	 * @param context			:dialog所在的context
-	 * @param destNumber		:目标手机号码，null表示发送到targetPhone
-	 * @param mesContext		:短信内容
-	 * @param sentIntentStr		:初始化sent Intent的字符串
-	 * @param deliveryIntentStr	:初始化delivery Intent的字符串
-	 * @return					try中发送成功，返回true，否则返回false
+	 * @param destNumberId			目标手机号码，设为null时，发送到TargetPhone
+	 * @param mesContext			短信内容
+	 * @param sentIntentStr			发送intent
+	 * @param deliveryIntentStr		接收回执intent
+	 * @return						发送成功返回true，否则返回false
 	 */
-	public static boolean SendMessage(Context context, String destNumber, String mesContext, String sentIntentStr , String deliveryIntentStr)
-	{	
-		//获取手机号码	
-		String strDestAddress = null;
-		
-		if(destNumber != null)
+	public boolean SendMessage(String destNumber, String mesContext, String sentIntentStr , String deliveryIntentStr)
+	{
+		if(destNumber == null)
 		{
-			strDestAddress = destNumber;
-		}
-		else
-		{
-			strDestAddress = IseekApplication.getInstance().prefs.getString(IseekApplication.getInstance().prefTargetPhoneKey, "unset");
-	
-			if(strDestAddress.equals("unset"))
-			{				
-				Toast.makeText(context, "Please Set Phone Number" , Toast.LENGTH_SHORT).show();				
+			destNumber = IseekApplication.prefs.getString(IseekApplication.prefTargetPhoneKey, "unset");
+			if(destNumber.equals("unset"))
+			{
+				Toast.makeText(mContext, R.string.ToastTargetSetEmpty,	Toast.LENGTH_LONG).show();
 				return false;
 			}
 		}
 		
+		return SendMessage(mContext, destNumber, mesContext, sentIntentStr, deliveryIntentStr);
+	}
+
+
+	private boolean SendMessage(Context context, String destNumber, String mesContext, String sentIntentStr , String deliveryIntentStr)
+	{	
 		//默认指令，gps回传经度和纬度
 	    String strMessage = mesContext; 		  
 	    SmsManager smsManager = SmsManager.getDefault();		     
@@ -53,11 +57,11 @@ public class SMSsender {
 	    	if(deliveryIntentStr != null)
 	    		mPIdelivery = PendingIntent.getBroadcast(context, 0, new Intent(deliveryIntentStr), 0);
 	    	
-		    smsManager.sendTextMessage(strDestAddress, null, strMessage, mPIsend, mPIdelivery);
+		    smsManager.sendTextMessage(destNumber, null, strMessage, mPIsend, mPIdelivery);
 		    
 		    if(StaticVar.DEBUG_ENABLE)
 		    {
-		    	StaticVar.logPrint('D', "number:" + strDestAddress + " context:" + strMessage);
+		    	StaticVar.logPrint('D', "number:" + destNumber + " context:" + strMessage);
 		    	StaticVar.logPrint('D', "send message success");
 		    }
 		    return true;
