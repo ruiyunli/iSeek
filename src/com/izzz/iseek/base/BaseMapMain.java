@@ -12,8 +12,10 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,6 +75,13 @@ public class BaseMapMain extends Activity {
 	public static ImageButton btnMoveDown  = null;
 	public static ImageButton btnMoveLeft  = null;
 	public static ImageButton btnMoveRight = null;
+	//菜单
+	private ImageButton btnMenuCall     = null;
+	private Button btnMenuRefresh  = null;
+	private ImageButton btnMenuSettings = null;
+	//校准的两个按钮
+	public static Button btnCorrOk = null;
+	public static Button btnCorrCancle = null;
 	
 	//用于退出时间记录
 	long lastTime = 0; 
@@ -103,9 +112,11 @@ public class BaseMapMain extends Activity {
 		btnViewSelect = (ImageButton)findViewById(R.id.btnViewSelect);
 		btnViewSelect.setOnClickListener(new BaseOnClickListener());
 		
-		InitCorrButton();	//初始化imagebutton变量		
+			
 		InitBCRRegister();	//注册BroadCastReceiver IntentFilter
-		InitMap();			//百度地图初始化			
+		InitMap();			//百度地图初始化		
+		InitCorrButton();	//初始化imagebutton变量	
+		InitMenuView();		//初始化自定义菜单
 //		InitDialog();
 		if(StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', "init success");
@@ -132,8 +143,8 @@ public class BaseMapMain extends Activity {
 		mMapController = mMapView.getController();
 		
 		//打开上次保存的地点
-		latitude  = IseekApplication.prefs.getString(IseekApplication.prefOriginLatitude, "unset");
-		longitude = IseekApplication.prefs.getString(IseekApplication.prefOriginLongitude, "unset");
+		latitude  = IseekApplication.prefs.getString(IseekApplication.prefOriginLatitudeKey, "unset");
+		longitude = IseekApplication.prefs.getString(IseekApplication.prefOriginLongitudeKey, "unset");
 		if((latitude != "unset") &&	(longitude != "unset"))
 		{
 			//保存方式为1E6
@@ -148,7 +159,7 @@ public class BaseMapMain extends Activity {
         mMapView.setLongClickable(true);
         mMapController.enableClick(true);        
         mMapController.setZoom(15);        
-        mMapView.setBuiltInZoomControls(true);
+//        mMapView.setBuiltInZoomControls(true);
 //      mMapView.setTraffic(true);
         mMapView.setSatellite(true);
         mMapView.setDoubleClickZooming(true);
@@ -173,22 +184,33 @@ public class BaseMapMain extends Activity {
 	public void InitCorrButton()
 	{
 		//获取
+		btnCorrOk	 = (Button)findViewById(R.id.btnCorrOk);
+		btnCorrCancle = (Button)findViewById(R.id.btnCorrCancle);
 		btnMoveUp    = (ImageButton)findViewById(R.id.btnMoveUp);
 		btnMoveDown  = (ImageButton)findViewById(R.id.btnMoveDown);
 		btnMoveLeft  = (ImageButton)findViewById(R.id.btnMoveLeft);
 		btnMoveRight = (ImageButton)findViewById(R.id.btnMoveRight);
 		//响应函数
+		btnCorrCancle.setOnClickListener(new BaseOnClickListener());
 		btnMoveUp.setOnClickListener(new BaseOnClickListener());
 		btnMoveDown.setOnClickListener(new BaseOnClickListener());
 		btnMoveLeft.setOnClickListener(new BaseOnClickListener());
 		btnMoveRight.setOnClickListener(new BaseOnClickListener());
-		//取消可见
-		btnMoveUp.setVisibility(View.INVISIBLE);
-		btnMoveDown.setVisibility(View.INVISIBLE);
-		btnMoveLeft.setVisibility(View.INVISIBLE);
-		btnMoveRight.setVisibility(View.INVISIBLE);		
+		
+		
+		CorrSetBtnGone();
 	}
 	
+	private void InitMenuView()
+	{
+		btnMenuCall     = (ImageButton)findViewById(R.id.btnMenuCall);
+		btnMenuRefresh  = (Button)findViewById(R.id.btnMenuRefresh);
+		btnMenuSettings = (ImageButton)findViewById(R.id.btnMenuSettings);
+		
+		btnMenuCall.setOnClickListener(new MenuViewOnClickListner());
+		btnMenuRefresh.setOnClickListener(new MenuViewOnClickListner());
+		btnMenuSettings.setOnClickListener(new MenuViewOnClickListner());
+	}
 	//设置新的坐标
 	public static void setNewPosition(GeoPoint newPoint)
 	{
@@ -244,6 +266,10 @@ public class BaseMapMain extends Activity {
 			Intent intent=new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+targetPhone));
 			startActivity(intent);
 		}
+		else
+		{
+			Toast.makeText(BaseMapMain.this, R.string.ToastTargetSetEmpty, Toast.LENGTH_LONG).show();
+		}
 	}
 	
 	private void MenuCorr(MenuItem item)
@@ -252,24 +278,33 @@ public class BaseMapMain extends Activity {
 		if(StaticVar.CORRECTION_ENABLE)
 		{
 			item.setTitle("UnCorration");
-			
+			/*
 			btnMoveUp.setVisibility(View.VISIBLE);
 			btnMoveDown.setVisibility(View.VISIBLE);
 			btnMoveLeft.setVisibility(View.VISIBLE);
 			btnMoveRight.setVisibility(View.VISIBLE);
+			*/
+			CorrSetBtnVisible();
 		}
 		else
 		{
+			
 			item.setTitle("Corration");
+			/*
 			btnMoveUp.setVisibility(View.INVISIBLE);
 			btnMoveDown.setVisibility(View.INVISIBLE);
 			btnMoveLeft.setVisibility(View.INVISIBLE);
 			btnMoveRight.setVisibility(View.INVISIBLE);
+			*/
+//			CorrSetBtnGone();
 			
 			//去掉校准层
+			/*
 			mMapView.getOverlays().remove(correctionOverlay);
 			mMapView.refresh();
 			StaticVar.ADD_LAYER_FLAG = false;
+			*/
+			CorrExit();
 		}
 	}
 	
@@ -278,6 +313,27 @@ public class BaseMapMain extends Activity {
 		Intent intent = new Intent();
 		intent.setClass(BaseMapMain.this, SettingActivity.class);
 		startActivity(intent);
+	}
+	
+	
+	class MenuViewOnClickListner implements OnClickListener{
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			if(v.getId() == btnMenuCall.getId())
+			{
+				MenuPhoneCall();
+			}
+			else if(v.getId() == btnMenuRefresh.getId())
+			{
+				MenuRefresh();
+			}
+			else if(v.getId() == btnMenuSettings.getId())
+			{
+				MenuSettings();
+			}
+		}		
 	}
 	
 	@Override
@@ -379,7 +435,33 @@ public class BaseMapMain extends Activity {
 		return super.onKeyDown(keyCode, event);
 	}
 	
+	public  static void CorrSetBtnVisible()
+	{
+		btnCorrCancle.setVisibility(View.VISIBLE);
+		btnCorrOk.setVisibility(View.VISIBLE);
+		btnMoveUp.setVisibility(View.VISIBLE);
+		btnMoveDown.setVisibility(View.VISIBLE);
+		btnMoveLeft.setVisibility(View.VISIBLE);
+		btnMoveRight.setVisibility(View.VISIBLE);
+	}
 	
-	
-	
+	public  static void CorrSetBtnGone()
+	{
+		btnCorrCancle.setVisibility(View.GONE);
+		btnCorrOk.setVisibility(View.GONE);
+		btnMoveUp.setVisibility(View.GONE);
+		btnMoveDown.setVisibility(View.GONE);
+		btnMoveLeft.setVisibility(View.GONE);
+		btnMoveRight.setVisibility(View.GONE);
+	}
+
+	public static void CorrExit()
+	{
+		CorrSetBtnGone();
+		//去掉校准层
+		mMapView.getOverlays().remove(correctionOverlay);
+		mMapView.refresh();
+		StaticVar.ADD_LAYER_FLAG = false;
+		StaticVar.CORRECTION_ENABLE = false;
+	}
 }

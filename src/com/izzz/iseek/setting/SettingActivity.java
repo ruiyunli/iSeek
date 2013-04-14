@@ -6,6 +6,7 @@ import com.example.iseek.R;
 import com.example.iseek.R.string;
 import com.example.iseek.R.xml;
 import com.izzz.iseek.app.IseekApplication;
+import com.izzz.iseek.base.AboutActivity;
 import com.izzz.iseek.base.BaseMapMain;
 import com.izzz.iseek.dialog.LogDialog;
 import com.izzz.iseek.receiver.SMSreceiver;
@@ -41,9 +42,10 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	IseekApplication app = null;
 	
 	//声明设置页面的控件
-	EditTextPreference prefTargetPhone = null;
-	EditTextPreference prefSosNumber   = null;
-	PreferenceScreen   prefAbout       = null;	
+	EditTextPreference prefTargetPhone 	= null;
+	EditTextPreference prefSosNumber   	= null;
+	PreferenceScreen   prefCorrection 	= null;
+	PreferenceScreen   prefAbout       	= null;	
 	
 	SMSreceiver setReceiver = null;
 	IntentFilter setFilter  = null;
@@ -70,18 +72,28 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	private void Initprefs()
 	{
 		//获取控件
-		prefTargetPhone = (EditTextPreference)findPreference(app.prefTargetPhoneKey);
-		prefSosNumber   = (EditTextPreference)findPreference(app.prefSosNumberKey);		
-		prefAbout       = (PreferenceScreen)findPreference(app.prefAboutKey);
+		prefTargetPhone = (EditTextPreference)findPreference(IseekApplication.prefTargetPhoneKey);
+		prefSosNumber   = (EditTextPreference)findPreference(IseekApplication.prefSosNumberKey);
+		prefCorrection	= (PreferenceScreen)findPreference(IseekApplication.prefCorrKey);
+		prefAbout       = (PreferenceScreen)findPreference(IseekApplication.prefAboutKey);
 		
 		//绑定监听器
 		prefTargetPhone.setOnPreferenceChangeListener(this);
 		prefSosNumber.setOnPreferenceChangeListener(this);
+		prefCorrection.setOnPreferenceClickListener(this);
 		prefAbout.setOnPreferenceClickListener(this);
 		
-		prefTargetPhone.setSummary(app.prefs.getString(app.prefTargetPhoneKey, 
+		//有问题。。。。。
+		
+		
+		
+		
+		
+		
+		
+		prefTargetPhone.setSummary(IseekApplication.prefs.getString(IseekApplication.prefTargetPhoneKey, 
 				(String) this.getResources().getText(R.string.set_targetPhone_summary)));
-		prefSosNumber.setSummary(app.prefs.getString(app.prefSosNumberKey, 
+		prefSosNumber.setSummary(IseekApplication.prefs.getString(IseekApplication.prefSosNumberKey, 
 				(String) this.getResources().getText(R.string.set_sosNumber_summary)));
 				
 	}
@@ -127,7 +139,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		if(isMobileNumber(phoneNum))
 		{	
 			//未设置targetPhone的时候不发送设置信号
-			if(isMobileNumber(app.prefs.getString(app.prefTargetPhoneKey, "unset")))
+			if(isMobileNumber(IseekApplication.prefs.getString(IseekApplication.prefTargetPhoneKey, "unset")))
 			{
 				//给gps发送短信
 				SMSsender.SendMessage(SettingActivity.this, null, StaticVar.SMS_SET_SOS + phoneNum, 
@@ -176,12 +188,12 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			StaticVar.logPrint('D', "Change--key:" + preference.getKey() + "--newValue:" + newValue);
 			
 		//TargetPhone设置
-		if(preference.getKey() == app.prefTargetPhoneKey)
+		if(preference.getKey() == IseekApplication.prefTargetPhoneKey)
 		{
 			return ChangeTargetPhone((String) newValue);
 		}
 		//SOSphone设置
-		else if(preference.getKey() == app.prefSosNumberKey)
+		else if(preference.getKey() == IseekApplication.prefSosNumberKey)
 		{
 			return ChangeSosPhone((String)newValue);		
 		}
@@ -193,9 +205,26 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	public boolean onPreferenceClick(Preference preference) {
 		// TODO Auto-generated method stub
 		if(StaticVar.DEBUG_ENABLE)
-			StaticVar.logPrint('D', "Click--key:" + preference.getKey());			
+			StaticVar.logPrint('D', "Click--key:" + preference.getKey());
+
+		if(preference.getKey() == IseekApplication.prefAboutKey)
+		{
+			Intent intent = new Intent();
+			intent.setClass(SettingActivity.this, AboutActivity.class);
+			startActivity(intent);
+			return true;
+		}
+		if(preference.getKey() == IseekApplication.prefCorrKey)
+		{
+			StaticVar.CORRECTION_ENABLE = true;
+			BaseMapMain.CorrSetBtnVisible();
+			if(StaticVar.DEBUG_ENABLE)
+				StaticVar.logPrint('D', "Correction started!");
+			finish();
+			return true;
+		}
 		
-		return true;
+		return false;
 	}	
 	
 	//判断是否为手机号码

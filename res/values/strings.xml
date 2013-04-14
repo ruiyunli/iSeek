@@ -14,7 +14,7 @@
     
     <!-- 设置页面中的文字 -->
     <!-- Category privateInfo -->
-    <string name="set_privateInfo_cate_title">PrivateInfo</string> 
+    <string name="set_privateInfo_cate_title">Private Info</string> 
        
     <string name="set_targetPhone_key">targetPhone</string>
     <string name="set_targetPhone_title">Tatget Phone Number</string>
@@ -32,6 +32,12 @@
     <string name="set_saveall_title">Save All</string>
     <string name="set_saveall_summary">save all you settings</string>
     
+    <!-- Category Tool -->
+    <string name="set_tool_cate_title">Tool</string>
+    <string name="set_corr_key">tool</string>
+    <string name="set_corr_title">Correction</string>
+    <string name="set_corr_summary">Correct summary</string>
+    
     <!-- Category About -->
     <string name="set_about_cate_title">About</string>
     <string name="set_about_key">about</string>
@@ -42,7 +48,7 @@
     <string name="set_origin_latitude_key">originLatitude</string>
     <string name="set_origin_longitude_key">originLongitude</string>
     
-    <!-- String in toast -->
+    <!-- String in Toast -->
     <string name="ToastErrorInternet">Internet Error</string>
     <string name="ToastErrorSearchData">Search Data Error</string>
     <string name="ToastErrorMapKey">Please Input Valid Map Key</string>    
@@ -82,11 +88,21 @@
     <string name="DialogSosOk">OK</string>
     <string name="DialogSosCancel">Cancel</string>
     
-    <!-- imageButton description -->
-    <string name="ImageViewTraffic">Traffic</string>
-    <string name="ImageViewSatellite">Satellite</string>
+    <!-- imageButton ContextDescription -->
+    <string name="BtnTraffic">Traffic</string>
+    <string name="BtnSatellite">Satellite</string>
+    <string name="BtnMenuCall">Call</string>
+    <string name="BtnMenuSettings">Call</string>
+    <string name="BtnMenuSeekGps">Seek GPS</string>
+    
+    <!-- 关于页面 -->
+    <string name="AboutCopyRight0">iSeek for Android V1.0</string>
+    <string name="AboutCopyRight1">西安电子科技大学</string>
+    <string name="AboutCopyRight2">版权所有©CopyRight，2013-2014</string>
+    <string name="AboutCopyRight3">保留所有权利</string>
     
     <!-- 其他 -->
     <string name="hello_world">Hello world!</string>
+    
 
 </resources>

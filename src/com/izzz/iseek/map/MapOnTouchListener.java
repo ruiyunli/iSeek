@@ -14,10 +14,13 @@ public class MapOnTouchListener implements OnTouchListener{
 
 	private GeoPoint corrPoint;
 	private OverlayItem corrItem;
+	
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		// TODO Auto-generated method stub
 		// 获得屏幕点击的位置
+		
+		
 		if(StaticVar.CORRECTION_ENABLE)
 		{
 			
@@ -54,7 +57,13 @@ public class MapOnTouchListener implements OnTouchListener{
         		
                 break;
             }
+            
+			
+			if(StaticVar.DEBUG_ENABLE)
+				StaticVar.logPrint('D', "keyDown");
+		
 		}
+		
 		return false;
 	}
 

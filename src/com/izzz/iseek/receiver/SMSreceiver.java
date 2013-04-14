@@ -205,8 +205,8 @@ public class SMSreceiver extends BroadcastReceiver
 			LatitudeInt = (int)(Double.parseDouble(Latitude) * 1E6);
 			LongitudeInt = (int)(Double.parseDouble(Longitude) * 1E6);
 			
-			IseekApplication.prefsEditor.putString(IseekApplication.prefOriginLatitude, Integer.toString(LatitudeInt)).commit();
-			IseekApplication.prefsEditor.putString(IseekApplication.prefOriginLongitude, Integer.toString(LongitudeInt)).commit();
+			IseekApplication.prefsEditor.putString(IseekApplication.prefOriginLatitudeKey, Integer.toString(LatitudeInt)).commit();
+			IseekApplication.prefsEditor.putString(IseekApplication.prefOriginLongitudeKey, Integer.toString(LongitudeInt)).commit();
 			
 			//符合要求，则取消闹钟关闭logDialog
 			IseekApplication.alarmManager.cancel(IseekApplication.alarmPI);

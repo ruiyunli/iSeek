@@ -25,6 +25,8 @@ public class BaseOnClickListener implements OnClickListener{
 			MoveCorration(v, StaticVar.MOVE_CORR_RIGHT);
 		else if ( v.getId() == BaseMapMain.btnViewSelect.getId())
 			ChangeView();
+		else if(v.getId() == BaseMapMain.btnCorrCancle.getId())
+			BaseMapMain.CorrExit();
 		
 	}
 	
@@ -66,7 +68,7 @@ public class BaseOnClickListener implements OnClickListener{
 	private void ChangeView()
 	{
 		if(BaseMapMain.btnViewSelect.getContentDescription().equals
-				(IseekApplication.getInstance().getResources().getString(R.string.ImageViewSatellite)))
+				(IseekApplication.getInstance().getResources().getString(R.string.BtnSatellite)))
 		{
 			if(StaticVar.DEBUG_ENABLE)
 				StaticVar.logPrint('D', "satellite view to traffic view");
@@ -75,7 +77,7 @@ public class BaseOnClickListener implements OnClickListener{
 			BaseMapMain.mMapView.refresh();
 			BaseMapMain.btnViewSelect.setImageResource(R.drawable.icon_button_satellite);
 			BaseMapMain.btnViewSelect.setContentDescription(
-					IseekApplication.getInstance().getResources().getString(R.string.ImageViewTraffic));
+					IseekApplication.getInstance().getResources().getString(R.string.BtnTraffic));
 		}
 		else
 		{
@@ -86,9 +88,11 @@ public class BaseOnClickListener implements OnClickListener{
 			BaseMapMain.mMapView.refresh();
 			BaseMapMain.btnViewSelect.setImageResource(R.drawable.icon_button_traffic);
 			BaseMapMain.btnViewSelect.setContentDescription(
-			IseekApplication.getInstance().getResources().getString(R.string.ImageViewSatellite));
+			IseekApplication.getInstance().getResources().getString(R.string.BtnSatellite));
 		
 		}
 	}
+	
+	
 
 }
