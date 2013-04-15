@@ -1,4 +1,4 @@
-package com.izzz.iseek.receiver;
+package com.izzz.iseek.SMS;
 
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.R;
@@ -121,10 +121,8 @@ public class SMSreceiver extends BroadcastReceiver
 			SmsMessage[] messages = new SmsMessage[myOBJpdus.length];	          
           	messages[0] = SmsMessage.createFromPdu ((byte[]) myOBJpdus[0]); 
 			
-			mesNumber = new String(messages[0].getDisplayOriginatingAddress()); 			  
-
-			IseekApplication.getInstance();
-			IseekApplication.getInstance();
+			mesNumber = new String(messages[0].getDisplayOriginatingAddress()); 
+			
 			String targetPhone = IseekApplication.prefs.getString(
 					IseekApplication.prefTargetPhoneKey,"unset");	
 			if(StaticVar.DEBUG_ENABLE)
@@ -151,10 +149,15 @@ public class SMSreceiver extends BroadcastReceiver
 				{
 					ReceiveMsgCaseSetSosOK(context, mesContext);
 				}
+				//短信头--gps没有正常共作
+				else if(mesContext.substring(0, 7).equals(StaticVar.SMS_Header_GPS_NOT_FIX))
+				{
+					ReceiveMstCaseGpsNotFix(context,mesContext);
+				}
 				else
 				{
 					//短信头不匹配--为了调试方便，后期将要删掉
-					Toast.makeText(context, "SMS-header Error", Toast.LENGTH_LONG).show();
+					Toast.makeText(context, R.string.ToastUnknowSMSheader, Toast.LENGTH_LONG).show();
 				}
 				
 				//不再广播消息，取消保存
@@ -231,6 +234,16 @@ public class SMSreceiver extends BroadcastReceiver
 		if(msgContext.substring(8).equals(StaticVar.SMS_BODY_SET_SOS_OK))
 		{
 			DialogRefresh(SettingActivity.settingDialog, R.string.DialogSosFeedBackGpsOK, StaticVar.SMS_BODY_SET_SOS_OK);
+		}
+	}
+	
+	private void ReceiveMstCaseGpsNotFix(Context context, String msgContext)
+	{
+		if(StaticVar.DEBUG_ENABLE)
+			StaticVar.logPrint('D', msgContext.substring(8));
+		if(msgContext.substring(8).equals(StaticVar.SMS_BODY_GPS_NOT_FIX))
+		{
+			DialogRefresh(BaseMapMain.baseDialog, R.string.DialogGpsNotFix, msgContext.substring(8));
 		}
 	}
 	

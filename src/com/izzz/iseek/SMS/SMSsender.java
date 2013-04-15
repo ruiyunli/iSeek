@@ -1,4 +1,4 @@
-package com.izzz.iseek.receiver;
+package com.izzz.iseek.SMS;
 
 import android.app.PendingIntent;
 import android.content.Context;

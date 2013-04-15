@@ -6,9 +6,9 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
 import com.baidu.mapapi.utils.CoordinateConvert;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
+import com.izzz.iseek.SMS.SMSreceiver;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.base.BaseMapMain;
-import com.izzz.iseek.receiver.SMSreceiver;
 
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -65,7 +65,7 @@ public class StaticVar {
 	public static final String COM_ALARM_BACK_EXIT 			= "com.izzz.iseek.alarm_back_exit";
 	
 	//闹钟时间
-	public static final long ALARM_TIME = 3*1000;
+	public static final long ALARM_TIME = 3*60*1000;
 		
 	
 	
@@ -80,6 +80,7 @@ public class StaticVar {
 	
 	//短信体
 	public static final String SMS_BODY_SET_SOS_OK  = "Set phone number  OK";//居然是两个空格，坑
+	public static final String SMS_BODY_GPS_NOT_FIX  = "GPS not fix";//这个待修改
 	
 	
 	//读取通讯录

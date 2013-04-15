@@ -29,66 +29,73 @@ import com.baidu.mapapi.map.OverlayItem;
 import com.baidu.mapapi.utils.CoordinateConvert;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.R;
+import com.izzz.iseek.SMS.SMSreceiver;
+import com.izzz.iseek.SMS.SMSsender;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.dialog.LogDialog;
 import com.izzz.iseek.map.CorrectionOverlay;
 import com.izzz.iseek.map.MapMKMapViewListener;
 import com.izzz.iseek.map.MapOnTouchListener;
-import com.izzz.iseek.receiver.SMSreceiver;
-import com.izzz.iseek.receiver.SMSsender;
+import com.izzz.iseek.map.MapZoomOnClickListener;
 import com.izzz.iseek.setting.SettingActivity;
 import com.izzz.iseek.vars.StaticVar;
 
 
 public class BaseMapMain extends Activity {
 	
-	public static IseekApplication app = null;
+	public static IseekApplication app = null;	
 	
-	//百度地图	
-	public static MapView mMapView = null;	
+	public static MapView mMapView = null;		//百度地图		
 	
-	//BroadCastReceiver的相关变量
-	private SMSreceiver mainReceiver = null;
-	private IntentFilter mainFilter = null;
+	private SMSreceiver mainReceiver = null;	//BroadCastReceiver的相关变量
 	
-	//logDialog中的变量
-	public static LogDialog baseDialog;
+	private IntentFilter mainFilter = null;		//BroadCastReceiver的相关变量	
 	
-	//百度地图	
-	public static MapController mMapController = null;
-	public static MyLocationOverlay myLocationOverlay = null;
-	public static LocationData tarLocData = null;
+	public static LogDialog baseDialog;			//logDialog中的变量
+	
+	public static MapController mMapController = null;			//百度地图
+	
+	public static MyLocationOverlay myLocationOverlay = null;	//百度地图
+	
+	public static LocationData tarLocData = null;				//百度地图
 
+	public static CorrectionOverlay correctionOverlay = null;	//校准用变量
 	
-	//校准用变量
-	public static CorrectionOverlay correctionOverlay = null;
-	public static GeoPoint corrPoint = null;
-	public static OverlayItem corrItem = null;
+	public static GeoPoint corrPoint = null;					//校准用变量
 	
-	//测试用输出testView 
-	public static TextView logText  = null;
+	public static OverlayItem corrItem = null;					//校准用变量	
 	
-	//视图切换
-	public static ImageButton btnViewSelect = null; 
-	//微调button
-	public static ImageButton btnMoveUp    = null;
-	public static ImageButton btnMoveDown  = null;
-	public static ImageButton btnMoveLeft  = null;
-	public static ImageButton btnMoveRight = null;
-	//菜单
-	private ImageButton btnMenuCall     = null;
-	private Button btnMenuRefresh  = null;
-	private ImageButton btnMenuSettings = null;
-	//校准的两个按钮
-	public static Button btnCorrOk = null;
-	public static Button btnCorrCancle = null;
+	public static ImageButton btnViewSelect = null; 	//视图切换
 	
-	//用于退出时间记录
-	long lastTime = 0; 
+	public static ImageButton btnMoveUp    = null;		//微调button
 	
-	//发送短信接口
-	SMSsender baseSMSsender = null;
-		
+	public static ImageButton btnMoveDown  = null;		//微调button
+	
+	public static ImageButton btnMoveLeft  = null;		//微调button
+	
+	public static ImageButton btnMoveRight = null;		//微调button
+	
+	private ImageButton btnMenuCall     = null;		//菜单
+	
+	private Button btnMenuRefresh  = null;			//菜单
+	
+	private ImageButton btnMenuSettings = null;		//菜单
+	
+	public static Button btnCorrOk = null;			//校准的两个按钮
+	
+	public static Button btnCorrCancle = null;		//校准的两个按钮
+	
+	
+	public static ImageButton btnZoomIn = null;		//zoom按钮
+	
+	public static ImageButton btnZoomOut = null;	//zoom按钮
+	
+	long lastTime = 0; 		//用于退出时间记录
+	
+	private SMSsender baseSMSsender = null;			//发送短信接口
+	
+	public static TextView logText  = null;			//测试用输出testView 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -100,7 +107,7 @@ public class BaseMapMain extends Activity {
         }
 		//注意：请在试用setContentView前初始化BMapManager对象，否则会报错
         
-		setContentView(R.layout.activity_main);		
+		setContentView(R.layout.activity_main);
 		
 		logText = (TextView)findViewById(R.id.logText);
 		baseSMSsender = new SMSsender(BaseMapMain.this);
@@ -110,7 +117,7 @@ public class BaseMapMain extends Activity {
 		InitMap();			//百度地图初始化		
 		InitCorrButton();	//初始化imagebutton变量	
 		InitMenuView();		//初始化自定义菜单
-//		InitDialog();
+		InitZoomButton();	//初始化zoom按鈕
 		if(StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', "init success");
 	}	
@@ -147,7 +154,8 @@ public class BaseMapMain extends Activity {
 		}
 		else
 		{
-		 centerpt = new GeoPoint((int)(34.128064* 1E6),(int)(108.847287* 1E6));
+		//北京--39.914492,116.403406,   西安--34.128064，108.847287
+		 centerpt = new GeoPoint((int)(39.914492* 1E6),(int)(116.40340* 1E6));
 		}
 		 
 		mMapController.setCenter(centerpt);
@@ -210,6 +218,16 @@ public class BaseMapMain extends Activity {
 		btnMenuRefresh.setOnClickListener(new MenuViewOnClickListner());
 		btnMenuSettings.setOnClickListener(new MenuViewOnClickListner());
 	}
+	
+	private void InitZoomButton()
+	{
+		btnZoomIn = (ImageButton)findViewById(R.id.btnZoomIn);
+		btnZoomOut = (ImageButton)findViewById(R.id.btnZoomOut);
+		
+		btnZoomIn.setOnClickListener(new MapZoomOnClickListener());
+		btnZoomOut.setOnClickListener(new MapZoomOnClickListener());
+	}
+	
 	//设置新的坐标
 	public static void setNewPosition(GeoPoint newPoint)
 	{
@@ -412,6 +430,13 @@ public class BaseMapMain extends Activity {
 				app.mBMapManager.start();
 				app.mBMapManager = null;
 			}
+			
+			btnMenuCall.setVisibility(View.VISIBLE);
+			btnMenuRefresh.setVisibility(View.VISIBLE);
+			btnMenuSettings.setVisibility(View.VISIBLE);
+			
+			if(StaticVar.DEBUG_ENABLE)
+				StaticVar.logPrint('D', "on Resume");
 	        super.onResume();
 	}
 
@@ -465,4 +490,5 @@ public class BaseMapMain extends Activity {
 		StaticVar.ADD_LAYER_FLAG = false;
 		StaticVar.CORRECTION_ENABLE = false;
 	}
+	
 }

@@ -14,80 +14,68 @@
     
     <!-- 设置页面中的文字 -->
     <!-- Category privateInfo -->
-    <string name="set_privateInfo_cate_title">Private Info</string> 
+    <string name="set_privateInfo_cate_title">号码设置</string> 
        
     <string name="set_targetPhone_key">targetPhone</string>
-    <string name="set_targetPhone_title">Tatget Phone Number</string>
-    <string name="set_targetPhone_summary">SIM card in GPS</string>
-    <string name="set_targetPhone_dialogTitle">TargetPhone</string>    
+    <string name="set_targetPhone_title">GPS Phone</string>
+    <string name="set_targetPhone_summary">目标GPS模块中的SIM卡</string>
+    <string name="set_targetPhone_dialogTitle">GPS Phone</string>    
     
     <string name="set_sosNumber_key">sosNumber</string>
-    <string name="set_sosNumber_title">SOS Number</string>
-    <string name="set_sosNumber_summary">SOS number for GPS</string>
-    <string name="set_sosNumber_dialogTitle">SOS Number</string>
-    
-    <!-- Category Save All -->
-    <string name="set_saveall_cate_title">SaveAll</string>
-    <string name="set_saveall_key">saveall</string>
-    <string name="set_saveall_title">Save All</string>
-    <string name="set_saveall_summary">save all you settings</string>
+    <string name="set_sosNumber_title">SOS Phone</string>
+    <string name="set_sosNumber_summary">GPS关联的紧急联系号码</string>
+    <string name="set_sosNumber_dialogTitle">SOS Phone</string>
     
     <!-- Category Tool -->
-    <string name="set_tool_cate_title">Tool</string>
-    <string name="set_corr_key">tool</string>
-    <string name="set_corr_title">Correction</string>
-    <string name="set_corr_summary">Correct summary</string>
+    <string name="set_tool_cate_title">工具</string>
+    <string name="set_corr_key">corretion</string>
+    <string name="set_corr_title">校准</string>
+    <string name="set_corr_summary">用于校准小范围定位误差</string>
+    
+    <string name="set_guide_key">guide</string>
+    <string name="set_guide_title">使用说明</string>
+    <string name="set_guide_summary">iSeek使用说明</string>
     
     <!-- Category About -->
-    <string name="set_about_cate_title">About</string>
+    <string name="set_about_cate_title">关于</string>
     <string name="set_about_key">about</string>
-    <string name="set_about_title">About</string>
-    <string name="set_about_summary">About iSeek</string>
+    <string name="set_about_title">关于 iSeek</string>
+    <string name="set_about_summary"></string>
     
     <!-- Category other keys -->
     <string name="set_origin_latitude_key">originLatitude</string>
     <string name="set_origin_longitude_key">originLongitude</string>
     
     <!-- String in Toast -->
-    <string name="ToastErrorInternet">Internet Error</string>
-    <string name="ToastErrorSearchData">Search Data Error</string>
-    <string name="ToastErrorMapKey">Please Input Valid Map Key</string>    
-    <string name="ToastTargetSetOK">Target phone set OK!</string>
-    <string name="ToastSosSetOK">SOS number set OK!</string>
-    <string name="ToastInvalidPhoneNumber">Invalid phone number</string>
-    <string name="ToastTargetSetEmpty">Please set Target Number</string>
-    <string name="ToastSosSetEmpty">Please set Target Number</string>
-    <string name="ToastExitWarning">Press Back Again to Exit</string>
-    <string name="ToastCorrPressFirst">Please Select a Point First</string>
+    <string name="ToastErrorInternet">网络连接出错</string>
+    <string name="ToastErrorSearchData">搜索数据出错</string>
+    <string name="ToastErrorMapKey">Invalid BaiduMapKey</string>    
+    <string name="ToastTargetSetOK">目标GPS手机号码设置成功!</string>
+    <string name="ToastSosSetOK">关联SOS号码设置成功!</string>
+    <string name="ToastInvalidPhoneNumber">请输入有效地手机号码</string>
+    <string name="ToastTargetSetEmpty">请设置GPS中的手机号码</string>
+    <string name="ToastSosSetEmpty">请设置关联的SOS号码</string>
+    <string name="ToastExitWarning">再按一次返回键退出应用</string>
+    <string name="ToastCorrPressFirst">请先触摸屏幕选择一个点</string>
+    <string name="ToastZoomInMax">已放大到最大级别</string>
+    <string name="ToastZoomInMin">已缩小到最小级别</string>
+    <string name="ToastUnknowSMSheader">注意:不能识别的短信</string>
+    
     
     <!-- logDialog中的文字 -->
     <string name="DialogTitle">iSeeking...</string>
     <string name="DialogMsgHeader">正在努力连接中...</string>
     <string name="DialogSendOK">成功发送请求</string>
-    <string name="DialogSendNO">请求发送失败，请重试</string>
-    <string name="DialogDeliveryOK">目标已经成功接收请求，正在处理中，请耐心等待1-2分钟...</string>
-    <string name="DialogDeliveryNO">目标没有接收到请求，请重试</string>
+    <string name="DialogDeliveryOK">目标成功接收请求，请耐心等待1-2分钟...</string>
+    <string name="DialogGpsNotFix">GPS未能正常工作!</string>
     
-    <string name="DialogSosSendGpsOK">GPS:成功发送设置请求</string>
-    <string name="DialogSosSendGpsNO">GPS:设置请求发送失败</string>
-    <string name="DialogSosDeliveryGpsOK">GPS:设置请求接收成功</string>
-    <string name="DialogSosDeliveryGpsNO">GPS:设置请求接收故障!</string>
+    <string name="DialogSosSendGpsOK">GPS:成功发送请求</string>
+    <string name="DialogSosDeliveryGpsOK">GPS:成功接收请求!</string>
     <string name="DialogSosFeedBackGpsOK">GPS:设置成功!</string>
     <string name="DialogSosSendTarOK">SOS:成功发送通知</string>
-    <string name="DialogSosSendTarNO">SOS:通知发送失败</string>
     <string name="DialogSosDeliveryTarOK">SOS:成功接收通知!</string>
-    <string name="DialogSosDeliveryTarNO">SOS:通知接收故障!</string>
     
     <string name="DialogAlarmGot">连接超时，请重试</string>
-    
-    
-    <!-- 设置SOS number的对话框中字符串 -->
-    <string name="DialogSosTitleOK">Set SOS Number</string>
-    <string name="DialogSosTitleNO">Wrong SOS Number</string>
-    <string name="DialogSosMsgOK">Are you sure set SOS number:</string>
-    <string name="DialogSosMsgNO">Invalid phone number,please try again</string>
-    <string name="DialogSosOk">OK</string>
-    <string name="DialogSosCancel">Cancel</string>
     
     <!-- imageButton ContextDescription -->
     <string name="BtnTraffic">Traffic</string>

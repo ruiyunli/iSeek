@@ -5,12 +5,12 @@ import java.util.regex.Pattern;
 import com.example.iseek.R;
 import com.example.iseek.R.string;
 import com.example.iseek.R.xml;
+import com.izzz.iseek.SMS.SMSreceiver;
+import com.izzz.iseek.SMS.SMSsender;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.base.AboutActivity;
 import com.izzz.iseek.base.BaseMapMain;
 import com.izzz.iseek.dialog.LogDialog;
-import com.izzz.iseek.receiver.SMSreceiver;
-import com.izzz.iseek.receiver.SMSsender;
 import com.izzz.iseek.vars.StaticVar;
 
 import android.app.AlarmManager;
@@ -88,14 +88,6 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		prefCorrection.setOnPreferenceClickListener(this);
 		prefAbout.setOnPreferenceClickListener(this);
 		
-		//有问题。。。。。
-		
-		
-		
-		
-		
-		
-		
 		prefTargetPhone.setSummary(IseekApplication.prefs.getString(IseekApplication.prefTargetPhoneKey, 
 				(String) this.getResources().getText(R.string.set_targetPhone_summary)));
 		prefSosNumber.setSummary(IseekApplication.prefs.getString(IseekApplication.prefSosNumberKey, 
@@ -151,15 +143,17 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		if(settingSMSsender.SendMessage(null, StaticVar.SMS_SET_SOS + phoneNum, 
 				StaticVar.COM_SMS_SEND_SOS_GPS, StaticVar.COM_SMS_DELIVERY_SOS_GPS))
 		{
-			//给关联sos号码发送短信
-			settingSMSsender.SendMessage(phoneNum, prefTargetPhone.getSummary() + StaticVar.SMS_SET_SOS_TAR , 
-					StaticVar.COM_SMS_SEND_SOS_TAR, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
-		
-			prefSosNumber.setSummary((CharSequence) phoneNum);
 			
 			settingDialog.proMessage = (String) getResources().getText(R.string.DialogMsgHeader);
 			settingDialog.proLogDialog.setMessage(settingDialog.proMessage);
 			settingDialog.showLog();
+			
+			//给关联sos号码发送短信
+			settingSMSsender.SendMessage(phoneNum, prefTargetPhone.getSummary() + StaticVar.SMS_SET_SOS_TAR , 
+					StaticVar.COM_SMS_SEND_SOS_TAR, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
+		
+			prefSosNumber.setSummary((CharSequence) phoneNum);		
+			
 			
 			IseekApplication.alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
 			Intent intent = new Intent(StaticVar.COM_ALARM_SOS_SET);
