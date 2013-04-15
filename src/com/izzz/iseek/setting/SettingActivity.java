@@ -31,8 +31,6 @@ import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
-import android.provider.ContactsContract;
-import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.widget.Toast;
 
 //设置页面，添加配置文件
@@ -119,13 +117,13 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		//正则表达式判断是否合法手机号码
 		if(isMobileNumber(phoneNum))
 		{
-			Toast.makeText(SettingActivity.this, R.string.ToastTargetSetOK, Toast.LENGTH_LONG).show();
+			Toast.makeText(SettingActivity.this, R.string.ToastTargetSetOK, Toast.LENGTH_SHORT).show();
 			prefTargetPhone.setSummary((CharSequence) phoneNum);
 			return true;			
 		}
 		else
 		{
-			Toast.makeText(SettingActivity.this, R.string.ToastInvalidPhoneNumber, Toast.LENGTH_LONG).show();
+			Toast.makeText(SettingActivity.this, R.string.ToastInvalidPhoneNumber, Toast.LENGTH_SHORT).show();
 			return false;
 		}
 	}
@@ -135,7 +133,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		//判断符合手机号码，则打开dialog，确认发送短信			
 		if(!isMobileNumber(phoneNum))
 		{
-			Toast.makeText(SettingActivity.this, R.string.ToastInvalidPhoneNumber, Toast.LENGTH_LONG).show();
+			Toast.makeText(SettingActivity.this, R.string.ToastInvalidPhoneNumber, Toast.LENGTH_SHORT).show();
 			return false;
 		}
 		
@@ -207,8 +205,12 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		}
 		if(preference.getKey() == IseekApplication.prefCorrKey)
 		{
-			StaticVar.CORRECTION_ENABLE = true;
-			BaseMapMain.CorrSetBtnVisible();
+//			StaticVar.CORRECTION_ENABLE = true;
+//			BaseMapMain.CorrSetBtnVisible();
+			
+			BaseMapMain.correction.CORRECTION_ENABLE = true;
+			BaseMapMain.correction.SetAllButtonVisible();
+			
 			if(StaticVar.DEBUG_ENABLE)
 				StaticVar.logPrint('D', "Correction started!");
 			finish();

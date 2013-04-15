@@ -1,36 +1,14 @@
 package com.izzz.iseek.vars;
 
-import com.baidu.mapapi.map.LocationData;
-import com.baidu.mapapi.map.MapController;
-import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.MyLocationOverlay;
-import com.baidu.mapapi.utils.CoordinateConvert;
-import com.baidu.platform.comapi.basestruct.GeoPoint;
-import com.izzz.iseek.SMS.SMSreceiver;
-import com.izzz.iseek.app.IseekApplication;
-import com.izzz.iseek.base.BaseMapMain;
-
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.telephony.SmsManager;
 import android.util.Log;
-import android.widget.Toast;
+
+
 
 public class StaticVar {
-
-	//百度Map Key
-	public static final String BaiduMapKey = "3200A096EA79B20773CAB5CBD68C2E1ADDDE22BB";
 	
-	//调试设置
-	public static boolean DEBUG_ENABLE = true;
-	public static boolean CORRECTION_ENABLE = false;
+	public static final String BaiduMapKey = "3200A096EA79B20773CAB5CBD68C2E1ADDDE22BB";	//百度Map Key
 	
-	//标志位-添加校准层
-	public static boolean ADD_LAYER_FLAG = false;
+	public static boolean DEBUG_ENABLE = true;		//调试设置
 	
 	//菜单order
 	public static final int MENU_REFRESH   = 100;
@@ -65,13 +43,7 @@ public class StaticVar {
 	public static final String COM_ALARM_BACK_EXIT 			= "com.izzz.iseek.alarm_back_exit";
 	
 	//闹钟时间
-	public static final long ALARM_TIME = 3*60*1000;
-		
-	
-	
-	
-	
-	
+	public static final long ALARM_TIME = 3*1000;	
 	
 	//短信头解析字符串
 	public static final String SMS_Header_LOC_SUCCESS = "W00,051";
@@ -81,7 +53,6 @@ public class StaticVar {
 	//短信体
 	public static final String SMS_BODY_SET_SOS_OK  = "Set phone number  OK";//居然是两个空格，坑
 	public static final String SMS_BODY_GPS_NOT_FIX  = "GPS not fix";//这个待修改
-	
 	
 	//读取通讯录
 	public static final int PICK_CONTACT_REQUEST_TargetPhone = 1;
@@ -94,7 +65,16 @@ public class StaticVar {
 	public static final int CORR_STEP = 10;
 
 	
-	//调试信息输出
+	
+	
+	
+	
+	
+	/**
+	 * 调试信息输出，调用前使用SatticVar.DEBUG_ENABLE进行判断
+	 * @param type			D:debug, E:error
+	 * @param logContext	内容
+	 */
 	public static void logPrint(char type ,String logContext)
 	{
 		switch (type)

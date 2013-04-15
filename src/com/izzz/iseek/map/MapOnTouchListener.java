@@ -21,7 +21,7 @@ public class MapOnTouchListener implements OnTouchListener{
 		// 获得屏幕点击的位置
 		
 		
-		if(StaticVar.CORRECTION_ENABLE)
+		if(BaseMapMain.correction.CORRECTION_ENABLE)
 		{
 			
             int x = (int) event.getX();
@@ -44,16 +44,19 @@ public class MapOnTouchListener implements OnTouchListener{
         		corrItem = new OverlayItem(corrPoint, "title", "snippet");
         		//corrItem.setMarker(getResources().getDrawable(R.drawable.icon_marka));
         		//初次调用，添加校准层
-        		if(!StaticVar.ADD_LAYER_FLAG)	
+        		if(!BaseMapMain.correction.ADD_LAYER_FLAG)	
         		{
-        			BaseMapMain.mMapView.getOverlays().add(BaseMapMain.correctionOverlay);
-        			StaticVar.ADD_LAYER_FLAG = true;
+//        			BaseMapMain.mMapView.getOverlays().add(BaseMapMain.correctionOverlay);
+//        			StaticVar.ADD_LAYER_FLAG = true;
+        			
+        			BaseMapMain.correction.AddOverlay();
+        			BaseMapMain.correction.ADD_LAYER_FLAG = true;
         		}
-        		BaseMapMain.correctionOverlay.refreshItem(corrItem);
+        		BaseMapMain.correction.correctionOverlay.refreshItem(corrItem);
         		BaseMapMain.mMapView.refresh();
         		
-        		BaseMapMain.corrPoint = corrPoint;
-        		BaseMapMain.corrItem = corrItem;
+        		BaseMapMain.correction.corrPoint = corrPoint;
+        		BaseMapMain.correction.corrItem = corrItem;
         		
                 break;
             }

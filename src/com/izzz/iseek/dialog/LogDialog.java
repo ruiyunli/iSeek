@@ -20,7 +20,7 @@ public class LogDialog {
 	 * @param dialogTitleId		Log´°¿Ú±êÌâÀ¸
 	 */
 	public LogDialog(Context context, int msgHeaderId, int dialogTitleId) {
-		
+		super();
 		this.mContext = context;
 		
 		proMessage = (String) context.getResources().getString(msgHeaderId);

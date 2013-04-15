@@ -1,31 +1,19 @@
 package com.izzz.iseek.base;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.map.LocationData;
 import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
-import com.baidu.mapapi.map.OverlayItem;
 import com.baidu.mapapi.utils.CoordinateConvert;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.R;
@@ -33,17 +21,17 @@ import com.izzz.iseek.SMS.SMSreceiver;
 import com.izzz.iseek.SMS.SMSsender;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.dialog.LogDialog;
-import com.izzz.iseek.map.CorrectionOverlay;
+import com.izzz.iseek.map.Correction;
 import com.izzz.iseek.map.MapMKMapViewListener;
 import com.izzz.iseek.map.MapOnTouchListener;
-import com.izzz.iseek.map.MapZoomOnClickListener;
-import com.izzz.iseek.setting.SettingActivity;
+import com.izzz.iseek.map.PluginChangeView;
+import com.izzz.iseek.map.PluginZoom;
 import com.izzz.iseek.vars.StaticVar;
 
 
 public class BaseMapMain extends Activity {
 	
-	public static IseekApplication app = null;	
+	private IseekApplication app = null;	
 	
 	public static MapView mMapView = null;		//百度地图		
 	
@@ -58,43 +46,44 @@ public class BaseMapMain extends Activity {
 	public static MyLocationOverlay myLocationOverlay = null;	//百度地图
 	
 	public static LocationData tarLocData = null;				//百度地图
-
-	public static CorrectionOverlay correctionOverlay = null;	//校准用变量
 	
-	public static GeoPoint corrPoint = null;					//校准用变量
+	public static Correction correction = null;			//校正类实例
 	
-	public static OverlayItem corrItem = null;					//校准用变量	
+	private ImageButton btnViewSelect = null; 			//视图切换
 	
-	public static ImageButton btnViewSelect = null; 	//视图切换
+	private PluginChangeView pluginChangeView = null;	//视图切换插件
 	
-	public static ImageButton btnMoveUp    = null;		//微调button
+	private ImageButton btnMoveUp    = null;			//微调button
 	
-	public static ImageButton btnMoveDown  = null;		//微调button
+	private ImageButton btnMoveDown  = null;			//微调button
 	
-	public static ImageButton btnMoveLeft  = null;		//微调button
+	private ImageButton btnMoveLeft  = null;			//微调button
 	
-	public static ImageButton btnMoveRight = null;		//微调button
+	private ImageButton btnMoveRight = null;			//微调button
 	
-	private ImageButton btnMenuCall     = null;		//菜单
+	private Button btnCorrOk = null;					//校准的两个按钮
 	
-	private Button btnMenuRefresh  = null;			//菜单
+	private Button btnCorrCancle = null;				//校准的两个按钮
 	
-	private ImageButton btnMenuSettings = null;		//菜单
+	private ImageButton btnMenuCall     = null;			//菜单
 	
-	public static Button btnCorrOk = null;			//校准的两个按钮
+	private Button btnMenuRefresh  = null;				//菜单
 	
-	public static Button btnCorrCancle = null;		//校准的两个按钮
+	private ImageButton btnMenuSettings = null;			//菜单
 	
+	private BottomMenu bottomMenu = null;				//菜单类实例
 	
-	public static ImageButton btnZoomIn = null;		//zoom按钮
+	private ImageButton btnZoomIn = null;				//zoom按钮
 	
-	public static ImageButton btnZoomOut = null;	//zoom按钮
+	private ImageButton btnZoomOut = null;				//zoom按钮
 	
-	long lastTime = 0; 		//用于退出时间记录
+	private PluginZoom pluginZoom = null;				//zoom插件
 	
-	private SMSsender baseSMSsender = null;			//发送短信接口
+	long lastTime = 0; 									//用于退出时间记录
 	
-	public static TextView logText  = null;			//测试用输出testView 
+	private SMSsender baseSMSsender = null;				//发送短信接口
+	
+	public static TextView logText  = null;				//测试用输出testView 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -113,11 +102,18 @@ public class BaseMapMain extends Activity {
 		baseSMSsender = new SMSsender(BaseMapMain.this);
 		baseDialog = new LogDialog(BaseMapMain.this, R.string.DialogMsgHeader, R.string.DialogTitle);
 		
-		InitBCRRegister();	//注册BroadCastReceiver IntentFilter
-		InitMap();			//百度地图初始化		
-		InitCorrButton();	//初始化imagebutton变量	
-		InitMenuView();		//初始化自定义菜单
-		InitZoomButton();	//初始化zoom按鈕
+		InitBCRRegister();			//注册BroadCastReceiver IntentFilter
+		
+		InitMap();					//百度地图初始化
+		
+		InitCorrection();			//初始化imagebutton变量
+		
+		InitBottomMenu();			//初始化自定义菜单
+		
+		InitPluginZoom();			//初始化缩放插件
+		
+		InitPluginChangeView();		//初始化切换视图插件
+		
 		if(StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', "init success");
 	}	
@@ -176,19 +172,14 @@ public class BaseMapMain extends Activity {
   		mMapView.refresh();		
   		
   		//CorrectionOverlay层
-        correctionOverlay = new CorrectionOverlay(getResources().getDrawable(R.drawable.icon_mapselect));
-        //MKMapViewListener响应函数
         mMapView.regMapViewListener(IseekApplication.getInstance().mBMapManager, new MapMKMapViewListener(BaseMapMain.this));
         //onTouchListener响应函数
         mMapView.setOnTouchListener(new MapOnTouchListener());
-        
-        //视图切换
-        btnViewSelect = (ImageButton)findViewById(R.id.btnViewSelect);
-		btnViewSelect.setOnClickListener(new BaseOnClickListener());
+
 	}
 	
 	//校准微调按钮初始化
-	public void InitCorrButton()
+	public void InitCorrection()
 	{
 		//获取
 		btnCorrOk	 = (Button)findViewById(R.id.btnCorrOk);
@@ -197,35 +188,35 @@ public class BaseMapMain extends Activity {
 		btnMoveDown  = (ImageButton)findViewById(R.id.btnMoveDown);
 		btnMoveLeft  = (ImageButton)findViewById(R.id.btnMoveLeft);
 		btnMoveRight = (ImageButton)findViewById(R.id.btnMoveRight);
-		//响应函数
-		btnCorrCancle.setOnClickListener(new BaseOnClickListener());
-		btnMoveUp.setOnClickListener(new BaseOnClickListener());
-		btnMoveDown.setOnClickListener(new BaseOnClickListener());
-		btnMoveLeft.setOnClickListener(new BaseOnClickListener());
-		btnMoveRight.setOnClickListener(new BaseOnClickListener());
 		
+		correction = new Correction(BaseMapMain.this, mMapView, btnMoveUp, btnMoveDown, 
+				btnMoveLeft, btnMoveRight, btnCorrOk, btnCorrCancle);
 		
-		CorrSetBtnGone();
+		correction.SetAllButtonGone();
 	}
 	
-	private void InitMenuView()
+	private void InitBottomMenu()
 	{
 		btnMenuCall     = (ImageButton)findViewById(R.id.btnMenuCall);
 		btnMenuRefresh  = (Button)findViewById(R.id.btnMenuRefresh);
 		btnMenuSettings = (ImageButton)findViewById(R.id.btnMenuSettings);
 		
-		btnMenuCall.setOnClickListener(new MenuViewOnClickListner());
-		btnMenuRefresh.setOnClickListener(new MenuViewOnClickListner());
-		btnMenuSettings.setOnClickListener(new MenuViewOnClickListner());
+		bottomMenu = new BottomMenu(BaseMapMain.this, btnMenuCall, btnMenuRefresh, 
+				btnMenuSettings, baseSMSsender, baseDialog);		
 	}
 	
-	private void InitZoomButton()
+	private void InitPluginZoom()
 	{
 		btnZoomIn = (ImageButton)findViewById(R.id.btnZoomIn);
 		btnZoomOut = (ImageButton)findViewById(R.id.btnZoomOut);
 		
-		btnZoomIn.setOnClickListener(new MapZoomOnClickListener());
-		btnZoomOut.setOnClickListener(new MapZoomOnClickListener());
+		pluginZoom = new PluginZoom(mMapView, btnZoomIn, btnZoomOut);
+	}
+	
+	private void InitPluginChangeView()
+	{
+		btnViewSelect = (ImageButton)findViewById(R.id.btnViewSelect);
+		pluginChangeView = new PluginChangeView(BaseMapMain.this, btnViewSelect, mMapView);
 	}
 	
 	//设置新的坐标
@@ -250,152 +241,7 @@ public class BaseMapMain extends Activity {
 		mMapController.animateTo(new GeoPoint((int)(baiduPoint.getLatitudeE6()),(int)(baiduPoint.getLongitudeE6())));
 		
 	}
-		
-	private void MenuRefresh()
-	{
-		//发送gps位置请求短信
-		if(baseSMSsender.SendMessage( null, StaticVar.SMS_GEO_REQU, StaticVar.COM_SMS_SEND_REFRESH, 
-				StaticVar.COM_SMS_DELIVERY_REFRESH))
-		{
-
-			baseDialog.proMessage = (String) getResources().getText(R.string.DialogMsgHeader);
-			baseDialog.proLogDialog.setMessage(baseDialog.proMessage);
-			baseDialog.enable();
-			baseDialog.showLog();
-			
-			IseekApplication.alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-			Intent intent = new Intent(StaticVar.COM_ALARM_REFRESH);
-			IseekApplication.alarmPI = PendingIntent.getBroadcast(this,0,intent,0);
-			IseekApplication.alarmManager.set(AlarmManager.RTC_WAKEUP, 
-					System.currentTimeMillis() + StaticVar.ALARM_TIME, IseekApplication.alarmPI);
-			
-			if(StaticVar.DEBUG_ENABLE)
-				StaticVar.logPrint('D', "alarm for refresh set ok!");
-		}
-	}
-		
-	private void MenuPhoneCall()
-	{
-		//调用系统打电话程序
-		String targetPhone = IseekApplication.prefs.getString(IseekApplication.prefTargetPhoneKey, "unset");
-		if(!targetPhone.equals("unset"))
-		{
-			Intent intent=new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+targetPhone));
-			startActivity(intent);
-		}
-		else
-		{
-			Toast.makeText(BaseMapMain.this, R.string.ToastTargetSetEmpty, Toast.LENGTH_LONG).show();
-		}
-	}
 	
-	private void MenuCorr(MenuItem item)
-	{
-		StaticVar.CORRECTION_ENABLE = !StaticVar.CORRECTION_ENABLE;
-		if(StaticVar.CORRECTION_ENABLE)
-		{
-			item.setTitle("UnCorration");
-			/*
-			btnMoveUp.setVisibility(View.VISIBLE);
-			btnMoveDown.setVisibility(View.VISIBLE);
-			btnMoveLeft.setVisibility(View.VISIBLE);
-			btnMoveRight.setVisibility(View.VISIBLE);
-			*/
-			CorrSetBtnVisible();
-		}
-		else
-		{
-			
-			item.setTitle("Corration");
-			/*
-			btnMoveUp.setVisibility(View.INVISIBLE);
-			btnMoveDown.setVisibility(View.INVISIBLE);
-			btnMoveLeft.setVisibility(View.INVISIBLE);
-			btnMoveRight.setVisibility(View.INVISIBLE);
-			*/
-//			CorrSetBtnGone();
-			
-			//去掉校准层
-			/*
-			mMapView.getOverlays().remove(correctionOverlay);
-			mMapView.refresh();
-			StaticVar.ADD_LAYER_FLAG = false;
-			*/
-			CorrExit();
-		}
-	}
-	
-	private void MenuSettings()
-	{
-		Intent intent = new Intent();
-		intent.setClass(BaseMapMain.this, SettingActivity.class);
-		startActivity(intent);
-	}
-	
-	
-	class MenuViewOnClickListner implements OnClickListener{
-
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			if(v.getId() == btnMenuCall.getId())
-			{
-				MenuPhoneCall();
-			}
-			else if(v.getId() == btnMenuRefresh.getId())
-			{
-				MenuRefresh();
-			}
-			else if(v.getId() == btnMenuSettings.getId())
-			{
-				MenuSettings();
-			}
-		}		
-	}
-	
-	/*
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
-		
-		//refresh按钮响应，发送短信到指定的手机号
-		switch(item.getOrder())
-		{
-		case StaticVar.MENU_REFRESH:	//刷新位置
-			MenuRefresh();
-			break;
-		
-		case StaticVar.MENU_SETTINGS:	//设置
-			MenuSettings();
-			break;
-		
-		case StaticVar.MENU_EXIT:		//退出
-			finish();
-			break;
-			
-		case StaticVar.MENU_PHONECALL:	//打电话
-			MenuPhoneCall();
-			break;
-			
-		case StaticVar.MENU_TEST:		//测试
-			GeoPoint newPoint =new GeoPoint((int)(34.235697* 1E6),(int)(108.914238* 1E6));			
-			setNewPosition(newPoint);
-			break;
-			
-		case StaticVar.MENU_CORR:		//校准
-			MenuCorr(item);
-			break;
-		}
-		
-		return super.onOptionsItemSelected(item);
-	}
-			*/
 	//百度地图重载
 	@Override
 	protected void onDestroy() {
@@ -459,36 +305,6 @@ public class BaseMapMain extends Activity {
 		}
 			
 		return super.onKeyDown(keyCode, event);
-	}
-	
-	public  static void CorrSetBtnVisible()
-	{
-		btnCorrCancle.setVisibility(View.VISIBLE);
-		btnCorrOk.setVisibility(View.VISIBLE);
-		btnMoveUp.setVisibility(View.VISIBLE);
-		btnMoveDown.setVisibility(View.VISIBLE);
-		btnMoveLeft.setVisibility(View.VISIBLE);
-		btnMoveRight.setVisibility(View.VISIBLE);
-	}
-	
-	public  static void CorrSetBtnGone()
-	{
-		btnCorrCancle.setVisibility(View.GONE);
-		btnCorrOk.setVisibility(View.GONE);
-		btnMoveUp.setVisibility(View.GONE);
-		btnMoveDown.setVisibility(View.GONE);
-		btnMoveLeft.setVisibility(View.GONE);
-		btnMoveRight.setVisibility(View.GONE);
-	}
-
-	public static void CorrExit()
-	{
-		CorrSetBtnGone();
-		//去掉校准层
-		mMapView.getOverlays().remove(correctionOverlay);
-		mMapView.refresh();
-		StaticVar.ADD_LAYER_FLAG = false;
-		StaticVar.CORRECTION_ENABLE = false;
 	}
 	
 }

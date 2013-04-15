@@ -15,6 +15,7 @@ public class SMSsender {
 	private Context mContext = null;
 	
 	public SMSsender(Context mContext) {
+		super();
 		this.mContext = mContext;
 	}
 
