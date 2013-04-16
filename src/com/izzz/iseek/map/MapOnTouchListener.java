@@ -28,7 +28,8 @@ public class MapOnTouchListener implements OnTouchListener{
             int y = (int) event.getY();
 
             // 将像素坐标转为地址坐标
-            Projection getProjection = BaseMapMain.mMapView.getProjection();
+            
+            Projection getProjection = BaseMapMain.correction.mMapView.getProjection();
             GeoPoint pt = getProjection.fromPixels(x, y);
             
             String longitude = Integer.toString(pt.getLongitudeE6());
@@ -46,14 +47,11 @@ public class MapOnTouchListener implements OnTouchListener{
         		//初次调用，添加校准层
         		if(!BaseMapMain.correction.ADD_LAYER_FLAG)	
         		{
-//        			BaseMapMain.mMapView.getOverlays().add(BaseMapMain.correctionOverlay);
-//        			StaticVar.ADD_LAYER_FLAG = true;
-        			
         			BaseMapMain.correction.AddOverlay();
         			BaseMapMain.correction.ADD_LAYER_FLAG = true;
         		}
         		BaseMapMain.correction.correctionOverlay.refreshItem(corrItem);
-        		BaseMapMain.mMapView.refresh();
+        		BaseMapMain.correction.mMapView.refresh();
         		
         		BaseMapMain.correction.corrPoint = corrPoint;
         		BaseMapMain.correction.corrItem = corrItem;

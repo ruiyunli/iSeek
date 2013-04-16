@@ -10,7 +10,8 @@ import com.izzz.iseek.SMS.SMSsender;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.base.AboutActivity;
 import com.izzz.iseek.base.BaseMapMain;
-import com.izzz.iseek.dialog.LogDialog;
+import com.izzz.iseek.tools.AlarmControl;
+import com.izzz.iseek.tools.LogDialog;
 import com.izzz.iseek.vars.StaticVar;
 
 import android.app.AlarmManager;
@@ -31,45 +32,49 @@ import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+import android.telephony.SmsManager;
 import android.widget.Toast;
 
 //设置页面，添加配置文件
 public class SettingActivity extends PreferenceActivity implements OnPreferenceClickListener,
 		OnPreferenceChangeListener{
 
-	IseekApplication app = null;
+	private EditTextPreference prefTargetPhone 	= null;
 	
-	//声明设置页面的控件
-	EditTextPreference prefTargetPhone 	= null;
-	EditTextPreference prefSosNumber   	= null;
-	PreferenceScreen   prefCorrection 	= null;
-	PreferenceScreen   prefAbout       	= null;	
+	private EditTextPreference prefSosNumber   	= null;
 	
-	SMSreceiver setReceiver = null;
-	IntentFilter setFilter  = null;
+	private PreferenceScreen   prefCorrection 	= null;
+	
+	private PreferenceScreen   prefAbout       	= null;	
 	
 	public static LogDialog settingDialog = null;
 	
-	//发送短信接口
-	private SMSsender settingSMSsender = null;
+	private SMSsender settingSMSsender = null;		//发送短信接口
+	
+	private SMSreceiver setReceiver = null;
+	
+	private IntentFilter setFilter  = null;
+	
+	public static AlarmControl alarmHandler = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
-		app = (IseekApplication)this.getApplication();
 		
 		//导入页面资源
 		addPreferencesFromResource(R.xml.settings);		
 		
 		settingDialog = new LogDialog(SettingActivity.this, R.string.DialogMsgHeader, R.string.DialogTitle);
-		settingDialog.enable();
 		
 		settingSMSsender = new SMSsender(SettingActivity.this);
 
 		Initprefs();	//初始化prefs
+		
 		InitBCR();		//注册广播
+		
+		alarmHandler = new AlarmControl(SettingActivity.this, StaticVar.COM_ALARM_SOS_SET);
 	}
 
 	private void Initprefs()
@@ -136,36 +141,26 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			Toast.makeText(SettingActivity.this, R.string.ToastInvalidPhoneNumber, Toast.LENGTH_SHORT).show();
 			return false;
 		}
+		settingDialog.enable();
+		settingDialog.proMessage = (String) getResources().getText(R.string.DialogMsgHeader);
+		settingDialog.proLogDialog.setMessage(settingDialog.proMessage);
+		settingDialog.showLog();
 		
 		//给gps发送短信
 		if(settingSMSsender.SendMessage(null, StaticVar.SMS_SET_SOS + phoneNum, 
 				StaticVar.COM_SMS_SEND_SOS_GPS, StaticVar.COM_SMS_DELIVERY_SOS_GPS))
 		{
-			
-			settingDialog.proMessage = (String) getResources().getText(R.string.DialogMsgHeader);
-			settingDialog.proLogDialog.setMessage(settingDialog.proMessage);
-			settingDialog.showLog();
-			
 			//给关联sos号码发送短信
 			settingSMSsender.SendMessage(phoneNum, prefTargetPhone.getSummary() + StaticVar.SMS_SET_SOS_TAR , 
 					StaticVar.COM_SMS_SEND_SOS_TAR, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
-		
-			prefSosNumber.setSummary((CharSequence) phoneNum);		
 			
+			prefSosNumber.setSummary((CharSequence) phoneNum);			
 			
-			IseekApplication.alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-			Intent intent = new Intent(StaticVar.COM_ALARM_SOS_SET);
-			IseekApplication.alarmPI = PendingIntent.getBroadcast(this,0,intent,0);
-			IseekApplication.alarmManager.set(AlarmManager.RTC_WAKEUP, 
-					System.currentTimeMillis() + StaticVar.ALARM_TIME, IseekApplication.alarmPI);
-			
-			if(StaticVar.DEBUG_ENABLE)
-				StaticVar.logPrint('D', "alarm for sos set start ok!");
-			
+			alarmHandler.Start();			
+						
 			return true;
-		}		
+		}
 		return false;
-		
 	}
 	
 	//值改变响应函数
@@ -222,7 +217,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	
 	//判断是否为手机号码
 	public boolean isMobileNumber(String mobiles){
-		  Pattern p=Pattern.compile("^(((13[0-9])|18[0,5-9]|15[0-3,5-9])\\d{8})|(10086)|(10001)|(5555)|(5556)$");
+		  Pattern p=Pattern.compile("^(((13[0-9])|18[0,5-9]|15[0-3,5-9]|147)\\d{8})|(10086)|(10001)|(5555)|(5556)$");
 		  Matcher m=p.matcher(mobiles);
 		  if(StaticVar.DEBUG_ENABLE)
 			  StaticVar.logPrint('D', "match result:" + m.matches());

@@ -1,9 +1,9 @@
-package com.izzz.iseek.base;
+package com.izzz.iseek.tools;
 
 import com.example.iseek.R;
 import com.izzz.iseek.SMS.SMSsender;
 import com.izzz.iseek.app.IseekApplication;
-import com.izzz.iseek.dialog.LogDialog;
+import com.izzz.iseek.base.BaseMapMain;
 import com.izzz.iseek.setting.SettingActivity;
 import com.izzz.iseek.vars.StaticVar;
 
@@ -28,23 +28,17 @@ public class BottomMenu {
 	
 	private ImageButton btnMenuSettings = null;		//菜单
 	
-	private SMSsender menuSender = null;
-
-	private LogDialog menuDialog = null;
 
 	
 	
 	
 	public BottomMenu(Context mContext, ImageButton btnMenuCall,
-			Button btnMenuRefresh, ImageButton btnMenuSettings,
-			SMSsender menuSender, LogDialog menuDialog) {
+			Button btnMenuRefresh, ImageButton btnMenuSettings ) {
 		super();
 		this.mContext = mContext;
 		this.btnMenuCall = btnMenuCall;
 		this.btnMenuRefresh = btnMenuRefresh;
 		this.btnMenuSettings = btnMenuSettings;
-		this.menuSender = menuSender;
-		this.menuDialog = menuDialog;
 		
 		btnMenuCall.setOnClickListener(new MenuBottomOnClickListner());
 		btnMenuRefresh.setOnClickListener(new MenuBottomOnClickListner());
@@ -66,28 +60,28 @@ public class BottomMenu {
 		}
 	}
 	
-	private void MenuRefresh()
-	{
-		//发送gps位置请求短信
-		if(menuSender.SendMessage( null, StaticVar.SMS_GEO_REQU, StaticVar.COM_SMS_SEND_REFRESH, 
-				StaticVar.COM_SMS_DELIVERY_REFRESH))
-		{
-
-			menuDialog .proMessage = (String) mContext.getResources().getString(R.string.DialogMsgHeader);
-			menuDialog.proLogDialog.setMessage(menuDialog.proMessage);
-			menuDialog.enable();
-			menuDialog.showLog();
-			
-			IseekApplication.alarmManager = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
-			Intent intent = new Intent(StaticVar.COM_ALARM_REFRESH);
-			IseekApplication.alarmPI = PendingIntent.getBroadcast(mContext,0,intent,0);
-			IseekApplication.alarmManager.set(AlarmManager.RTC_WAKEUP, 
-					System.currentTimeMillis() + StaticVar.ALARM_TIME, IseekApplication.alarmPI);
-			
-			if(StaticVar.DEBUG_ENABLE)
-				StaticVar.logPrint('D', "alarm for refresh set ok!");
-		}
-	}
+//	private void MenuRefresh()
+//	{
+//		//发送gps位置请求短信
+//		if(menuSender.SendMessage( null, StaticVar.SMS_GEO_REQU, StaticVar.COM_SMS_SEND_REFRESH, 
+//				StaticVar.COM_SMS_DELIVERY_REFRESH))
+//		{
+//
+//			menuDialog .proMessage = (String) mContext.getResources().getString(R.string.DialogMsgHeader);
+//			menuDialog.proLogDialog.setMessage(menuDialog.proMessage);
+//			menuDialog.enable();
+//			menuDialog.showLog();
+//			
+//			IseekApplication.alarmManager = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
+//			Intent intent = new Intent(StaticVar.COM_ALARM_REFRESH);
+//			IseekApplication.alarmPI = PendingIntent.getBroadcast(mContext,0,intent,0);
+//			IseekApplication.alarmManager.set(AlarmManager.RTC_WAKEUP, 
+//					System.currentTimeMillis() + StaticVar.ALARM_TIME, IseekApplication.alarmPI);
+//			
+//			if(StaticVar.DEBUG_ENABLE)
+//				StaticVar.logPrint('D', "alarm for refresh set ok!");
+//		}
+//	}
 	
 	private void MenuSettings()
 	{
@@ -107,7 +101,9 @@ public class BottomMenu {
 			}
 			else if(v.getId() == btnMenuRefresh.getId())
 			{
-				MenuRefresh();
+//				MenuRefresh();
+				BaseMapMain.gpsLocate.RefreshLocation();
+				
 			}
 			else if(v.getId() == btnMenuSettings.getId())
 			{

@@ -1,11 +1,13 @@
 package com.izzz.iseek.SMS;
 
+import java.util.Set;
+
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.R;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.base.BaseMapMain;
-import com.izzz.iseek.dialog.LogDialog;
 import com.izzz.iseek.setting.SettingActivity;
+import com.izzz.iseek.tools.LogDialog;
 import com.izzz.iseek.vars.StaticVar;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -34,12 +36,12 @@ public class SMSreceiver extends BroadcastReceiver
 		//接收到refresh发送状态广播
 		else if (intent.getAction().equals(StaticVar.COM_SMS_SEND_REFRESH))
 		{
-			DialogRefresh(BaseMapMain.baseDialog, R.string.DialogSendOK, StaticVar.COM_SMS_SEND_REFRESH);
+			DialogRefresh(BaseMapMain.gpsLocate.DialogLocate, R.string.DialogSendOK, StaticVar.COM_SMS_SEND_REFRESH);
 		}
 		//接收到refresh发送回执广播
 		else if (intent.getAction().equals(StaticVar.COM_SMS_DELIVERY_REFRESH))
 		{
-			DialogRefresh(BaseMapMain.baseDialog, R.string.DialogDeliveryOK, StaticVar.COM_SMS_DELIVERY_REFRESH);
+			DialogRefresh(BaseMapMain.gpsLocate.DialogLocate, R.string.DialogDeliveryOK, StaticVar.COM_SMS_DELIVERY_REFRESH);
 		}
 		
 		//接收到sos设置发送状态广播
@@ -66,7 +68,7 @@ public class SMSreceiver extends BroadcastReceiver
 		//接收到refresh闹钟广播
 		else if(intent.getAction().equals(StaticVar.COM_ALARM_REFRESH))
 		{
-			DialogRefresh(BaseMapMain.baseDialog, R.string.DialogAlarmGot, StaticVar.COM_ALARM_REFRESH);
+			DialogRefresh(BaseMapMain.gpsLocate.DialogLocate, R.string.DialogAlarmGot, StaticVar.COM_ALARM_REFRESH);
 		}
 		//接收到sos set闹钟广播
 		else if(intent.getAction().equals(StaticVar.COM_ALARM_SOS_SET))
@@ -84,7 +86,8 @@ public class SMSreceiver extends BroadcastReceiver
 	private void DialogRefresh(LogDialog logDialog, int strAppendId, String strCase)
 	{
 		if( getResultCode() == Activity.RESULT_OK || 
-			strCase == StaticVar.COM_ALARM_REFRESH)
+			strCase == StaticVar.COM_ALARM_REFRESH ||
+			strCase == StaticVar.COM_ALARM_SOS_SET )
 		{
 			if(StaticVar.DEBUG_ENABLE)
 				StaticVar.logPrint('D', "receive sucess in " + strCase);
@@ -92,8 +95,12 @@ public class SMSreceiver extends BroadcastReceiver
 		}
 		else
 		{
+			
 			if(StaticVar.DEBUG_ENABLE)
+			{
 				StaticVar.logPrint('D', "error in receive:" + strCase);
+				StaticVar.logPrint('D', "result:" + Activity.RESULT_OK);
+			}
 		}
 	}	
 	
@@ -142,17 +149,17 @@ public class SMSreceiver extends BroadcastReceiver
 				//短信头--定位成功短信
 				if(mesContext.substring(0, 7).equals(StaticVar.SMS_Header_LOC_SUCCESS))
 				{					
-					ReceiveMsgCaseLocOK(mesContext);
+					ReceiveMsgCaseLocOK(mesContext, BaseMapMain.gpsLocate.DialogLocate);
 				}
 				//短信头--设置sos号码的gps回复短息
 				else if(mesContext.substring(0, 7).equals(StaticVar.SMS_Header_SET_SOS_OK))
 				{
-					ReceiveMsgCaseSetSosOK(context, mesContext);
+					ReceiveMsgCaseSetSosOK(context, mesContext , SettingActivity.settingDialog );
 				}
 				//短信头--gps没有正常共作
 				else if(mesContext.substring(0, 7).equals(StaticVar.SMS_Header_GPS_NOT_FIX))
 				{
-					ReceiveMstCaseGpsNotFix(context,mesContext);
+					ReceiveMstCaseGpsNotFix(context,mesContext,BaseMapMain.gpsLocate.DialogLocate);
 				}
 				else
 				{
@@ -185,7 +192,7 @@ public class SMSreceiver extends BroadcastReceiver
 	}
 	
 	//定位成功
-	private void ReceiveMsgCaseLocOK(String msgContext)
+	private void ReceiveMsgCaseLocOK(String msgContext, LogDialog logDialog)
 	{
 		//解析经纬度
 		
@@ -212,38 +219,40 @@ public class SMSreceiver extends BroadcastReceiver
 			IseekApplication.prefsEditor.putString(IseekApplication.prefOriginLongitudeKey, Integer.toString(LongitudeInt)).commit();
 			
 			//符合要求，则取消闹钟关闭logDialog
-			IseekApplication.alarmManager.cancel(IseekApplication.alarmPI);
+			BaseMapMain.gpsLocate.alarmHandler.Stop();
 			
-			BaseMapMain.baseDialog.dismissLog();
-			BaseMapMain.baseDialog.disable();
+			logDialog.dismissLog();
+			logDialog.disable();
 			
 			//WGS84坐标转换为百度坐标
 //			CoordinateConver.fromGcjToBaidu   --  GCJ-20(中文谷歌地图)到百度坐标系 
 //			CoordinateConver.fromWgs84ToBaidu --  WGS81到百度坐标系转换
 			GeoPoint tmpPoint = new GeoPoint(LatitudeInt, LongitudeInt);
 			
-			BaseMapMain.setNewPosition(tmpPoint);
+			BaseMapMain.gpsLocate.animateTo(tmpPoint);
 		}
 	}
 	
 	//设置sos号码成功
-	private void ReceiveMsgCaseSetSosOK(Context context, String msgContext)
+	private void ReceiveMsgCaseSetSosOK(Context context, String msgContext, LogDialog logDialog)
 	{
 		if(StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', msgContext.substring(8));
 		if(msgContext.substring(8).equals(StaticVar.SMS_BODY_SET_SOS_OK))
 		{
+			SettingActivity.alarmHandler.Stop();
 			DialogRefresh(SettingActivity.settingDialog, R.string.DialogSosFeedBackGpsOK, StaticVar.SMS_BODY_SET_SOS_OK);
+			SettingActivity.settingDialog.disable();
 		}
 	}
 	
-	private void ReceiveMstCaseGpsNotFix(Context context, String msgContext)
+	private void ReceiveMstCaseGpsNotFix(Context context, String msgContext, LogDialog logDialog)
 	{
 		if(StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', msgContext.substring(8));
 		if(msgContext.substring(8).equals(StaticVar.SMS_BODY_GPS_NOT_FIX))
 		{
-			DialogRefresh(BaseMapMain.baseDialog, R.string.DialogGpsNotFix, msgContext.substring(8));
+			DialogRefresh(logDialog, R.string.DialogGpsNotFix, msgContext.substring(8));
 		}
 	}
 	

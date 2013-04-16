@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <color name="menu_press_false">#e0000000</color>
-    <color name="menu_press_true">#e0696969</color>
+    <color name="menu_press_false">#c0000000</color>
+    <color name="menu_press_true">#c0696969</color>
     <color name="white">#FFFFFF</color>
     
     <!-- 待选 -->

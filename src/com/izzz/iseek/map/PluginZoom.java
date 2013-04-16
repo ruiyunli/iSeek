@@ -54,7 +54,7 @@ public class PluginZoom {
 	
 	private void ZoomOut(View v)
 	{
-		int currentLevel = BaseMapMain.mMapView.getZoomLevel();
+		int currentLevel = mMapView.getZoomLevel();
 		
 		currentLevel -= 1;
 		

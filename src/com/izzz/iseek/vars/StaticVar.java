@@ -43,7 +43,7 @@ public class StaticVar {
 	public static final String COM_ALARM_BACK_EXIT 			= "com.izzz.iseek.alarm_back_exit";
 	
 	//闹钟时间
-	public static final long ALARM_TIME = 3*1000;	
+	public static final long ALARM_TIME = 3*60*1000;	
 	
 	//短信头解析字符串
 	public static final String SMS_Header_LOC_SUCCESS = "W00,051";
@@ -64,8 +64,6 @@ public class StaticVar {
 	//校准微调步长
 	public static final int CORR_STEP = 10;
 
-	
-	
 	
 	
 	

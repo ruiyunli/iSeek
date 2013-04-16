@@ -35,8 +35,8 @@ public class IseekApplication extends Application {
   	public static SharedPreferences.Editor prefsEditor = null;	//没用上！！！！！
   	
   	//闹铃相关
-  	public static AlarmManager alarmManager = null;
-	public static PendingIntent alarmPI = null;
+//  	public static AlarmManager alarmManager = null;
+//	public static PendingIntent alarmPI = null;
 	
 	
 	

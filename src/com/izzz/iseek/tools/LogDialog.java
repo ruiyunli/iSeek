@@ -1,4 +1,4 @@
-package com.izzz.iseek.dialog;
+package com.izzz.iseek.tools;
 
 import android.app.ProgressDialog;
 import android.content.Context;
