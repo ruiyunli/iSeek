@@ -4,6 +4,7 @@
     <color name="menu_press_false">#c0000000</color>
     <color name="menu_press_true">#c0696969</color>
     <color name="white">#FFFFFF</color>
+    <color name="title_bar_background">#e0000000</color>
     
     <!-- 待选 -->
     

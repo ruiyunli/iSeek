@@ -33,6 +33,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.telephony.SmsManager;
+import android.view.Window;
 import android.widget.Toast;
 
 //设置页面，添加配置文件
@@ -60,11 +61,14 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		
+		boolean isCustom = requestWindowFeature(Window.FEATURE_CUSTOM_TITLE); //声明使用自定义标题
 		super.onCreate(savedInstanceState);
 		
-		
-		//导入页面资源
 		addPreferencesFromResource(R.xml.settings);		
+		
+		if(isCustom)
+			getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_setting);//自定义布局赋值
 		
 		settingDialog = new LogDialog(SettingActivity.this, R.string.DialogMsgHeader, R.string.DialogTitle);
 		

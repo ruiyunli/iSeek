@@ -116,7 +116,7 @@ public class BaseMapMain extends Activity {
 		InitPluginChangeView(); // 初始化切换视图插件
 
 		if (StaticVar.DEBUG_ENABLE)
-			StaticVar.logPrint('D', "init success");
+			StaticVar.logPrint('D', "On Create");
 	}
 
 	/** 注册BroadcastReceiver,用于接收短信、回执及闹钟 */
@@ -224,6 +224,10 @@ public class BaseMapMain extends Activity {
 			app.mBMapManager = null;
 		}
 		super.onDestroy();
+		
+		if (StaticVar.DEBUG_ENABLE)
+			StaticVar.logPrint('D', "on Destroy");
+		
 		System.exit(0);
 	}
 
@@ -236,6 +240,10 @@ public class BaseMapMain extends Activity {
 			app.mBMapManager.stop();
 			app.mBMapManager = null;
 		}
+		
+		if (StaticVar.DEBUG_ENABLE)
+			StaticVar.logPrint('D', "on Pause");
+		
 		super.onPause();
 	}
 
@@ -249,9 +257,7 @@ public class BaseMapMain extends Activity {
 			app.mBMapManager = null;
 		}
 
-		btnMenuCall.setVisibility(View.VISIBLE);
-		btnMenuRefresh.setVisibility(View.VISIBLE);
-		btnMenuSettings.setVisibility(View.VISIBLE);
+		bottomMenu.SetVisible();
 
 		if (StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', "on Resume");

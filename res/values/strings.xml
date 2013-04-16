@@ -91,6 +91,10 @@
     <string name="AboutCopyRight2">版权所有©CopyRight，2013-2014</string>
     <string name="AboutCopyRight3">保留所有权利</string>
     
+    <!-- title bar中的文字 -->
+    <string name="TitleBarAbout">关于</string>
+    <string name="TitleBarSetting">设置</string>
+    
     <!-- 其他 -->
     <string name="hello_world">Hello world!</string>
     <string name="OK">OK</string>
