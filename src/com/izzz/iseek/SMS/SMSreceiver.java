@@ -6,7 +6,7 @@ import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.R;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.base.BaseMapMain;
-import com.izzz.iseek.setting.SettingActivity;
+import com.izzz.iseek.base.SettingActivity;
 import com.izzz.iseek.tools.LogDialog;
 import com.izzz.iseek.vars.StaticVar;
 import android.app.Activity;
@@ -164,7 +164,7 @@ public class SMSreceiver extends BroadcastReceiver
 				else
 				{
 					//短信头不匹配--为了调试方便，后期将要删掉
-					Toast.makeText(context, R.string.ToastUnknowSMSheader, Toast.LENGTH_LONG).show();
+					//Toast.makeText(context, R.string.ToastUnknowSMSheader, Toast.LENGTH_LONG).show();
 				}
 				
 				//不再广播消息，取消保存

@@ -1,0 +1,47 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        >
+
+		<EditText
+		    android:id="@+id/OffCityName"
+		    android:layout_width="220dp"
+		    android:layout_height="wrap_content"
+		    android:hint="@string/OfflineCityHint" />		
+		<Button
+		    android:id="@+id/OffRequest"
+		    android:layout_width="80dp"
+		    android:layout_height="wrap_content"
+		    android:layout_toRightOf="@id/OffCityName"
+		    android:text="@string/OfflineRequest" />
+      	<Button
+	        android:id="@+id/OffDownload"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@id/OffRequest"
+	        android:layout_alignLeft="@id/OffRequest"
+	        android:layout_alignRight="@id/OffRequest"
+	        android:text="@string/OfflineDownload" />
+        <TextView
+            android:id="@+id/OffDetailText"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_below="@id/OffCityName"
+            android:layout_alignLeft="@id/OffCityName"
+            android:layout_alignRight="@id/OffCityName"
+            android:layout_alignTop="@id/OffDownload"
+            android:layout_alignBottom="@id/OffDownload"
+            android:gravity="center_vertical"
+            android:text="@string/OfflineDetailHint"
+            android:textIsSelectable="false" />
+	</RelativeLayout>
+
+</RelativeLayout>

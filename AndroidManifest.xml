@@ -60,9 +60,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.izzz.iseek.setting.SettingActivity"
+        <activity android:name="com.izzz.iseek.base.SettingActivity"
             android:theme="@style/titlebar"
             android:label="" ></activity>
+        <activity android:name="com.izzz.iseek.base.OfflineManage"
+		    android:theme="@style/titlebar"
+			android:label=""></activity>
 		<activity android:name="com.izzz.iseek.base.AboutActivity"
 		    android:theme="@style/titlebar"
 			android:label=""></activity>

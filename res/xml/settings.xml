@@ -28,6 +28,11 @@ xmlns:android="http://schemas.android.com/apk/res/android">
             android:title="@string/set_guide_title"
             android:summary="@string/set_guide_summary">            
         </PreferenceScreen>
+        <PreferenceScreen
+            android:key="@string/set_offline_key"
+            android:title="@string/set_offline_title"
+            android:summary="@string/set_offline_summary">            
+        </PreferenceScreen>
     </PreferenceCategory>
     
     <PreferenceCategory android:title="@string/set_about_cate_title" > 

@@ -36,6 +36,10 @@
     <string name="set_guide_title">使用说明</string>
     <string name="set_guide_summary">iSeek使用说明</string>
     
+    <string name="set_offline_key">OfflineManage</string>
+    <string name="set_offline_title">离线管理</string>
+    <string name="set_offline_summary">管理离线地图</string>
+    
     <!-- Category About -->
     <string name="set_about_cate_title">关于</string>
     <string name="set_about_key">about</string>
@@ -91,8 +95,15 @@
     <string name="AboutCopyRight2">版权所有©CopyRight，2013-2014</string>
     <string name="AboutCopyRight3">保留所有权利</string>
     
+    <!-- 离线地图管理页面 -->
+    <string name="OfflineCityHint">输入查询城市</string>
+    <string name="OfflineRequest">查询</string>
+    <string name="OfflineDownload">下载地图</string>
+    <string name="OfflineDetailHint">请输入城市查询下载</string>
+    
     <!-- title bar中的文字 -->
     <string name="TitleBarAbout">关于</string>
+    <string name="TitleBarOffline">离线管理</string>
     <string name="TitleBarSetting">设置</string>
     
     <!-- 其他 -->

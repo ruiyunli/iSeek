@@ -4,7 +4,7 @@ import com.example.iseek.R;
 import com.izzz.iseek.SMS.SMSsender;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.base.BaseMapMain;
-import com.izzz.iseek.setting.SettingActivity;
+import com.izzz.iseek.base.SettingActivity;
 import com.izzz.iseek.vars.StaticVar;
 
 import android.app.AlarmManager;

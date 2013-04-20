@@ -179,7 +179,7 @@ public class Correction {
 			
 			if(StaticVar.DEBUG_ENABLE)
 				BaseMapMain.logText.setText("x: unknown" + " y: unknown" 
-		                + '\n' + " latitude: " + corrPoint.getLatitudeE6()
+		                + "\n" + " latitude: " + corrPoint.getLatitudeE6()
 		                +" longitude: " + corrPoint.getLongitudeE6());
 		}
 	}

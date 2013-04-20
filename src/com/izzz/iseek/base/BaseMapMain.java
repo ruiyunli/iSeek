@@ -25,6 +25,7 @@ import com.izzz.iseek.SMS.SMSsender;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.map.Correction;
 import com.izzz.iseek.map.GPSLocate;
+import com.izzz.iseek.map.LocalMapControl;
 import com.izzz.iseek.map.MapMKMapViewListener;
 import com.izzz.iseek.map.MapOnTouchListener;
 import com.izzz.iseek.map.PluginChangeView;
@@ -39,11 +40,13 @@ public class BaseMapMain extends Activity {
 
 	private MapView mMapView = null; // 百度地图
 
+	private MapController mMapController = null; // 百度地图
+	
+	public static LocalMapControl localMapControl = null;	//本地地图管理
+	
 	private SMSreceiver mainReceiver = null; // BroadCastReceiver的相关变量
 
 	private IntentFilter mainFilter = null; // BroadCastReceiver的相关变量
-
-	private MapController mMapController = null; // 百度地图
 
 	public static GPSLocate gpsLocate = null;
 
@@ -160,6 +163,8 @@ public class BaseMapMain extends Activity {
 		mMapView.setTraffic(true);
 		// mMapView.setSatellite(true);
 		mMapView.setDoubleClickZooming(true);
+		
+		localMapControl = new LocalMapControl(mMapController);//本地地图管理
 
 		// 注册响应函数
 		mMapView.regMapViewListener(IseekApplication.getInstance().mBMapManager, new MapMKMapViewListener(BaseMapMain.this));
@@ -281,7 +286,7 @@ public class BaseMapMain extends Activity {
 
 		return super.onKeyDown(keyCode, event);
 	}
-	
+	/*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -299,4 +304,5 @@ public class BaseMapMain extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	*/
 }

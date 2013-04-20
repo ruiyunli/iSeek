@@ -38,7 +38,7 @@ public class MapOnTouchListener implements OnTouchListener{
             switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
             	BaseMapMain.logText.setText("x: " + x + " y: " + y
-                        + '\n' + " latitude: " + latitude
+                        + "\n" + " latitude: " + latitude
                         +" longitude: " + longitude);
             	
             	corrPoint = new GeoPoint(pt.getLatitudeE6(), pt.getLongitudeE6());

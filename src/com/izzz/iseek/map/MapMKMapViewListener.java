@@ -20,12 +20,10 @@ public class MapMKMapViewListener implements MKMapViewListener{
 		@Override
 		public void onClickMapPoi(MapPoi mapPoiInfo) {
 			// TODO Auto-generated method stub
-			String title = "";
 			if(StaticVar.DEBUG_ENABLE)
 				StaticVar.logPrint('D', "onClickMapPoi()");
 			if (mapPoiInfo != null){
-				title = mapPoiInfo.strText + "--Lat:" + mapPoiInfo.geoPt.getLatitudeE6() + " Lon:" +mapPoiInfo.geoPt.getLongitudeE6();
-				Toast.makeText(mContext,title,Toast.LENGTH_LONG).show();
+				Toast.makeText(mContext,mapPoiInfo.strText,Toast.LENGTH_LONG).show();
 //				mMapController.animateTo(mapPoiInfo.geoPt);
 			}
 		}

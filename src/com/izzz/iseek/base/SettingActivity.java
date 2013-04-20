@@ -1,4 +1,4 @@
-package com.izzz.iseek.setting;
+package com.izzz.iseek.base;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,8 +8,6 @@ import com.example.iseek.R.xml;
 import com.izzz.iseek.SMS.SMSreceiver;
 import com.izzz.iseek.SMS.SMSsender;
 import com.izzz.iseek.app.IseekApplication;
-import com.izzz.iseek.base.AboutActivity;
-import com.izzz.iseek.base.BaseMapMain;
 import com.izzz.iseek.tools.AlarmControl;
 import com.izzz.iseek.tools.LogDialog;
 import com.izzz.iseek.vars.StaticVar;
@@ -45,6 +43,8 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	private EditTextPreference prefSosNumber   	= null;
 	
 	private PreferenceScreen   prefCorrection 	= null;
+	
+	private PreferenceScreen   prefOffline 	= null;
 	
 	private PreferenceScreen   prefAbout       	= null;	
 	
@@ -87,12 +87,14 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		prefTargetPhone = (EditTextPreference)findPreference(IseekApplication.prefTargetPhoneKey);
 		prefSosNumber   = (EditTextPreference)findPreference(IseekApplication.prefSosNumberKey);
 		prefCorrection	= (PreferenceScreen)findPreference(IseekApplication.prefCorrKey);
+		prefOffline		= (PreferenceScreen)findPreference(IseekApplication.prefOfflineKey);
 		prefAbout       = (PreferenceScreen)findPreference(IseekApplication.prefAboutKey);
 		
 		//绑定监听器
 		prefTargetPhone.setOnPreferenceChangeListener(this);
 		prefSosNumber.setOnPreferenceChangeListener(this);
 		prefCorrection.setOnPreferenceClickListener(this);
+		prefOffline.setOnPreferenceClickListener(this);
 		prefAbout.setOnPreferenceClickListener(this);
 		
 		prefTargetPhone.setSummary(IseekApplication.prefs.getString(IseekApplication.prefTargetPhoneKey, 
@@ -195,6 +197,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		if(StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', "Click--key:" + preference.getKey());
 
+		//关于页面
 		if(preference.getKey() == IseekApplication.prefAboutKey)
 		{
 			Intent intent = new Intent();
@@ -202,7 +205,16 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			startActivity(intent);
 			return true;
 		}
-		if(preference.getKey() == IseekApplication.prefCorrKey)
+		//离线管理页面
+		else if(preference.getKey() == IseekApplication.prefOfflineKey)
+		{
+			Intent intent = new Intent();
+			intent.setClass(SettingActivity.this, OfflineManage.class);
+			startActivity(intent);
+			return true;
+		}
+		//校准设置
+		else if(preference.getKey() == IseekApplication.prefCorrKey)
 		{
 //			StaticVar.CORRECTION_ENABLE = true;
 //			BaseMapMain.CorrSetBtnVisible();

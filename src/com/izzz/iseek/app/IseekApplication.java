@@ -28,19 +28,13 @@ public class IseekApplication extends Application {
   	public static String prefTargetPhoneKey  	= null;
   	public static String prefSosNumberKey    	= null;
   	public static String prefCorrKey        	= null;	
+  	public static String prefOfflineKey			= null;
   	public static String prefAboutKey        	= null;	
   	public static String prefOriginLatitudeKey  = null;
   	public static String prefOriginLongitudeKey = null;
-  	public static SharedPreferences prefs    = null;
+  	public static SharedPreferences prefs    	= null;
   	public static SharedPreferences.Editor prefsEditor = null;	//没用上！！！！！
   	
-  	//闹铃相关
-//  	public static AlarmManager alarmManager = null;
-//	public static PendingIntent alarmPI = null;
-	
-	
-	
-    
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
@@ -81,12 +75,13 @@ public class IseekApplication extends Application {
 	private void InitPrefs()
 	{
 		//获取控件key字符串
-		prefTargetPhoneKey  = getResources().getString(R.string.set_targetPhone_key);
-		prefSosNumberKey    = getResources().getString(R.string.set_sosNumber_key);
-		prefCorrKey        = getResources().getString(R.string.set_corr_key);
-		prefAboutKey        = getResources().getString(R.string.set_about_key);
-		prefOriginLatitudeKey  = getResources().getString(R.string.set_origin_latitude_key);
-		prefOriginLongitudeKey = getResources().getString(R.string.set_origin_longitude_key);
+		prefTargetPhoneKey  	= getResources().getString(R.string.set_targetPhone_key);
+		prefSosNumberKey    	= getResources().getString(R.string.set_sosNumber_key);
+		prefCorrKey        		= getResources().getString(R.string.set_corr_key);
+		prefOfflineKey			= getResources().getString(R.string.set_offline_key);
+		prefAboutKey        	= getResources().getString(R.string.set_about_key);
+		prefOriginLatitudeKey  	= getResources().getString(R.string.set_origin_latitude_key);
+		prefOriginLongitudeKey 	= getResources().getString(R.string.set_origin_longitude_key);
 		
 		//获取prefs和editor
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
