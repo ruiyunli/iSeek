@@ -1,47 +1,148 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RelativeLayout1"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical" >
 
-    <RelativeLayout
+    <LinearLayout
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:focusable="true"
+        android:focusableInTouchMode="true" >
+
+        <requestFocus />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/OfflineTitleRequest"
+        android:textSize="16sp" />
+
+    <View
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" 
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        >
+        android:layout_height="2dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/seperate_line" />
 
-		<EditText
-		    android:id="@+id/OffCityName"
-		    android:layout_width="220dp"
-		    android:layout_height="wrap_content"
-		    android:hint="@string/OfflineCityHint" />		
-		<Button
-		    android:id="@+id/OffRequest"
-		    android:layout_width="80dp"
-		    android:layout_height="wrap_content"
-		    android:layout_toRightOf="@id/OffCityName"
-		    android:text="@string/OfflineRequest" />
-      	<Button
-	        android:id="@+id/OffDownload"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_below="@id/OffRequest"
-	        android:layout_alignLeft="@id/OffRequest"
-	        android:layout_alignRight="@id/OffRequest"
-	        android:text="@string/OfflineDownload" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <EditText
+            android:id="@+id/OffCityName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:hint="@string/OfflineCityHint" />
+
+        <Button
+            android:id="@+id/OffBtnRequest"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/OfflineBtnRequest" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
         <TextView
             android:id="@+id/OffDetailText"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_below="@id/OffCityName"
-            android:layout_alignLeft="@id/OffCityName"
-            android:layout_alignRight="@id/OffCityName"
-            android:layout_alignTop="@id/OffDownload"
-            android:layout_alignBottom="@id/OffDownload"
-            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
             android:text="@string/OfflineDetailHint"
             android:textIsSelectable="false" />
-	</RelativeLayout>
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/OffBtnDownload"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/OfflineBtnDownload" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/OfflineTitleLocal"
+        android:textSize="16sp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/seperate_line" />
+
+    <Spinner
+        android:id="@+id/OffLocalSelecter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="3" >
+            <TextView 
+                android:id="@+id/text01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/OfflineTextSize" />
+
+            <TextView
+                android:id="@+id/OffLocalSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/text01"
+                android:layout_toRightOf="@id/text01"
+                android:text="@string/OfflineTextSelectHint" />
+
+            <TextView 
+                android:id="@+id/text02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
+                android:layout_alignBottom="@id/text01"
+                android:text="@string/OfflineTextRatio" />
+            <TextView 
+                android:id="@+id/OffLocalRatio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/text02"
+                android:layout_toRightOf="@id/text02"
+                android:text="@string/OfflineTextSelectHint" />
+		</RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/OffBtnUpdate"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/OfflineBtnUpdate" />
+
+            <Button
+                android:id="@+id/OffBtnDelete"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/OfflineBtnDelete" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -59,7 +59,7 @@
     <string name="ToastInvalidPhoneNumber">请输入有效地手机号码</string>
     <string name="ToastTargetSetEmpty">请设置GPS中的手机号码</string>
     <string name="ToastSosSetEmpty">请设置关联的SOS号码</string>
-    <string name="ToastExitWarning">再按一次返回键退出应用</string>
+    <string name="ToastExitWarning">再按一次退出</string>
     <string name="ToastCorrPressFirst">请先触摸屏幕选择一个点</string>
     <string name="ToastZoomInMax">已放大到最大级别</string>
     <string name="ToastZoomInMin">已缩小到最小级别</string>
@@ -97,9 +97,26 @@
     
     <!-- 离线地图管理页面 -->
     <string name="OfflineCityHint">输入查询城市</string>
-    <string name="OfflineRequest">查询</string>
-    <string name="OfflineDownload">下载地图</string>
+    <string name="OfflineBtnRequest">查询</string>
+    <string name="OfflineBtnDownload">下载地图</string>
     <string name="OfflineDetailHint">请输入城市查询下载</string>
+    <string name="OfflineTitleRequest">地图下载</string>
+    <string name="OfflineTitleLocal">本地管理</string>
+    <string name="OfflineTextSize">大小：</string>
+    <string name="OfflineTextRatio">已下载：</string>
+    <string name="OfflineTextSelectHint">请选择</string>
+    <string name="OfflineCityNameEmpty">请输入需要查询的城市</string>
+    <string name="OfflineBtnUpdate">更新</string>
+    <string name="OfflineBtnDelete">删除</string>
+    <string name="OfflineDeleteOK">地图删除成功</string>
+    <string name="OfflineDeleteFail">地图删除失败</string>
+    <string name="OfflineDownloadStart">地图开始下载</string>
+    <string name="OfflineRequestNull">对不起，没有查询到地图</string>
+    <string name="OfflineRequestDownload">可下载</string>
+    <string name="OfflineRequestNewest">已最新</string>
+    <string name="OfflineRequestUpdate">可更新</string>
+    <string name="OfflineRequestDownloadOK">可更新</string>
+    
     
     <!-- title bar中的文字 -->
     <string name="TitleBarAbout">关于</string>

@@ -46,7 +46,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	
 	private PreferenceScreen   prefOffline 	= null;
 	
-	private PreferenceScreen   prefAbout       	= null;	
+	private PreferenceScreen   prefAbout = null;
 	
 	public static LogDialog settingDialog = null;
 	

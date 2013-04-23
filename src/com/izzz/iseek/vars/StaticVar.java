@@ -63,6 +63,11 @@ public class StaticVar {
 	
 	//校准微调步长
 	public static final int CORR_STEP = 10;
+	
+	//离线地图下载标志
+	public static final int OFFLINE_NULL	 = 0;
+	public static final int OFFLINE_DOWNLOAD = 1;
+	public static final int OFFLINE_UPDATE   = 2;
 
 	
 	

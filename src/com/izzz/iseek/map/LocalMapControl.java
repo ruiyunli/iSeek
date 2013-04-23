@@ -7,6 +7,7 @@ import com.baidu.mapapi.map.MKOLUpdateElement;
 import com.baidu.mapapi.map.MKOfflineMap;
 import com.baidu.mapapi.map.MKOfflineMapListener;
 import com.baidu.mapapi.map.MapController;
+import com.izzz.iseek.base.OfflineManage;
 
 
 public class LocalMapControl {
@@ -44,6 +45,17 @@ public class LocalMapControl {
 	public MKOLUpdateElement getUpdateInfo(int state)
 	{
 		return mOffline.getUpdateInfo(state);
+	}
+	
+	//获取所有的更新信息
+	public ArrayList<MKOLUpdateElement> getAllUpdateInfo()
+	{
+		return  mOffline.getAllUpdateInfo();
+	}
+	
+	public boolean remove(int cityId)
+	{
+		return mOffline.remove(cityId);
 	}
 	
 }
