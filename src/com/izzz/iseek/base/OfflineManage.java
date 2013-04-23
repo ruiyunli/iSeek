@@ -1,16 +1,19 @@
 package com.izzz.iseek.base;
 
-
 import java.util.ArrayList;
-
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,7 +21,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.baidu.mapapi.map.MKOLSearchRecord;
 import com.baidu.mapapi.map.MKOLUpdateElement;
 import com.baidu.mapapi.map.MKOfflineMap;
@@ -58,6 +60,12 @@ public class OfflineManage extends Activity{
 	
 	private int DownloadFlag = StaticVar.OFFLINE_NULL;
 	
+	private NotificationManager mNotificationManager;
+	
+	private NotificationCompat.Builder mBuilder;
+    
+	private static final int mNotiId=1;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +98,34 @@ public class OfflineManage extends Activity{
 		
 		btnDownload.setEnabled(false);
 		
+		InitNotification();
+		
 		UpdateLocal();
 	}	
+	
+	private void InitNotification()
+	{
+		Intent resultIntent = new Intent(this, OfflineManage.class);				
+		PendingIntent resultPendingIntent=PendingIntent.getActivity(OfflineManage.this, 0, resultIntent, 0);
+		
+		mBuilder =
+		        new NotificationCompat.Builder(this)
+		        .setSmallIcon(R.drawable.ic_launcher)
+		        .setContentTitle(getResources().getString(R.string.app_name))
+		        .setContentText(getResources().getString(R.string.OfflineDownloadEnd))
+		        .setAutoCancel(true)
+		        .setTicker(getResources().getString(R.string.OfflineDownloadEnd))
+		        .setWhen(System.currentTimeMillis())
+		        .setContentIntent(resultPendingIntent);
+		
+		mNotificationManager =
+		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+	}
+	
+	private void SendDownloadNotif()
+	{
+		mNotificationManager.notify(mNotiId, mBuilder.build());
+	}
 	
 	private void UpdateLocal()
 	{
@@ -106,7 +140,6 @@ public class OfflineManage extends Activity{
         		StaticVar.logPrint('D', "info size:" + updateInfo.size());
         	for ( int i=0; i<updateInfo.size(); i++)
         	{
-//        		 StaticVar.logPrint('D',String.format("updateinfo : %s %d %d", e.cityName,e.cityID,e.status));
         		localMap[i] = updateInfo.get(i).cityName;    
         		if(StaticVar.DEBUG_ENABLE)
         			StaticVar.logPrint('D', "localmap:" + i + "--" + localMap[i]);
@@ -148,7 +181,8 @@ public class OfflineManage extends Activity{
 				
 				requestCityId = record.cityID;
 				
-				String recordInfo = String.format("%s   大小:%.2fMB   ", record.cityName, ((double)record.size)/1000000);
+				String recordInfo = record.cityName + String.format("   大小:%.2fMB   ", ((double)record.size)/1000000);
+				
 				
 				String StrAppend = getResources().getString(R.string.OfflineRequestDownload);
 				btnDownload.setEnabled(true);
@@ -258,6 +292,24 @@ public class OfflineManage extends Activity{
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
+			
+			new AlertDialog.Builder(OfflineManage.this) 
+		    .setTitle(R.string.OfflineAlertDeleteTitle)
+		    .setMessage(R.string.OfflineAlertDeleteHint)
+		    .setPositiveButton(R.string.OK_CH, new AlertDeleteOnClickListener())
+		    .setNegativeButton(R.string.CANCLE_CH, null)
+		    .show();
+			
+		}
+	}
+	
+	//删除时弹出的alertDialog响应函数
+	class AlertDeleteOnClickListener implements DialogInterface.OnClickListener
+	{
+
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			// TODO Auto-generated method stub
 			String toastStr; 
 			if(BaseMapMain.localMapControl.remove(updateInfo.get(spinIndex).cityID))
 				toastStr = getResources().getString(R.string.OfflineDeleteOK);
@@ -269,7 +321,9 @@ public class OfflineManage extends Activity{
 			//更新视图
 			UpdateLocal();
 		}
+		
 	}
+	
 	
 	//spinner响应
 	class spinnerItemSelectedListener implements OnItemSelectedListener
@@ -280,7 +334,7 @@ public class OfflineManage extends Activity{
 				long arg3) {
 			// TODO Auto-generated method stub
 			spinIndex = (int) arg3;
-			String sizetmp = String.format("%.2fMB", ((double)updateInfo.get(spinIndex).size/1000000));
+			String sizetmp = String.format("%.2fMB", (double)updateInfo.get(spinIndex).size/1000000);
 			
 			if(StaticVar.DEBUG_ENABLE)
 			{
@@ -352,6 +406,8 @@ public class OfflineManage extends Activity{
 						if(DownloadFlag == StaticVar.OFFLINE_DOWNLOAD)
 							requestDetail.setText(R.string.OfflineRequestDownloadOK);
 						UpdateLocal();
+						
+						SendDownloadNotif();
 					}
 				}
 				break;

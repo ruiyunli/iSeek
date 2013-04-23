@@ -67,10 +67,10 @@
     
     
     <!-- logDialog中的文字 -->
-    <string name="DialogTitle">iSeeking...</string>
-    <string name="DialogMsgHeader">正在努力连接中...</string>
+    <string name="DialogTitle">iSeeking…</string>
+    <string name="DialogMsgHeader">正在努力连接中…</string>
     <string name="DialogSendOK">成功发送请求</string>
-    <string name="DialogDeliveryOK">目标成功接收请求，请耐心等待1-2分钟...</string>
+    <string name="DialogDeliveryOK">目标成功接收请求，请耐心等待1–2分钟…</string>
     <string name="DialogGpsNotFix">GPS未能正常工作!</string>
     
     <string name="DialogSosSendGpsOK">GPS:成功发送请求</string>
@@ -92,7 +92,7 @@
     <!-- 关于页面 -->
     <string name="AboutCopyRight0">iSeek for Android V1.0</string>
     <string name="AboutCopyRight1">西安电子科技大学</string>
-    <string name="AboutCopyRight2">版权所有©CopyRight，2013-2014</string>
+    <string name="AboutCopyRight2">版权所有©CopyRight，2013–2014</string>
     <string name="AboutCopyRight3">保留所有权利</string>
     
     <!-- 离线地图管理页面 -->
@@ -116,6 +116,9 @@
     <string name="OfflineRequestNewest">已最新</string>
     <string name="OfflineRequestUpdate">可更新</string>
     <string name="OfflineRequestDownloadOK">可更新</string>
+    <string name="OfflineDownloadEnd">地图下载完成</string>
+    <string name="OfflineAlertDeleteTitle">删除</string>
+    <string name="OfflineAlertDeleteHint">确定删除本地地图？</string>
     
     
     <!-- title bar中的文字 -->
@@ -127,6 +130,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="OK">OK</string>
     <string name="CANCLE">CANCLE</string>
+    <string name="OK_CH">确认</string>
+    <string name="CANCLE_CH">取消</string>
     
 
 </resources>
