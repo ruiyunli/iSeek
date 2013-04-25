@@ -52,7 +52,7 @@ public class StaticVar {
 	
 	//短信体
 	public static final String SMS_BODY_SET_SOS_OK  = "Set phone number  OK";//居然是两个空格，坑
-	public static final String SMS_BODY_GPS_NOT_FIX  = "GPS not fix";//这个待修改
+	public static final String SMS_BODY_GPS_NOT_FIX  = " GPS not fix";//这个待修改
 	
 	//读取通讯录
 	public static final int PICK_CONTACT_REQUEST_TargetPhone = 1;
@@ -68,6 +68,15 @@ public class StaticVar {
 	public static final int OFFLINE_NULL	 = 0;
 	public static final int OFFLINE_DOWNLOAD = 1;
 	public static final int OFFLINE_UPDATE   = 2;
+	
+	//坐标类型-百度-wgs84
+	public static final boolean GEO_WGS84 = false;
+	public static final boolean GEO_BAIDU = true;
+	
+	//离线地图类型
+	public static final int CITYTYPE_COUNTRY = 0;
+	public static final int CITYTYPE_PROVIENCE = 1;
+	public static final int CITYTYPE_CITY = 2;
 
 	
 	

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+    <!-- #c0000000 #c0696969-->
     <color name="menu_press_false">#c0000000</color>
     <color name="menu_press_true">#c0696969</color>
     <color name="white">#FFFFFF</color>

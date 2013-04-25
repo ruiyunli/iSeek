@@ -17,24 +17,29 @@
     <string name="set_privateInfo_cate_title">号码设置</string> 
        
     <string name="set_targetPhone_key">targetPhone</string>
-    <string name="set_targetPhone_title">GPS Phone</string>
+    <string name="set_targetPhone_title">GPS 号码</string>
     <string name="set_targetPhone_summary">目标GPS模块中的SIM卡</string>
     <string name="set_targetPhone_dialogTitle">GPS Phone</string>    
     
     <string name="set_sosNumber_key">sosNumber</string>
-    <string name="set_sosNumber_title">SOS Phone</string>
+    <string name="set_sosNumber_title">SOS 号码</string>
     <string name="set_sosNumber_summary">GPS关联的紧急联系号码</string>
     <string name="set_sosNumber_dialogTitle">SOS Phone</string>
     
-    <!-- Category Tool -->
-    <string name="set_tool_cate_title">工具</string>
-    <string name="set_corr_key">corretion</string>
-    <string name="set_corr_title">校准</string>
-    <string name="set_corr_summary">用于校准小范围定位误差</string>
     
-    <string name="set_guide_key">guide</string>
-    <string name="set_guide_title">使用说明</string>
-    <string name="set_guide_summary">iSeek使用说明</string>
+    
+    
+    <!-- Category Tool -->
+    <string name="set_tool_cate_title">工具</string>   
+    
+    <string name="set_correntry_key">correntry</string>
+    <string name="set_correntry_title">校准</string>
+    <string name="set_correntry_summary">用于校准小范围定位误差</string>
+    
+    <string name="set_correnable_key">correnable</string>
+    <string name="set_correnable_title">使用校准</string>
+    <string name="set_correnable_summary_on">已启用校准</string>
+    <string name="set_correnable_summary_off">未启用校准</string>
     
     <string name="set_offline_key">OfflineManage</string>
     <string name="set_offline_title">离线管理</string>
@@ -42,6 +47,11 @@
     
     <!-- Category About -->
     <string name="set_about_cate_title">关于</string>
+    
+    <string name="set_guide_key">guide</string>
+    <string name="set_guide_title">使用说明</string>
+    <string name="set_guide_summary">iSeek使用说明</string>
+    
     <string name="set_about_key">about</string>
     <string name="set_about_title">关于 iSeek</string>
     <string name="set_about_summary"></string>
@@ -86,7 +96,13 @@
     <string name="BtnSatellite">Satellite</string>
     <string name="BtnMenuCall">Call</string>
     <string name="BtnMenuSettings">Settings</string>
-    <string name="BtnMenuSeekGps">Seek GPS</string>
+    <string name="BtnMenuSeekGps">定位</string>
+    <string name="BtnZoomIn">+</string>
+    <string name="BtnZoomOut">-</string>
+    <string name="BtnMoveLeft">&#60; </string>
+    <string name="BtnMoveRight">&#62; </string>
+    <string name="BtnMoveUp">^</string>
+    <string name="BtnMoveDown">v</string>
     
     
     <!-- 关于页面 -->
@@ -100,6 +116,8 @@
     <string name="OfflineBtnRequest">查询</string>
     <string name="OfflineBtnDownload">下载地图</string>
     <string name="OfflineDetailHint">请输入城市查询下载</string>
+    <string name="OfflineChildCityHint">没有下属地区地图包</string>
+    <string name="OfflineChildCityHeader">地图包：</string>
     <string name="OfflineTitleRequest">地图下载</string>
     <string name="OfflineTitleLocal">本地管理</string>
     <string name="OfflineTextSize">大小：</string>
@@ -125,6 +143,10 @@
     <string name="TitleBarAbout">关于</string>
     <string name="TitleBarOffline">离线管理</string>
     <string name="TitleBarSetting">设置</string>
+    <string name="TitleBarGuide">使用说明</string>
+    
+    <!-- 使用说明页面 -->
+    <string name="GuideTextApp">1、应用：本应用可用于照看老人，小孩，随身携带可避免走失。</string>
     
     <!-- 其他 -->
     <string name="hello_world">Hello world!</string>

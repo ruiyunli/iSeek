@@ -10,6 +10,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.OverlayItem;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.R;
+import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.base.BaseMapMain;
 import com.izzz.iseek.vars.StaticVar;
 
@@ -37,9 +38,9 @@ public class Correction {
 	
 	public Button btnCorrCancle = null;					//校准的两个按钮
 	
-	public boolean ADD_LAYER_FLAG = false;
+	public boolean ADD_LAYER_FLAG = false;				//是否添加有覆盖层
 	
-	public boolean CORRECTION_ENABLE = false;
+	public boolean CORRECTION_START = false;			//主要用于在ontouch响应中决定是否显示红叉
 
 	public Correction(Context mContext, MapView mMapView, ImageButton btnMoveUp,
 			ImageButton btnMoveDown, ImageButton btnMoveLeft,
@@ -125,7 +126,8 @@ public class Correction {
 		mMapView.refresh();
 		
 		ADD_LAYER_FLAG = false;
-		CORRECTION_ENABLE = false;
+		CORRECTION_START = false;
+		
 	}
 
 	
@@ -183,6 +185,8 @@ public class Correction {
 		                +" longitude: " + corrPoint.getLongitudeE6());
 		}
 	}
+	
+	
 	
 	
 }

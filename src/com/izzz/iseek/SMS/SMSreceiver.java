@@ -1,7 +1,5 @@
 package com.izzz.iseek.SMS;
 
-import java.util.Set;
-
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.R;
 import com.izzz.iseek.app.IseekApplication;
@@ -164,11 +162,13 @@ public class SMSreceiver extends BroadcastReceiver
 				else
 				{
 					//短信头不匹配--为了调试方便，后期将要删掉
-					//Toast.makeText(context, R.string.ToastUnknowSMSheader, Toast.LENGTH_LONG).show();
+					if(StaticVar.DEBUG_ENABLE)
+						Toast.makeText(context, R.string.ToastUnknowSMSheader, Toast.LENGTH_LONG).show();
 				}
 				
 				//不再广播消息，取消保存
-				//abortBroadcast();
+				if(!StaticVar.DEBUG_ENABLE)
+					abortBroadcast();
 			}
 			else
 			{
@@ -218,18 +218,15 @@ public class SMSreceiver extends BroadcastReceiver
 			IseekApplication.prefsEditor.putString(IseekApplication.prefOriginLatitudeKey, Integer.toString(LatitudeInt)).commit();
 			IseekApplication.prefsEditor.putString(IseekApplication.prefOriginLongitudeKey, Integer.toString(LongitudeInt)).commit();
 			
-			//符合要求，则取消闹钟关闭logDialog
 			BaseMapMain.gpsLocate.alarmHandler.Stop();
 			
 			logDialog.dismissLog();
 			logDialog.disable();
 			
-			//WGS84坐标转换为百度坐标
-//			CoordinateConver.fromGcjToBaidu   --  GCJ-20(中文谷歌地图)到百度坐标系 
-//			CoordinateConver.fromWgs84ToBaidu --  WGS81到百度坐标系转换
 			GeoPoint tmpPoint = new GeoPoint(LatitudeInt, LongitudeInt);
 			
-			BaseMapMain.gpsLocate.animateTo(tmpPoint);
+			BaseMapMain.gpsLocate.animateTo(tmpPoint,StaticVar.GEO_WGS84);	//打开指定区域
+			
 		}
 	}
 	

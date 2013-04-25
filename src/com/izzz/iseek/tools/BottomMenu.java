@@ -28,10 +28,6 @@ public class BottomMenu {
 	
 	private ImageButton btnMenuSettings = null;		//²Ëµ¥
 	
-
-	
-	
-	
 	public BottomMenu(Context mContext, ImageButton btnMenuCall,
 			Button btnMenuRefresh, ImageButton btnMenuSettings ) {
 		super();
@@ -45,11 +41,20 @@ public class BottomMenu {
 		btnMenuSettings.setOnClickListener(new MenuBottomOnClickListner());
 	}
 
-	public void SetVisible()
+	public void SetVisible(boolean isVisible)
 	{
-		btnMenuCall.setVisibility(View.VISIBLE);
-		btnMenuRefresh.setVisibility(View.VISIBLE);
-		btnMenuSettings.setVisibility(View.VISIBLE);
+		if(isVisible)
+		{
+			btnMenuCall.setVisibility(View.VISIBLE);
+			btnMenuRefresh.setVisibility(View.VISIBLE);
+			btnMenuSettings.setVisibility(View.VISIBLE);
+		}
+		else
+		{
+			btnMenuCall.setVisibility(View.INVISIBLE);
+			btnMenuRefresh.setVisibility(View.INVISIBLE);
+			btnMenuSettings.setVisibility(View.INVISIBLE);
+		}
 	}
 	
 	private void MenuPhoneCall()
@@ -86,7 +91,6 @@ public class BottomMenu {
 			}
 			else if(v.getId() == btnMenuRefresh.getId())
 			{
-//				MenuRefresh();
 				BaseMapMain.gpsLocate.RefreshLocation();
 				
 			}

@@ -21,7 +21,7 @@ public class MapOnTouchListener implements OnTouchListener{
 		// 获得屏幕点击的位置
 		
 		
-		if(BaseMapMain.correction.CORRECTION_ENABLE)
+		if(BaseMapMain.correction.CORRECTION_START)
 		{
 			
             int x = (int) event.getX();

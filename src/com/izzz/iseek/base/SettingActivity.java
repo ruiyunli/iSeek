@@ -23,6 +23,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
@@ -44,7 +45,11 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	
 	private PreferenceScreen   prefCorrection 	= null;
 	
+	private CheckBoxPreference prefCorrEnable	= null;
+	
 	private PreferenceScreen   prefOffline 	= null;
+	
+	private PreferenceScreen   prefGuide 	= null;
 	
 	private PreferenceScreen   prefAbout = null;
 	
@@ -86,15 +91,19 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		//获取控件
 		prefTargetPhone = (EditTextPreference)findPreference(IseekApplication.prefTargetPhoneKey);
 		prefSosNumber   = (EditTextPreference)findPreference(IseekApplication.prefSosNumberKey);
-		prefCorrection	= (PreferenceScreen)findPreference(IseekApplication.prefCorrKey);
+		prefCorrection	= (PreferenceScreen)findPreference(IseekApplication.prefCorrEntryKey);
+		prefCorrEnable  = (CheckBoxPreference)findPreference(IseekApplication.prefCorrEnableKey);
 		prefOffline		= (PreferenceScreen)findPreference(IseekApplication.prefOfflineKey);
+		prefGuide 		= (PreferenceScreen)findPreference(IseekApplication.prefGuideKey);
 		prefAbout       = (PreferenceScreen)findPreference(IseekApplication.prefAboutKey);
 		
 		//绑定监听器
 		prefTargetPhone.setOnPreferenceChangeListener(this);
 		prefSosNumber.setOnPreferenceChangeListener(this);
 		prefCorrection.setOnPreferenceClickListener(this);
+		prefCorrEnable.setOnPreferenceChangeListener(this);
 		prefOffline.setOnPreferenceClickListener(this);
+		prefGuide.setOnPreferenceClickListener(this);
 		prefAbout.setOnPreferenceClickListener(this);
 		
 		prefTargetPhone.setSummary(IseekApplication.prefs.getString(IseekApplication.prefTargetPhoneKey, 
@@ -187,6 +196,16 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		{
 			return ChangeSosPhone((String)newValue);		
 		}
+		else if(preference.getKey() == IseekApplication.prefCorrEnableKey)
+		{
+			if(newValue.equals(true))
+				IseekApplication.CORRECTION_ENABLE = true;
+			else
+				IseekApplication.CORRECTION_ENABLE = true;
+			if(StaticVar.DEBUG_ENABLE)
+				StaticVar.logPrint('D', "change:" + newValue);
+			return true;
+		}
 		return false;		 
 	}
 
@@ -213,19 +232,27 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			startActivity(intent);
 			return true;
 		}
-		//校准设置
-		else if(preference.getKey() == IseekApplication.prefCorrKey)
+		//关于页面
+		if(preference.getKey() == IseekApplication.prefGuideKey)
 		{
-//			StaticVar.CORRECTION_ENABLE = true;
-//			BaseMapMain.CorrSetBtnVisible();
-			
-			BaseMapMain.correction.CORRECTION_ENABLE = true;
+			Intent intent = new Intent();
+			intent.setClass(SettingActivity.this, AppGuide.class);
+			startActivity(intent);
+			return true;
+		}
+		//校准设置
+		else if(preference.getKey() == IseekApplication.prefCorrEntryKey)
+		{
+			//由于校准是开发者通过实验获取校准变换矩阵，所以，用户不再需要校准接口，只需要校准使能接口，暂时去掉
+			/*
+			BaseMapMain.correction.CORRECTION_START = true;
 			BaseMapMain.correction.SetAllButtonVisible();
 			
 			if(StaticVar.DEBUG_ENABLE)
 				StaticVar.logPrint('D', "Correction started!");
 			finish();
 			return true;
+			*/
 		}
 		
 		return false;

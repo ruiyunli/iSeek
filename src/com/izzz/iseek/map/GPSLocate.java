@@ -12,6 +12,7 @@ import com.baidu.mapapi.utils.CoordinateConvert;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.R;
 import com.izzz.iseek.SMS.SMSsender;
+import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.base.BaseMapMain;
 import com.izzz.iseek.tools.AlarmControl;
 import com.izzz.iseek.tools.LogDialog;
@@ -61,22 +62,35 @@ public class GPSLocate {
 	}
 
 	// 设置新的坐标
-	public void animateTo(GeoPoint newPoint) {
+	public void animateTo(GeoPoint newPoint, boolean GEO_TYPE) {
 		// gps坐标系到百度坐标系的转化
-		GeoPoint baiduPoint = CoordinateConvert.fromWgs84ToBaidu(newPoint);
+		GeoPoint baiduPoint;
+		if(GEO_TYPE == StaticVar.GEO_BAIDU)
+			baiduPoint = newPoint;
+		else
+			baiduPoint = CoordinateConvert.fromWgs84ToBaidu(newPoint);
+		
 
 		if (StaticVar.DEBUG_ENABLE)
 		{
 			StaticVar.logPrint('D', "Latitude:" + baiduPoint.getLatitudeE6() + "  Longitude:" + baiduPoint.getLongitudeE6());
 			BaseMapMain.logText.setText("Latitude:" + baiduPoint.getLatitudeE6() + "  Longitude:" + baiduPoint.getLongitudeE6());
 		}
+		
+		if(IseekApplication.CORRECTION_ENABLE)
+		{
+			//插入校准变换
+			baiduPoint = CorrectionBaidu(baiduPoint);
+		}
+		
+		
 		tarLocData.latitude = baiduPoint.getLatitudeE6() / (1E6);
 		tarLocData.longitude = baiduPoint.getLongitudeE6() / (1E6);
 		tarLocData.accuracy = (float) 31.181425;
 		tarLocData.direction = -1.0f;
 
 		myLocationOverlay.setData(tarLocData);
-		mMapView.getController().setZoom(16);
+		mMapView.getController().setZoom(19);
 		mMapView.refresh();
 		mMapView.getController().animateTo(baiduPoint);
 
@@ -93,19 +107,31 @@ public class GPSLocate {
 			DialogLocate.proLogDialog.setMessage(DialogLocate.proMessage);
 			DialogLocate.enable();
 			DialogLocate.showLog();
-			/*
-			alarmManager = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
-			Intent intent = new Intent(StaticVar.COM_ALARM_REFRESH);
-			alarmPI = PendingIntent.getBroadcast(mContext,0,intent,0);
-			alarmManager.set(AlarmManager.RTC_WAKEUP, 
-					System.currentTimeMillis() + StaticVar.ALARM_TIME, alarmPI);
-			*/
 			
 			alarmHandler.Start();
 			
 			if(StaticVar.DEBUG_ENABLE)
 				StaticVar.logPrint('D', "alarm for refresh set ok!");
 		}
+	}
+	
+	private GeoPoint CorrectionBaidu(GeoPoint pt)
+	{
+		double k1 = 1.060364935510665;
+		double k2 = -0.000000000554165;
+		
+		long longOrigin =  pt.getLongitudeE6();
+		
+		double longNew = k2*longOrigin*longOrigin + k1*longOrigin;
+//		double longNew = longNew1 + longNew2;
+		
+		if(StaticVar.DEBUG_ENABLE)
+			StaticVar.logPrint('D', "long origin:" + longOrigin + " long new:" + longNew);
+		
+		
+		pt.setLongitudeE6((int)longNew);
+		
+		return pt;
 	}
 
 	

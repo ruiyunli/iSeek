@@ -17,23 +17,38 @@ import android.widget.Toast;
 
 public class IseekApplication extends Application {
 
-	//全局变量
+	private static IseekApplication mInstance = null;	//地图相关
 	
-	//地图相关
-	private static IseekApplication mInstance = null;
-    public boolean m_bKeyRight = true;
-    public BMapManager mBMapManager = null;
+    public boolean m_bKeyRight = true;					//地图相关
     
-    //控件对应的key字符串声明
-  	public static String prefTargetPhoneKey  	= null;
-  	public static String prefSosNumberKey    	= null;
-  	public static String prefCorrKey        	= null;	
-  	public static String prefOfflineKey			= null;
-  	public static String prefAboutKey        	= null;	
-  	public static String prefOriginLatitudeKey  = null;
-  	public static String prefOriginLongitudeKey = null;
-  	public static SharedPreferences prefs    	= null;
-  	public static SharedPreferences.Editor prefsEditor = null;	//没用上！！！！！
+    public BMapManager mBMapManager = null;				//地图相关
+    
+  	public static String prefTargetPhoneKey  	= null;			//控件对应的key字符串声明
+  	
+  	public static String prefSosNumberKey    	= null;			//控件对应的key字符串声明
+  	
+  	public static String prefCorrEntryKey     	= null;			//控件对应的key字符串声明
+  	
+  	public static String prefCorrEnableKey		= null;			//控件对应的key字符串声明
+  	
+  	public static String prefOfflineKey			= null;			//控件对应的key字符串声明
+  	
+  	public static String prefGuideKey			= null;			//控件对应的key字符串声明
+  	
+  	public static String prefAboutKey        	= null;			//控件对应的key字符串声明
+  	
+  	public static String prefOriginLatitudeKey  = null;			//控件对应的key字符串声明
+  	
+  	public static String prefOriginLongitudeKey = null;			//控件对应的key字符串声明
+  	
+  	public static SharedPreferences prefs    	= null;			//控件对应的key字符串声明
+  	
+  	public static SharedPreferences.Editor prefsEditor = null;	//控件对应的key字符串声明
+  	
+  	public static int DOWNLOAD_CHANNEL = StaticVar.OFFLINE_NULL;	//离线下载页面的下载途径标志
+  	
+  	public static boolean CORRECTION_ENABLE = false;
+  	
   	
 	@Override
 	public void onCreate() {
@@ -77,8 +92,10 @@ public class IseekApplication extends Application {
 		//获取控件key字符串
 		prefTargetPhoneKey  	= getResources().getString(R.string.set_targetPhone_key);
 		prefSosNumberKey    	= getResources().getString(R.string.set_sosNumber_key);
-		prefCorrKey        		= getResources().getString(R.string.set_corr_key);
+		prefCorrEntryKey   		= getResources().getString(R.string.set_correntry_key);
 		prefOfflineKey			= getResources().getString(R.string.set_offline_key);
+		prefGuideKey			= getResources().getString(R.string.set_guide_key);
+		prefCorrEnableKey 		= getResources().getString(R.string.set_correnable_key);
 		prefAboutKey        	= getResources().getString(R.string.set_about_key);
 		prefOriginLatitudeKey  	= getResources().getString(R.string.set_origin_latitude_key);
 		prefOriginLongitudeKey 	= getResources().getString(R.string.set_origin_longitude_key);
@@ -86,6 +103,10 @@ public class IseekApplication extends Application {
 		//获取prefs和editor
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefsEditor = prefs.edit();
+		
+		CORRECTION_ENABLE = prefs.getBoolean(prefCorrEnableKey,false); 
+		if(StaticVar.DEBUG_ENABLE)
+			StaticVar.logPrint('D', "correction enable:" + CORRECTION_ENABLE);
 	}
 	
 	public static IseekApplication getInstance() {

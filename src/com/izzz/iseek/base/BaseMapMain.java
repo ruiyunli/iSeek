@@ -262,7 +262,7 @@ public class BaseMapMain extends Activity {
 			app.mBMapManager = null;
 		}
 
-		bottomMenu.SetVisible();
+		bottomMenu.SetVisible(true);
 
 		if (StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', "on Resume");
@@ -299,10 +299,11 @@ public class BaseMapMain extends Activity {
 		
 		if(item.getOrder() == StaticVar.MENU_TEST)
 		{
-			GeoPoint newPoint = new GeoPoint((int)(34.128064*(1E6)), (int)(108.847287 * (1E6)));
-			gpsLocate.animateTo(newPoint);
+			GeoPoint newPoint = new GeoPoint((int)(34.238332*(1E6)), (int)(108.927169 * (1E6)));
+			gpsLocate.animateTo(newPoint,StaticVar.GEO_BAIDU);
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	*/
+	
 }

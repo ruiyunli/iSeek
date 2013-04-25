@@ -26,6 +26,7 @@ import com.baidu.mapapi.map.MKOLUpdateElement;
 import com.baidu.mapapi.map.MKOfflineMap;
 import com.baidu.mapapi.map.MKOfflineMapListener;
 import com.example.iseek.R;
+import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.vars.StaticVar;
 
 public class OfflineManage extends Activity{
@@ -35,6 +36,8 @@ public class OfflineManage extends Activity{
 	private Button btnDownload = null;
 	
 	private TextView requestDetail = null;
+	
+	private TextView requestChildCity = null;
 	
 	private Button btnRequest = null;
 	
@@ -58,8 +61,6 @@ public class OfflineManage extends Activity{
 	
 	private ArrayList<MKOLUpdateElement> updateInfo;
 	
-	private int DownloadFlag = StaticVar.OFFLINE_NULL;
-	
 	private NotificationManager mNotificationManager;
 	
 	private NotificationCompat.Builder mBuilder;
@@ -82,6 +83,7 @@ public class OfflineManage extends Activity{
 		btnDownload = (Button)findViewById(R.id.OffBtnDownload);
 		btnRequest = (Button)findViewById(R.id.OffBtnRequest);
 		requestDetail = (TextView)findViewById(R.id.OffDetailText);
+		requestChildCity = (TextView)findViewById(R.id.OffChildCity);
 		localSize = (TextView)findViewById(R.id.OffLocalSize);
 		localRatio = (TextView)findViewById(R.id.OffLocalRatio);
 		btnUpdate = (Button)findViewById(R.id.OffBtnUpdate);
@@ -116,6 +118,7 @@ public class OfflineManage extends Activity{
 		        .setAutoCancel(true)
 		        .setTicker(getResources().getString(R.string.OfflineDownloadEnd))
 		        .setWhen(System.currentTimeMillis())
+		        .setVibrate(new long[] {500L, 200L, 200L, 500L})
 		        .setContentIntent(resultPendingIntent);
 		
 		mNotificationManager =
@@ -183,34 +186,30 @@ public class OfflineManage extends Activity{
 				
 				String recordInfo = record.cityName + String.format("   大小:%.2fMB   ", ((double)record.size)/1000000);
 				
-				
 				String StrAppend = getResources().getString(R.string.OfflineRequestDownload);
 				btnDownload.setEnabled(true);
 				
-				for(MKOLUpdateElement e:updateInfo)
-				{
-					if(e.cityID == requestCityId)
+				if(updateInfo != null)
+				{					
+					for(MKOLUpdateElement e:updateInfo)
 					{
-						//可更新
-						if(e.update)
+						if(e.cityID == requestCityId)
 						{
-							StrAppend = getResources().getString(R.string.OfflineRequestUpdate);
-						}
-						//未下载完成
-						else if(e.ratio < 100)
-						{
-							StrAppend = e.ratio + "%";
-						}
-						//已下载完成
-						else if(e.ratio == 100)
-						{
-							StrAppend = getResources().getString(R.string.OfflineRequestNewest);
-							btnDownload.setEnabled(false);
-						}
-						//其他
-						else
-						{
-							btnDownload.setEnabled(false);
+							//可更新
+							if(e.update)
+								StrAppend = getResources().getString(R.string.OfflineRequestUpdate);
+							//未下载完成
+							else if(e.ratio < 100)
+								StrAppend = e.ratio + "%";
+							//已下载完成
+							else if(e.ratio == 100)
+							{
+								StrAppend = getResources().getString(R.string.OfflineRequestNewest);
+								btnDownload.setEnabled(false);
+							}
+							//其他
+							else
+								btnDownload.setEnabled(false);
 						}
 					}
 				}
@@ -220,6 +219,21 @@ public class OfflineManage extends Activity{
 				requestDetail.setText(recordInfo);
 				
 				requestCityName = CityName.getText().toString();
+				
+				//如果是地图包，存在子地图，提示用户
+				if(record.childCities != null)
+				{
+					recordInfo = getResources().getString(R.string.OfflineChildCityHeader);
+					for(MKOLSearchRecord e:record.childCities)
+					{
+						if (StaticVar.DEBUG_ENABLE) 
+						{
+							StaticVar.logPrint('D', "childCities:" + e.cityName);
+						}
+						recordInfo = recordInfo + e.cityName + " ";
+					}
+					requestChildCity.setText(recordInfo);
+				}
 				
 				if(StaticVar.DEBUG_ENABLE)
 				{
@@ -247,7 +261,7 @@ public class OfflineManage extends Activity{
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			
-			DownloadFlag = StaticVar.OFFLINE_DOWNLOAD;
+			IseekApplication.DOWNLOAD_CHANNEL = StaticVar.OFFLINE_DOWNLOAD;
 			if(BaseMapMain.localMapControl.download(requestCityId))
 			{
 				if(StaticVar.DEBUG_ENABLE)
@@ -256,7 +270,7 @@ public class OfflineManage extends Activity{
 			}
 			else
 			{
-				DownloadFlag = StaticVar.OFFLINE_NULL;
+				IseekApplication.DOWNLOAD_CHANNEL = StaticVar.OFFLINE_NULL;
 				if(StaticVar.DEBUG_ENABLE)
 					StaticVar.logPrint('D', "download not start");
 			}
@@ -271,7 +285,7 @@ public class OfflineManage extends Activity{
 			// TODO Auto-generated method stub
 			//更新--怎么更新
 			
-			DownloadFlag = StaticVar.OFFLINE_UPDATE;
+			IseekApplication.DOWNLOAD_CHANNEL = StaticVar.OFFLINE_UPDATE;
 			if(BaseMapMain.localMapControl.download(updateInfo.get(spinIndex).cityID))
 			{
 				if(StaticVar.DEBUG_ENABLE)
@@ -279,7 +293,7 @@ public class OfflineManage extends Activity{
 			}
 			else
 			{
-				DownloadFlag = StaticVar.OFFLINE_NULL;
+				IseekApplication.DOWNLOAD_CHANNEL = StaticVar.OFFLINE_NULL;
 				if(StaticVar.DEBUG_ENABLE)
 					StaticVar.logPrint('D', "update not start");
 			}
@@ -349,26 +363,20 @@ public class OfflineManage extends Activity{
 			if(updateInfo.get(spinIndex).update)
 			{
 				if(StaticVar.DEBUG_ENABLE)
-				{
 					StaticVar.logPrint('D',"get update");
-				}
 				btnUpdate.setEnabled(true);
 			}
 			else if(updateInfo.get(spinIndex).ratio < 100)
 			{
 				if(StaticVar.DEBUG_ENABLE)
-				{
 					StaticVar.logPrint('D',"download not done");
-				}
 				btnUpdate.setEnabled(true);
 			}
 			//有更新
 			else
 			{
 				if(StaticVar.DEBUG_ENABLE)
-				{
 					StaticVar.logPrint('D',"no update");
-				}
 				btnUpdate.setEnabled(false);
 			}
 				
@@ -394,16 +402,16 @@ public class OfflineManage extends Activity{
 					MKOLUpdateElement update = BaseMapMain.localMapControl.getUpdateInfo(state);
 					if ( update != null )
 					{
-						if(DownloadFlag == StaticVar.OFFLINE_DOWNLOAD)
+						if(IseekApplication.DOWNLOAD_CHANNEL == StaticVar.OFFLINE_DOWNLOAD)
 							requestDetail.setText(String.format("%s : %d%%", update.cityName, update.ratio));
-						else if(DownloadFlag == StaticVar.OFFLINE_UPDATE)
+						else if(IseekApplication.DOWNLOAD_CHANNEL == StaticVar.OFFLINE_UPDATE)
 							localRatio.setText(String.format("%d%%", update.ratio));
 					}
 					
 					if(update.ratio == 100)
 					{
 						//更新视图
-						if(DownloadFlag == StaticVar.OFFLINE_DOWNLOAD)
+						if(IseekApplication.DOWNLOAD_CHANNEL == StaticVar.OFFLINE_DOWNLOAD)
 							requestDetail.setText(R.string.OfflineRequestDownloadOK);
 						UpdateLocal();
 						
