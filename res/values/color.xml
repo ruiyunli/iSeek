@@ -4,8 +4,13 @@
     <color name="menu_press_false">#c0000000</color>
     <color name="menu_press_true">#c0696969</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#ff000000</color>
     <color name="title_bar_background">#e0000000</color>
     <color name="seperate_line">#ff33b5e5</color>
+    <color name="guide_text">#669900</color>
+    <color name="rounded_container_border">#ffb7babb</color>
+    <color name="base_start_color_default">#ffffffff</color>
+    <color name="base_end_color_default">#ffffffff</color>
     
     <!-- 待选 -->
     
@@ -153,5 +158,4 @@
 	<color name="mediumblue">#0000CD</color><!--中兰色 -->  
 	<color name="darkblue">#00008B</color><!--暗蓝色 -->  
 	<color name="navy">#000080</color><!--海军色 -->  
-	<color name="black">#000000</color><!--黑色 -->
 </resources>

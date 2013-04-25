@@ -32,7 +32,10 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.telephony.SmsManager;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 //设置页面，添加配置文件
@@ -63,6 +66,8 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	
 	public static AlarmControl alarmHandler = null;
 	
+	ImageButton btnTitleBarSetting = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -78,7 +83,9 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		settingDialog = new LogDialog(SettingActivity.this, R.string.DialogMsgHeader, R.string.DialogTitle);
 		
 		settingSMSsender = new SMSsender(SettingActivity.this);
-
+		
+		InitTitleBar();
+		
 		Initprefs();	//初始化prefs
 		
 		InitBCR();		//注册广播
@@ -86,6 +93,19 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		alarmHandler = new AlarmControl(SettingActivity.this, StaticVar.COM_ALARM_SOS_SET);
 	}
 
+	private void InitTitleBar()
+	{
+		btnTitleBarSetting = (ImageButton)findViewById(R.id.btnTitleBarSetting);
+		btnTitleBarSetting.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
+	}
+	
 	private void Initprefs()
 	{
 		//获取控件
@@ -244,7 +264,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		else if(preference.getKey() == IseekApplication.prefCorrEntryKey)
 		{
 			//由于校准是开发者通过实验获取校准变换矩阵，所以，用户不再需要校准接口，只需要校准使能接口，暂时去掉
-			/*
+			
 			BaseMapMain.correction.CORRECTION_START = true;
 			BaseMapMain.correction.SetAllButtonVisible();
 			
@@ -252,7 +272,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 				StaticVar.logPrint('D', "Correction started!");
 			finish();
 			return true;
-			*/
+			
 		}
 		
 		return false;

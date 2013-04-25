@@ -6,41 +6,39 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.BMapManager;
-import com.baidu.mapapi.map.LocationData;
 import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.MyLocationOverlay;
-import com.baidu.mapapi.utils.CoordinateConvert;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.R;
 import com.izzz.iseek.SMS.SMSreceiver;
-import com.izzz.iseek.SMS.SMSsender;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.map.Correction;
 import com.izzz.iseek.map.GPSLocate;
 import com.izzz.iseek.map.LocalMapControl;
 import com.izzz.iseek.map.MapMKMapViewListener;
 import com.izzz.iseek.map.MapOnTouchListener;
+import com.izzz.iseek.map.PhoneLocation;
 import com.izzz.iseek.map.PluginChangeView;
 import com.izzz.iseek.map.PluginZoom;
 import com.izzz.iseek.tools.BottomMenu;
-import com.izzz.iseek.tools.LogDialog;
 import com.izzz.iseek.vars.StaticVar;
 
 public class BaseMapMain extends Activity {
 
 	private IseekApplication app = null;
 
-	private MapView mMapView = null; // 百度地图
+	private MapView mMapView = null; 			// 百度地图
 
 	private MapController mMapController = null; // 百度地图
+	
+	private PhoneLocation mPLocation;
 	
 	public static LocalMapControl localMapControl = null;	//本地地图管理
 	
@@ -108,6 +106,10 @@ public class BaseMapMain extends Activity {
 
 		InitMap();			// 百度地图初始化
 		
+		InitPhoneLocate();		//定位初始化
+		
+		
+		
 		InitGPSLocation();	//初始化GPSLocation
 
 		InitCorrection(); 	// 初始化imagebutton变量
@@ -172,6 +174,14 @@ public class BaseMapMain extends Activity {
 		mMapView.setOnTouchListener(new MapOnTouchListener());
 
 	}
+	
+	private void InitPhoneLocate()
+	{
+		mPLocation = ((IseekApplication)getApplication()).mPhoneLocation;
+		mPLocation.InitLocationClient();
+		mPLocation.Start();
+	}
+	
 	
 	/** 初始化GPS定位类*/
 	private void InitGPSLocation()
@@ -286,7 +296,7 @@ public class BaseMapMain extends Activity {
 
 		return super.onKeyDown(keyCode, event);
 	}
-	/*
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -299,11 +309,11 @@ public class BaseMapMain extends Activity {
 		
 		if(item.getOrder() == StaticVar.MENU_TEST)
 		{
-			GeoPoint newPoint = new GeoPoint((int)(34.238332*(1E6)), (int)(108.927169 * (1E6)));
-			gpsLocate.animateTo(newPoint,StaticVar.GEO_BAIDU);
+			mPLocation.requestLocation();
+			
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	*/
+	
 	
 }

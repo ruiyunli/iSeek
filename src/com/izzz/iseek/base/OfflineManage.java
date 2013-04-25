@@ -1,6 +1,7 @@
 package com.izzz.iseek.base;
 
 import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
@@ -18,9 +19,11 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.baidu.mapapi.map.MKOLSearchRecord;
 import com.baidu.mapapi.map.MKOLUpdateElement;
 import com.baidu.mapapi.map.MKOfflineMap;
@@ -64,6 +67,8 @@ public class OfflineManage extends Activity{
 	private NotificationManager mNotificationManager;
 	
 	private NotificationCompat.Builder mBuilder;
+	
+	private ImageButton btnTitleBarOffline = null;
     
 	private static final int mNotiId=1;
 	
@@ -89,6 +94,7 @@ public class OfflineManage extends Activity{
 		btnUpdate = (Button)findViewById(R.id.OffBtnUpdate);
 		btnDelete = (Button)findViewById(R.id.OffBtnDelete);
 		spinLocalSelecter = (Spinner)findViewById(R.id.OffLocalSelecter);
+		btnTitleBarOffline = (ImageButton)findViewById(R.id.btnTitleBarOffline);
 				
 		//响应函数
 		btnRequest.setOnClickListener(new RequestOnClickListener());
@@ -97,6 +103,8 @@ public class OfflineManage extends Activity{
 		btnUpdate.setOnClickListener(new UpdateOnClickListener());
 		btnDelete.setOnClickListener(new DeleteOnClickListener());
 		spinLocalSelecter.setOnItemSelectedListener(new spinnerItemSelectedListener());
+		
+		btnTitleBarOffline.setOnClickListener(new TitleBarOnClickListener());
 		
 		btnDownload.setEnabled(false);
 		
@@ -166,7 +174,10 @@ public class OfflineManage extends Activity{
 
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub			
+			// TODO Auto-generated method stub	
+			
+			//先清空下属列表
+			requestChildCity.setText(R.string.OfflineChildCityHint);
 			
 			//输入为空
 			if("".equals(CityName.getText().toString().trim()))
@@ -422,5 +433,15 @@ public class OfflineManage extends Activity{
 			}
 		}
 	}
+	
+	
+	class TitleBarOnClickListener implements OnClickListener{
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			finish();
+		}
+	}
+	
 	
 }

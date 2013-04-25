@@ -8,32 +8,29 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="14" />
 
-    <!--使用网络功能所需权限  -->
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-	<!-- SDK离线地图和cache功能需要读写外部存储器 -->
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<!-- 获取设置信息和详情页直接拨打电话需要以下权限  -->
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<uses-permission android:name="android.permission.CALL_PHONE" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />  <!-- 貌似可去掉 -->
+	
 	<!-- 使用定位功能所需权限,demo已集成百度定位SDK,不使用定位功能可去掉以下6项 -->
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
-	<uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCES_MOCK_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_GPS"/>
+	 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+<!-- 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission> -->
+<!-- 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission> -->
+<!-- 	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission> -->
+<!-- 	<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission> -->
+<!-- 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission> -->
+<!-- 	<uses-permission android:name="android.permission.INTERNET" /> -->
+	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"></uses-permission>
+	<uses-permission android:name="android.permission.READ_LOGS"></uses-permission>
 	
-	<!-- 发送短信 -->
+	<uses-permission android:name="android.permission.CALL_PHONE" />
 	<uses-permission android:name="android.permission.SEND_SMS" />
-	<!-- 接收短信 -->
-	<uses-permission android:name="android.permission.RECEIVE_SMS" />
-	<!-- 读取通讯录 -->
-	<uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
-	
-	<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+	<uses-permission android:name="android.permission.RECEIVE_SMS" />	
+	<uses-permission android:name="android.permission.VIBRATE"  />
 	
 	
 	    
@@ -43,7 +40,6 @@
         android:resizeable="true"
         android:anyDensity="true"/>
     
-    <!--         	android:theme="@android:style/Theme.NoTitleBar"  -->
     <application
         android:name="com.izzz.iseek.app.IseekApplication"
         android:allowBackup="true"
@@ -69,6 +65,10 @@
 		    android:theme="@style/titlebar" android:label=""></activity>
 		<activity android:name="com.izzz.iseek.base.AppGuide"
 		    android:theme="@style/titlebar" android:label=""></activity>
+		
+		<service android:name="com.baidu.location.f" android:enabled="true"
+			android:process=":remote">
+		</service>
     </application>
 
 </manifest>

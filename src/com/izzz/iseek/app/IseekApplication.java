@@ -1,15 +1,16 @@
 package com.izzz.iseek.app;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
 import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.MKGeneralListener;
 import com.baidu.mapapi.map.MKEvent;
 import com.example.iseek.R;
+import com.izzz.iseek.base.BaseMapMain;
+import com.izzz.iseek.map.PhoneLocation;
 import com.izzz.iseek.vars.StaticVar;
-
-
-import android.app.AlarmManager;
 import android.app.Application;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -22,6 +23,8 @@ public class IseekApplication extends Application {
     public boolean m_bKeyRight = true;					//地图相关
     
     public BMapManager mBMapManager = null;				//地图相关
+    
+    public PhoneLocation mPhoneLocation = null;		//定位相关
     
   	public static String prefTargetPhoneKey  	= null;			//控件对应的key字符串声明
   	
@@ -53,6 +56,9 @@ public class IseekApplication extends Application {
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
+		
+		mPhoneLocation = new PhoneLocation(this);
+		
 		super.onCreate();
 		
 		//this指针
@@ -60,6 +66,8 @@ public class IseekApplication extends Application {
 		
 		//百度地图BMapManger对象
 		initEngineManager(this);
+		
+		
 		
 		//初始化shareedPreference
 		InitPrefs();
@@ -139,9 +147,4 @@ public class IseekApplication extends Application {
             }
         }
     }
-	
-	
-	
-	
-
 }

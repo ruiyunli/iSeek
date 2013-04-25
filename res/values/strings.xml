@@ -114,10 +114,10 @@
     <!-- 离线地图管理页面 -->
     <string name="OfflineCityHint">输入查询城市</string>
     <string name="OfflineBtnRequest">查询</string>
-    <string name="OfflineBtnDownload">下载地图</string>
+    <string name="OfflineBtnDownload">下载</string>
     <string name="OfflineDetailHint">请输入城市查询下载</string>
-    <string name="OfflineChildCityHint">没有下属地区地图包</string>
-    <string name="OfflineChildCityHeader">地图包：</string>
+    <string name="OfflineChildCityHint">地图包:没有下属地区地图包</string>
+    <string name="OfflineChildCityHeader">地图包:</string>
     <string name="OfflineTitleRequest">地图下载</string>
     <string name="OfflineTitleLocal">本地管理</string>
     <string name="OfflineTextSize">大小：</string>
@@ -146,7 +146,10 @@
     <string name="TitleBarGuide">使用说明</string>
     
     <!-- 使用说明页面 -->
-    <string name="GuideTextApp">1、应用：本应用可用于照看老人，小孩，随身携带可避免走失。</string>
+    <string name="GuideTextApp">关于应用：本应用可用于照看老人、小孩，达到实时看护，应用在手，时时刻刻都能够掌握他们的位置，随身携带可避免走失。</string>
+    <string name="GuideTextCorr">关于校准：在设置页面中开启校准功能，将更进一步精确GPS的位置，实现更快速，方便的寻找，如需停止自动校准，请在设置页面中关闭。</string>
+    <string name="GuideTextOffline">关于地图：离线管理是对本地地图的管理，可以进行更新、删除，以及搜索下载指定区域的地图等操作。</string>
+    
     
     <!-- 其他 -->
     <string name="hello_world">Hello world!</string>

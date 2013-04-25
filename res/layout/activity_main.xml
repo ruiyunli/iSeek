@@ -12,7 +12,8 @@
         android:id="@+id/logText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="log output" />
+        android:text="log output" 
+        android:visibility="gone"/>
 
     <!-- 百度地图 -->
 
@@ -54,7 +55,8 @@
             android:layout_weight="2"
             android:background="@drawable/btn_menu"
             android:text="@string/BtnMenuSeekGps"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="20sp" />
 
         <View
             android:layout_width="1dp"
@@ -82,12 +84,12 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/btnCorrCancle"
+            android:id="@+id/btnCorrOk"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:background="@drawable/btn_menu"
-            android:text="@string/CANCLE_CH"
+            android:text="@string/OK_CH"
             android:textColor="@color/white" />
 
         <View
@@ -96,12 +98,12 @@
             android:background="@color/menu_press_true" />
 
         <Button
-            android:id="@+id/btnCorrOk"
+            android:id="@+id/btnCorrCancle"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:background="@drawable/btn_menu"
-            android:text="@string/OK_CH"
+            android:text="@string/CANCLE_CH"
             android:textColor="@color/white" />
     </LinearLayout>
 

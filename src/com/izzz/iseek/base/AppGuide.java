@@ -2,14 +2,16 @@ package com.izzz.iseek.base;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.TextView;
+import android.widget.ImageButton;
 
 import com.example.iseek.R;
 
 public class AppGuide extends Activity{
 
-	private TextView textApp = null;
+	private ImageButton btnTitleBarGuide = null; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +23,16 @@ public class AppGuide extends Activity{
 		if(isCustom)
 			getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_guide);//自定义布局赋值   
 		
-		textApp = (TextView)findViewById(R.id.textApp);
+		btnTitleBarGuide = (ImageButton)findViewById(R.id.btnTitleBarGuide);
 		
-		textApp.setText(R.string.GuideTextApp);
+		btnTitleBarGuide.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
+		
 	}
 }

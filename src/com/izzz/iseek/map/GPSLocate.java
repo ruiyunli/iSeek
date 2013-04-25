@@ -71,19 +71,18 @@ public class GPSLocate {
 			baiduPoint = CoordinateConvert.fromWgs84ToBaidu(newPoint);
 		
 
-		if (StaticVar.DEBUG_ENABLE)
-		{
-			StaticVar.logPrint('D', "Latitude:" + baiduPoint.getLatitudeE6() + "  Longitude:" + baiduPoint.getLongitudeE6());
-			BaseMapMain.logText.setText("Latitude:" + baiduPoint.getLatitudeE6() + "  Longitude:" + baiduPoint.getLongitudeE6());
-		}
-		
 		if(IseekApplication.CORRECTION_ENABLE)
 		{
 			//插入校准变换
 			baiduPoint = CorrectionBaidu(baiduPoint);
 		}
 		
-		
+		if (StaticVar.DEBUG_ENABLE)
+		{
+			StaticVar.logPrint('D', "Latitude:" + baiduPoint.getLatitudeE6() + "  Longitude:" + baiduPoint.getLongitudeE6());
+			BaseMapMain.logText.setText("Latitude:" + baiduPoint.getLatitudeE6() + "  Longitude:" + baiduPoint.getLongitudeE6());
+		}
+				
 		tarLocData.latitude = baiduPoint.getLatitudeE6() / (1E6);
 		tarLocData.longitude = baiduPoint.getLongitudeE6() / (1E6);
 		tarLocData.accuracy = (float) 31.181425;
