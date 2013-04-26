@@ -36,6 +36,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 //设置页面，添加配置文件
@@ -78,26 +79,32 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		addPreferencesFromResource(R.xml.settings);		
 		
 		if(isCustom)
-			getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar_setting);//自定义布局赋值
+			getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);//自定义布局赋值
 		
-		settingDialog = new LogDialog(SettingActivity.this, R.string.DialogMsgHeader, R.string.DialogTitle);
-		
-		settingSMSsender = new SMSsender(SettingActivity.this);
-		
-		InitTitleBar();
+		InitTitleBar();		
 		
 		Initprefs();	//初始化prefs
 		
 		InitBCR();		//注册广播
 		
+		settingDialog = new LogDialog(SettingActivity.this, R.string.DialogMsgHeader, R.string.DialogTitle);
+		
+		settingSMSsender = new SMSsender(SettingActivity.this);
+		
 		alarmHandler = new AlarmControl(SettingActivity.this, StaticVar.COM_ALARM_SOS_SET);
 	}
-
+	
+	
+	
 	private void InitTitleBar()
 	{
-		btnTitleBarSetting = (ImageButton)findViewById(R.id.btnTitleBarSetting);
-		btnTitleBarSetting.setOnClickListener(new OnClickListener() {
-			
+		ImageButton btnTitleBar = (ImageButton)findViewById(R.id.btnTitleBar);
+		TextView textTitleBar = (TextView)findViewById(R.id.textTitleBar);
+		
+		//此处修改一下，对应页面的文字标题
+		textTitleBar.setText(R.string.TitleBarSetting);
+		
+		btnTitleBar.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -264,13 +271,17 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		else if(preference.getKey() == IseekApplication.prefCorrEntryKey)
 		{
 			//由于校准是开发者通过实验获取校准变换矩阵，所以，用户不再需要校准接口，只需要校准使能接口，暂时去掉
-			
+			/*
 			BaseMapMain.correction.CORRECTION_START = true;
 			BaseMapMain.correction.SetAllButtonVisible();
 			
 			if(StaticVar.DEBUG_ENABLE)
 				StaticVar.logPrint('D', "Correction started!");
 			finish();
+			*/
+			Intent intent = new Intent();
+			intent.setClass(SettingActivity.this, CorrManage.class);
+			startActivity(intent);
 			return true;
 			
 		}

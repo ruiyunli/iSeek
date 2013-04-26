@@ -1,11 +1,14 @@
 package com.izzz.iseek.base;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -23,6 +26,7 @@ import com.izzz.iseek.map.Correction;
 import com.izzz.iseek.map.GPSLocate;
 import com.izzz.iseek.map.LocalMapControl;
 import com.izzz.iseek.map.MapMKMapViewListener;
+import com.izzz.iseek.map.MapOnLongClickListener;
 import com.izzz.iseek.map.MapOnTouchListener;
 import com.izzz.iseek.map.PhoneLocation;
 import com.izzz.iseek.map.PluginChangeView;
@@ -82,8 +86,6 @@ public class BaseMapMain extends Activity {
 
 	long lastTime = 0; // 用于退出时间记录
 
-//	private SMSsender baseSMSsender = null; // 发送短信接口
-
 	public static TextView logText = null; // 测试用输出testView
 
 	@Override
@@ -106,9 +108,7 @@ public class BaseMapMain extends Activity {
 
 		InitMap();			// 百度地图初始化
 		
-		InitPhoneLocate();		//定位初始化
-		
-		
+//		InitPhoneLocate();		//定位初始化
 		
 		InitGPSLocation();	//初始化GPSLocation
 
@@ -172,6 +172,8 @@ public class BaseMapMain extends Activity {
 		mMapView.regMapViewListener(IseekApplication.getInstance().mBMapManager, new MapMKMapViewListener(BaseMapMain.this));
 		// 注册onTouchListener响应函数
 		mMapView.setOnTouchListener(new MapOnTouchListener());
+		
+		mMapView.setOnLongClickListener(new MapOnLongClickListener(BaseMapMain.this));
 
 	}
 	
@@ -297,6 +299,7 @@ public class BaseMapMain extends Activity {
 		return super.onKeyDown(keyCode, event);
 	}
 	
+	/*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -314,6 +317,5 @@ public class BaseMapMain extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	
+	*/
 }

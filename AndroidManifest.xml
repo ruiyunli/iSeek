@@ -65,6 +65,8 @@
 		    android:theme="@style/titlebar" android:label=""></activity>
 		<activity android:name="com.izzz.iseek.base.AppGuide"
 		    android:theme="@style/titlebar" android:label=""></activity>
+		<activity android:name="com.izzz.iseek.base.CorrManage"
+		    android:theme="@style/titlebar" android:label=""></activity>
 		
 		<service android:name="com.baidu.location.f" android:enabled="true"
 			android:process=":remote">

@@ -3,7 +3,7 @@
     android:orientation="horizontal" android:layout_width="fill_parent" 
     android:layout_height="fill_parent">
     <ImageButton 
-        android:id="@+id/btnTitleBarAbout"
+        android:id="@+id/btnTitleBar"
         android:layout_width="wrap_content" 
         android:layout_centerVertical="true"
         android:layout_height="wrap_content" 
@@ -11,10 +11,12 @@
         android:contentDescription="@string/app_name"
         />
     
-    <TextView android:layout_width="wrap_content" 
+    <TextView
+        android:id="@+id/textTitleBar"
+        android:layout_width="wrap_content" 
         android:layout_centerInParent="true" 
         android:layout_height="wrap_content" 
         android:textColor="#ffffff"
         android:textSize="18sp"
-        android:text="@string/TitleBarAbout" />
+        android:text="" />
 </RelativeLayout>

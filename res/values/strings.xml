@@ -4,66 +4,55 @@
     <!-- Activity name -->
     <string name="app_name">iSeek</string>
     <string name="activity_setting">Setting</string>
-    
+
     <!-- 菜单中的文字 -->
     <string name="action_refresh">ReFresh</string>
     <string name="action_settings">Settings</string>
     <string name="action_phoneCall">Call</string>
     <string name="action_exit">Exit</string>
-    
-    
+
     <!-- 设置页面中的文字 -->
     <!-- Category privateInfo -->
-    <string name="set_privateInfo_cate_title">号码设置</string> 
-       
+    <string name="set_privateInfo_cate_title">号码设置</string>
     <string name="set_targetPhone_key">targetPhone</string>
     <string name="set_targetPhone_title">GPS 号码</string>
     <string name="set_targetPhone_summary">目标GPS模块中的SIM卡</string>
-    <string name="set_targetPhone_dialogTitle">GPS Phone</string>    
-    
+    <string name="set_targetPhone_dialogTitle">GPS Phone</string>
     <string name="set_sosNumber_key">sosNumber</string>
     <string name="set_sosNumber_title">SOS 号码</string>
     <string name="set_sosNumber_summary">GPS关联的紧急联系号码</string>
     <string name="set_sosNumber_dialogTitle">SOS Phone</string>
-    
-    
-    
-    
+
     <!-- Category Tool -->
-    <string name="set_tool_cate_title">工具</string>   
-    
+    <string name="set_tool_cate_title">工具</string>
     <string name="set_correntry_key">correntry</string>
     <string name="set_correntry_title">校准</string>
     <string name="set_correntry_summary">用于校准小范围定位误差</string>
-    
     <string name="set_correnable_key">correnable</string>
     <string name="set_correnable_title">使用校准</string>
     <string name="set_correnable_summary_on">已启用校准</string>
     <string name="set_correnable_summary_off">未启用校准</string>
-    
     <string name="set_offline_key">OfflineManage</string>
     <string name="set_offline_title">离线管理</string>
     <string name="set_offline_summary">管理离线地图</string>
-    
+
     <!-- Category About -->
     <string name="set_about_cate_title">关于</string>
-    
     <string name="set_guide_key">guide</string>
     <string name="set_guide_title">使用说明</string>
     <string name="set_guide_summary">iSeek使用说明</string>
-    
     <string name="set_about_key">about</string>
     <string name="set_about_title">关于 iSeek</string>
     <string name="set_about_summary"></string>
-    
+
     <!-- Category other keys -->
     <string name="set_origin_latitude_key">originLatitude</string>
     <string name="set_origin_longitude_key">originLongitude</string>
-    
+
     <!-- String in Toast -->
     <string name="ToastErrorInternet">网络连接出错</string>
     <string name="ToastErrorSearchData">搜索数据出错</string>
-    <string name="ToastErrorMapKey">Invalid BaiduMapKey</string>    
+    <string name="ToastErrorMapKey">Invalid BaiduMapKey</string>
     <string name="ToastTargetSetOK">目标GPS手机号码设置成功!</string>
     <string name="ToastSosSetOK">关联SOS号码设置成功!</string>
     <string name="ToastInvalidPhoneNumber">请输入有效地手机号码</string>
@@ -74,23 +63,20 @@
     <string name="ToastZoomInMax">已放大到最大级别</string>
     <string name="ToastZoomInMin">已缩小到最小级别</string>
     <string name="ToastUnknowSMSheader">注意:不能识别的短信</string>
-    
-    
+
     <!-- logDialog中的文字 -->
     <string name="DialogTitle">iSeeking…</string>
     <string name="DialogMsgHeader">正在努力连接中…</string>
     <string name="DialogSendOK">成功发送请求</string>
     <string name="DialogDeliveryOK">目标成功接收请求，请耐心等待1–2分钟…</string>
     <string name="DialogGpsNotFix">GPS未能正常工作!</string>
-    
     <string name="DialogSosSendGpsOK">GPS:成功发送请求</string>
     <string name="DialogSosDeliveryGpsOK">GPS:成功接收请求!</string>
     <string name="DialogSosFeedBackGpsOK">GPS:设置成功!</string>
     <string name="DialogSosSendTarOK">SOS:成功发送通知</string>
     <string name="DialogSosDeliveryTarOK">SOS:成功接收通知!</string>
-    
     <string name="DialogAlarmGot">连接超时，请重试</string>
-    
+
     <!-- imageButton ContextDescription -->
     <string name="BtnTraffic">Traffic</string>
     <string name="BtnSatellite">Satellite</string>
@@ -103,14 +89,13 @@
     <string name="BtnMoveRight">&#62; </string>
     <string name="BtnMoveUp">^</string>
     <string name="BtnMoveDown">v</string>
-    
-    
+
     <!-- 关于页面 -->
-    <string name="AboutCopyRight0">iSeek for Android V1.0</string>
+    <string name="AboutCopyRight0">iSeek for Android V0.1</string>
     <string name="AboutCopyRight1">西安电子科技大学</string>
     <string name="AboutCopyRight2">版权所有©CopyRight，2013–2014</string>
     <string name="AboutCopyRight3">保留所有权利</string>
-    
+
     <!-- 离线地图管理页面 -->
     <string name="OfflineCityHint">输入查询城市</string>
     <string name="OfflineBtnRequest">查询</string>
@@ -137,26 +122,29 @@
     <string name="OfflineDownloadEnd">地图下载完成</string>
     <string name="OfflineAlertDeleteTitle">删除</string>
     <string name="OfflineAlertDeleteHint">确定删除本地地图？</string>
-    
-    
+
     <!-- title bar中的文字 -->
     <string name="TitleBarAbout">关于</string>
     <string name="TitleBarOffline">离线管理</string>
     <string name="TitleBarSetting">设置</string>
     <string name="TitleBarGuide">使用说明</string>
+    <string name="TitleBarCorr">校准</string>
     
+    <!-- 校准中文字 -->
+    <string name="CorrAlertTitle">校准</string>
+    <string name="CorrAlertMsg">确定对这个点进行校准吗？</string>
+    <string name="btnCorrCalc">计算校准量</string>
+
     <!-- 使用说明页面 -->
     <string name="GuideTextApp">关于应用：本应用可用于照看老人、小孩，达到实时看护，应用在手，时时刻刻都能够掌握他们的位置，随身携带可避免走失。</string>
     <string name="GuideTextCorr">关于校准：在设置页面中开启校准功能，将更进一步精确GPS的位置，实现更快速，方便的寻找，如需停止自动校准，请在设置页面中关闭。</string>
     <string name="GuideTextOffline">关于地图：离线管理是对本地地图的管理，可以进行更新、删除，以及搜索下载指定区域的地图等操作。</string>
-    
-    
+
     <!-- 其他 -->
     <string name="hello_world">Hello world!</string>
     <string name="OK">OK</string>
     <string name="CANCLE">CANCLE</string>
     <string name="OK_CH">确认</string>
     <string name="CANCLE_CH">取消</string>
-    
 
 </resources>

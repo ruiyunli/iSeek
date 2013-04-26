@@ -118,6 +118,14 @@ public class Correction {
 			mMapView.getOverlays().add(correctionOverlay);
 	}
 	
+	/** 进入校准 */
+	public void EnterCorrection()
+	{
+		BaseMapMain.correction.CORRECTION_START = true;
+		BaseMapMain.correction.SetAllButtonVisible();
+	}
+	
+	/** 退出校准 */
 	public void ExitCorrection()
 	{
 		SetAllButtonGone();
