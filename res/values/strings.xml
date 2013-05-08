@@ -45,14 +45,38 @@
     <string name="set_about_title">关于 iSeek</string>
     <string name="set_about_summary"></string>
 
-    <!-- Category other keys -->
-    <string name="set_origin_latitude_key">originLatitude</string>
-    <string name="set_origin_longitude_key">originLongitude</string>
+    <!-- key-上次定位位置 -->
+    <string name="set_last_latitude_key">LastLatitude</string>
+    <string name="set_last_longitude_key">LastLongitude</string>
+
+    <!-- key-校准内容存储 -->
+    <string name="corr_point_size_key">CorrPointSize</string>
+    <string name="corr_point_0_key">CorrPoint0</string>
+    <string name="corr_point_1_key">CorrPoint1</string>
+    <string name="corr_point_2_key">CorrPoint2</string>
+    <string name="corr_point_3_key">CorrPoint3</string>
+    <string name="corr_point_4_key">CorrPoint4</string>
+    <string name="corr_point_5_key">CorrPoint5</string>
+    <string name="corr_point_6_key">CorrPoint6</string>
+    <string name="corr_point_7_key">CorrPoint7</string>
+    <string name="corr_point_8_key">CorrPoint8</string>
+    <string name="corr_point_9_key">CorrPoint9</string>
+    <string name="origin_point_0_key">OriginPoint0</string>
+    <string name="origin_point_1_key">OriginPoint1</string>
+    <string name="origin_point_2_key">OriginPoint2</string>
+    <string name="origin_point_3_key">OriginPoint3</string>
+    <string name="origin_point_4_key">OriginPoint4</string>
+    <string name="origin_point_5_key">OriginPoint5</string>
+    <string name="origin_point_6_key">OriginPoint6</string>
+    <string name="origin_point_7_key">OriginPoint7</string>
+    <string name="origin_point_8_key">OriginPoint8</string>
+    <string name="origin_point_9_key">OriginPoint9</string>
 
     <!-- String in Toast -->
     <string name="ToastErrorInternet">网络连接出错</string>
     <string name="ToastErrorSearchData">搜索数据出错</string>
     <string name="ToastErrorMapKey">Invalid BaiduMapKey</string>
+    <string name="ToastErrorMapManager">BMapManager 初始化错误!</string>
     <string name="ToastTargetSetOK">目标GPS手机号码设置成功!</string>
     <string name="ToastSosSetOK">关联SOS号码设置成功!</string>
     <string name="ToastInvalidPhoneNumber">请输入有效地手机号码</string>
@@ -63,6 +87,7 @@
     <string name="ToastZoomInMax">已放大到最大级别</string>
     <string name="ToastZoomInMin">已缩小到最小级别</string>
     <string name="ToastUnknowSMSheader">注意:不能识别的短信</string>
+    <string name="ToastCorrPointFull">请先清除掉部分校准数据</string>
 
     <!-- logDialog中的文字 -->
     <string name="DialogTitle">iSeeking…</string>
@@ -129,11 +154,19 @@
     <string name="TitleBarSetting">设置</string>
     <string name="TitleBarGuide">使用说明</string>
     <string name="TitleBarCorr">校准</string>
-    
+
     <!-- 校准中文字 -->
     <string name="CorrAlertTitle">校准</string>
-    <string name="CorrAlertMsg">确定对这个点进行校准吗？</string>
+    <string name="CorrAlertMsgWarn">确定对这个点进行校准吗？</string>
+    <string name="CorrAlertMsgNoLocate">校准前请先定位成功！</string>
+    <string name="CorrAlertMsgCorrUsed">进入校准模式，请先关闭自动校准再重新定位！</string>
+    <string name="btnCorrDelete">删除</string>
     <string name="btnCorrCalc">计算校准量</string>
+    <string name="CorrGuideTitle">校准步骤</string>
+    <string name="CorrGuideContext">1、选择偏移量相对稳定的数据组\n2、点击计算校准量按钮\n3、在设置页面勾选使用校准</string>
+    <string name="CorrListOrigin">原始数据</string>
+    <string name="CorrListTarget">手动校准</string>
+    <string name="CorrListDiff">误差</string>
 
     <!-- 使用说明页面 -->
     <string name="GuideTextApp">关于应用：本应用可用于照看老人、小孩，达到实时看护，应用在手，时时刻刻都能够掌握他们的位置，随身携带可避免走失。</string>

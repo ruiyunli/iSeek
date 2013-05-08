@@ -10,6 +10,7 @@ import com.izzz.iseek.SMS.SMSsender;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.tools.AlarmControl;
 import com.izzz.iseek.tools.LogDialog;
+import com.izzz.iseek.tools.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
 
 import android.app.AlarmManager;
@@ -116,13 +117,13 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	private void Initprefs()
 	{
 		//获取控件
-		prefTargetPhone = (EditTextPreference)findPreference(IseekApplication.prefTargetPhoneKey);
-		prefSosNumber   = (EditTextPreference)findPreference(IseekApplication.prefSosNumberKey);
-		prefCorrection	= (PreferenceScreen)findPreference(IseekApplication.prefCorrEntryKey);
-		prefCorrEnable  = (CheckBoxPreference)findPreference(IseekApplication.prefCorrEnableKey);
-		prefOffline		= (PreferenceScreen)findPreference(IseekApplication.prefOfflineKey);
-		prefGuide 		= (PreferenceScreen)findPreference(IseekApplication.prefGuideKey);
-		prefAbout       = (PreferenceScreen)findPreference(IseekApplication.prefAboutKey);
+		prefTargetPhone = (EditTextPreference)findPreference(PrefHolder.prefTargetPhoneKey);
+		prefSosNumber   = (EditTextPreference)findPreference(PrefHolder.prefSosNumberKey);
+		prefCorrection	= (PreferenceScreen)findPreference(PrefHolder.prefCorrEntryKey);
+		prefCorrEnable  = (CheckBoxPreference)findPreference(PrefHolder.prefCorrEnableKey);
+		prefOffline		= (PreferenceScreen)findPreference(PrefHolder.prefOfflineKey);
+		prefGuide 		= (PreferenceScreen)findPreference(PrefHolder.prefGuideKey);
+		prefAbout       = (PreferenceScreen)findPreference(PrefHolder.prefAboutKey);
 		
 		//绑定监听器
 		prefTargetPhone.setOnPreferenceChangeListener(this);
@@ -133,9 +134,9 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		prefGuide.setOnPreferenceClickListener(this);
 		prefAbout.setOnPreferenceClickListener(this);
 		
-		prefTargetPhone.setSummary(IseekApplication.prefs.getString(IseekApplication.prefTargetPhoneKey, 
+		prefTargetPhone.setSummary(PrefHolder.prefs.getString(PrefHolder.prefTargetPhoneKey, 
 				(String) this.getResources().getText(R.string.set_targetPhone_summary)));
-		prefSosNumber.setSummary(IseekApplication.prefs.getString(IseekApplication.prefSosNumberKey, 
+		prefSosNumber.setSummary(PrefHolder.prefs.getString(PrefHolder.prefSosNumberKey, 
 				(String) this.getResources().getText(R.string.set_sosNumber_summary)));
 				
 	}
@@ -214,21 +215,21 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			StaticVar.logPrint('D', "Change--key:" + preference.getKey() + "--newValue:" + newValue);
 			
 		//TargetPhone设置
-		if(preference.getKey() == IseekApplication.prefTargetPhoneKey)
+		if(preference.getKey() == PrefHolder.prefTargetPhoneKey)
 		{
 			return ChangeTargetPhone((String) newValue);
 		}
 		//SOSphone设置
-		else if(preference.getKey() == IseekApplication.prefSosNumberKey)
+		else if(preference.getKey() == PrefHolder.prefSosNumberKey)
 		{
 			return ChangeSosPhone((String)newValue);		
 		}
-		else if(preference.getKey() == IseekApplication.prefCorrEnableKey)
+		else if(preference.getKey() == PrefHolder.prefCorrEnableKey)
 		{
 			if(newValue.equals(true))
 				IseekApplication.CORRECTION_ENABLE = true;
 			else
-				IseekApplication.CORRECTION_ENABLE = true;
+				IseekApplication.CORRECTION_ENABLE = false;
 			if(StaticVar.DEBUG_ENABLE)
 				StaticVar.logPrint('D', "change:" + newValue);
 			return true;
@@ -244,7 +245,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			StaticVar.logPrint('D', "Click--key:" + preference.getKey());
 
 		//关于页面
-		if(preference.getKey() == IseekApplication.prefAboutKey)
+		if(preference.getKey() == PrefHolder.prefAboutKey)
 		{
 			Intent intent = new Intent();
 			intent.setClass(SettingActivity.this, AboutActivity.class);
@@ -252,7 +253,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			return true;
 		}
 		//离线管理页面
-		else if(preference.getKey() == IseekApplication.prefOfflineKey)
+		else if(preference.getKey() == PrefHolder.prefOfflineKey)
 		{
 			Intent intent = new Intent();
 			intent.setClass(SettingActivity.this, OfflineManage.class);
@@ -260,7 +261,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			return true;
 		}
 		//关于页面
-		if(preference.getKey() == IseekApplication.prefGuideKey)
+		if(preference.getKey() == PrefHolder.prefGuideKey)
 		{
 			Intent intent = new Intent();
 			intent.setClass(SettingActivity.this, AppGuide.class);
@@ -268,7 +269,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			return true;
 		}
 		//校准设置
-		else if(preference.getKey() == IseekApplication.prefCorrEntryKey)
+		else if(preference.getKey() == PrefHolder.prefCorrEntryKey)
 		{
 			//由于校准是开发者通过实验获取校准变换矩阵，所以，用户不再需要校准接口，只需要校准使能接口，暂时去掉
 			/*

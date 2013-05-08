@@ -1,4 +1,4 @@
-package com.izzz.iseek.map;
+package com.izzz.iseek.corr;
 
 import android.content.Context;
 import android.view.View;
@@ -12,6 +12,8 @@ import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.R;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.base.BaseMapMain;
+import com.izzz.iseek.map.CorrectionOverlay;
+import com.izzz.iseek.tools.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
 
 public class Correction {
@@ -26,21 +28,23 @@ public class Correction {
 	
 	public OverlayItem corrItem = null;					//校准用变量	
 	
-	public ImageButton btnMoveUp    = null;				//微调button
+	private ImageButton btnMoveUp    = null;				//微调button
 	
-	public ImageButton btnMoveDown  = null;				//微调button
+	private ImageButton btnMoveDown  = null;				//微调button
 	
-	public ImageButton btnMoveLeft  = null;				//微调button
+	private ImageButton btnMoveLeft  = null;				//微调button
 	
-	public ImageButton btnMoveRight = null;				//微调button
+	private ImageButton btnMoveRight = null;				//微调button
 	
-	public Button btnCorrOk = null;						//校准的两个按钮
+	private Button btnCorrOk = null;						//校准的两个按钮
 	
-	public Button btnCorrCancle = null;					//校准的两个按钮
+	private Button btnCorrCancle = null;					//校准的两个按钮
 	
 	public boolean ADD_LAYER_FLAG = false;				//是否添加有覆盖层
 	
 	public boolean CORRECTION_START = false;			//主要用于在ontouch响应中决定是否显示红叉
+	
+	private CorrPointManager corrPM = null;
 
 	public Correction(Context mContext, MapView mMapView, ImageButton btnMoveUp,
 			ImageButton btnMoveDown, ImageButton btnMoveLeft,
@@ -55,7 +59,9 @@ public class Correction {
 		this.btnCorrOk = btnCorrOk;
 		this.btnCorrCancle = btnCorrCancle;
 		
+		corrPM = new CorrPointManager(mContext, PrefHolder.prefs, PrefHolder.prefsEditor);
 		
+		btnCorrOk.setOnClickListener(new CorrOnClickListener());
 		btnCorrCancle.setOnClickListener(new CorrOnClickListener());
 		btnMoveUp.setOnClickListener(new CorrOnClickListener());
 		btnMoveDown.setOnClickListener(new CorrOnClickListener());
@@ -65,13 +71,14 @@ public class Correction {
 		correctionOverlay = new CorrectionOverlay(mContext.getResources().getDrawable(R.drawable.icon_mapselect));
 	}
 	
-	
+	/**校准所有按钮不显示*/
 	public void SetAllButtonGone()
 	{
 		SetMoveButtonGone();
 		SetOkButtonGone();
 	}
 	
+	/**校准微调按钮不显示*/
 	public void SetMoveButtonGone()
 	{
 		btnMoveUp.setVisibility(View.GONE);
@@ -80,18 +87,21 @@ public class Correction {
 		btnMoveDown.setVisibility(View.GONE);
 	}
 	
+	/**校准ok和canle按钮不显示*/
 	public void SetOkButtonGone()
 	{
 		btnCorrCancle.setVisibility(View.GONE);
 		btnCorrOk.setVisibility(View.GONE);
 	}
 	
+	/**校准所有按钮显示*/
 	public void SetAllButtonVisible()
 	{
 		SetMoveButtonVisible();
 		SetOkButtonVisible();
 	}
 	
+	/**校准微调按钮显示*/
 	public void SetMoveButtonVisible()
 	{
 		btnMoveUp.setVisibility(View.VISIBLE);
@@ -100,18 +110,21 @@ public class Correction {
 		btnMoveDown.setVisibility(View.VISIBLE);
 	}
 	
+	/**校准ok和canle按钮显示*/
 	public void SetOkButtonVisible()
 	{
 		btnCorrCancle.setVisibility(View.VISIBLE);
 		btnCorrOk.setVisibility(View.VISIBLE);
 	}
 	
+	/**去掉红叉显示层*/
 	public void RemoveOverlay()
 	{
 		if(ADD_LAYER_FLAG)
 			mMapView.getOverlays().remove(correctionOverlay);
 	}
 	
+	/**添加红叉显示层*/
 	public void AddOverlay()
 	{
 		if(!ADD_LAYER_FLAG)
@@ -121,8 +134,13 @@ public class Correction {
 	/** 进入校准 */
 	public void EnterCorrection()
 	{
-		BaseMapMain.correction.CORRECTION_START = true;
-		BaseMapMain.correction.SetAllButtonVisible();
+		if(corrPM.isCorrEnable())
+		{
+			BaseMapMain.correction.CORRECTION_START = true;
+			BaseMapMain.correction.SetAllButtonVisible();
+		}
+		else
+			Toast.makeText(mContext, R.string.ToastCorrPointFull, Toast.LENGTH_LONG).show();
 	}
 	
 	/** 退出校准 */
@@ -137,8 +155,40 @@ public class Correction {
 		CORRECTION_START = false;
 		
 	}
-
 	
+	/**校准顺利结束*/
+	public void CorrectionOK(View v)
+	{
+		if(isCorrPointNull())
+		{
+			Toast.makeText(v.getContext(), R.string.ToastCorrPressFirst, Toast.LENGTH_LONG).show();
+			return ;
+		}
+		
+		try {
+			corrPM.add(BaseMapMain.gpsPoint.getLongitudeE6(), corrPoint.getLongitudeE6());
+		} catch (Exception e) {
+			// TODO: handle exception
+			if(StaticVar.DEBUG_ENABLE)
+				StaticVar.logPrint('D', e.toString());
+		}
+		
+		ExitCorrection();
+		
+		if(StaticVar.DEBUG_ENABLE)
+			StaticVar.logPrint('D', "correction ok!");
+	}
+	
+	public boolean isCorrPointNull()
+	{
+		if(corrPoint == null)
+			return true;
+		else
+			return false;
+	}
+	
+
+	/**按钮响应函数*/
 	public class CorrOnClickListener implements OnClickListener{
 
 		@Override
@@ -155,13 +205,17 @@ public class Correction {
 				MoveCorration(v, StaticVar.MOVE_CORR_RIGHT);			
 			else if(v.getId() == btnCorrCancle.getId())
 				ExitCorrection();
+			else if (v.getId() == btnCorrOk.getId())
+				CorrectionOK(v);
 			
 		}
+		
+		
 		
 		//微调共用函数
 		private void MoveCorration(View v, int direction)
 		{
-			if(corrPoint == null)
+			if(isCorrPointNull())
 			{
 				Toast.makeText(v.getContext(), R.string.ToastCorrPressFirst, Toast.LENGTH_LONG).show();
 				return ;
@@ -188,13 +242,16 @@ public class Correction {
 			mMapView.refresh();
 			
 			if(StaticVar.DEBUG_ENABLE)
+			{
+				StaticVar.logPrint('D', "x: unknown" + " y: unknown" 
+		                + "\n" + " latitude: " + corrPoint.getLatitudeE6()
+		                +" longitude: " + corrPoint.getLongitudeE6());
 				BaseMapMain.logText.setText("x: unknown" + " y: unknown" 
 		                + "\n" + " latitude: " + corrPoint.getLatitudeE6()
 		                +" longitude: " + corrPoint.getLongitudeE6());
+			}
 		}
+		
+		
 	}
-	
-	
-	
-	
 }

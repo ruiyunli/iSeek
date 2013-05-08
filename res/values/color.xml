@@ -7,7 +7,7 @@
     <color name="black">#ff000000</color>
     <color name="title_bar_background">#e0000000</color>
     <color name="seperate_line">#ff33b5e5</color>
-    <color name="guide_text">#669900</color>
+    <color name="guide_text">#228B22</color>
     <color name="rounded_container_border">#ffb7babb</color>
     <color name="base_start_color_default">#ffffffff</color>
     <color name="base_end_color_default">#ffffffff</color>

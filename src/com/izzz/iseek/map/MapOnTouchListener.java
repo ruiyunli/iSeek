@@ -37,10 +37,15 @@ public class MapOnTouchListener implements OnTouchListener{
 	            String longitude = Integer.toString(pt.getLongitudeE6());
 	            String latitude = Integer.toString(pt.getLatitudeE6());	           
 	            
-            	BaseMapMain.logText.setText("x: " + x + " y: " + y
-                        + "\n" + " latitude: " + latitude
-                        +" longitude: " + longitude);
-            	
+	            if(StaticVar.DEBUG_ENABLE)
+	            {
+	            	StaticVar.logPrint('D', "x: " + x + " y: " + y
+	                        + "\n" + " latitude: " + latitude
+	                        +" longitude: " + longitude);
+	            	BaseMapMain.logText.setText("x: " + x + " y: " + y
+	                        + "\n" + " latitude: " + latitude
+	                        +" longitude: " + longitude);
+	            }
             	corrPoint = new GeoPoint(pt.getLatitudeE6(), pt.getLongitudeE6());
         		corrItem = new OverlayItem(corrPoint, "title", "snippet");
         		//corrItem.setMarker(getResources().getDrawable(R.drawable.icon_marka));

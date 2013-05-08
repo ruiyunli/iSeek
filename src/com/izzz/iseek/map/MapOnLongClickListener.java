@@ -1,6 +1,7 @@
 package com.izzz.iseek.map;
 
 import com.example.iseek.R;
+import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.base.BaseMapMain;
 import com.izzz.iseek.vars.StaticVar;
 import android.app.AlertDialog;
@@ -8,12 +9,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+import android.widget.Toast;
 
 public class MapOnLongClickListener implements OnLongClickListener{
 
 	private Context mContext = null;
-	
-	
 	
 	public MapOnLongClickListener(Context mContext) {
 		super();
@@ -27,14 +27,34 @@ public class MapOnLongClickListener implements OnLongClickListener{
 		if(StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', "longClick");
 		
-		new AlertDialog.Builder(mContext) 
-	    .setTitle(R.string.CorrAlertTitle)
-	    .setMessage(R.string.CorrAlertMsg)
-	    .setPositiveButton(R.string.OK_CH, new AlertCorrOnClickListener())
-	    .setNegativeButton(R.string.CANCLE_CH, null)
-	    .show();
+		//确保在定位成功后再校准,并且定位过程中没有使用自动校准
+		if(IseekApplication.GPS_LOCATE_OK && !IseekApplication.CORRECTION_USED)
+			new AlertDialog.Builder(mContext) 
+			    .setTitle(R.string.CorrAlertTitle)
+			    .setMessage(R.string.CorrAlertMsgWarn)
+			    .setPositiveButton(R.string.OK_CH, new AlertCorrOnClickListener())
+			    .setNegativeButton(R.string.CANCLE_CH, null)
+			    .show();
+		//没有定位成功
+		else if(!IseekApplication.GPS_LOCATE_OK)
+		{
+			new AlertDialog.Builder(mContext) 
+			    .setTitle(R.string.CorrAlertTitle)
+			    .setMessage(R.string.CorrAlertMsgNoLocate)
+			    .setPositiveButton(R.string.OK_CH, null)
+			    .show();
+		}
+		//使用了自动校准
+		else if(IseekApplication.CORRECTION_USED)
+		{
+			new AlertDialog.Builder(mContext) 
+			    .setTitle(R.string.CorrAlertTitle)
+			    .setMessage(R.string.CorrAlertMsgCorrUsed)
+			    .setPositiveButton(R.string.OK_CH, null)
+			    .show();
+		}
 		
-		return false;
+		return true;
 	}
 	
 	class AlertCorrOnClickListener implements DialogInterface.OnClickListener
@@ -43,8 +63,6 @@ public class MapOnLongClickListener implements OnLongClickListener{
 		@Override
 		public void onClick(DialogInterface dialog, int which) {
 			// TODO Auto-generated method stub
-//			BaseMapMain.correction.CORRECTION_START = true;
-//			BaseMapMain.correction.SetAllButtonVisible();
 			
 			BaseMapMain.correction.EnterCorrection();
 			

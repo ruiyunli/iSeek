@@ -6,6 +6,7 @@ import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.base.BaseMapMain;
 import com.izzz.iseek.base.SettingActivity;
 import com.izzz.iseek.tools.LogDialog;
+import com.izzz.iseek.tools.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -128,8 +129,8 @@ public class SMSreceiver extends BroadcastReceiver
 			
 			mesNumber = new String(messages[0].getDisplayOriginatingAddress()); 
 			
-			String targetPhone = IseekApplication.prefs.getString(
-					IseekApplication.prefTargetPhoneKey,"unset");	
+			String targetPhone = PrefHolder.prefs.getString(
+					PrefHolder.prefTargetPhoneKey,"unset");	
 			if(StaticVar.DEBUG_ENABLE)
 				StaticVar.logPrint('D', "mesNumber:" + mesNumber + " targetPhone:" + targetPhone);
 			
@@ -212,20 +213,24 @@ public class SMSreceiver extends BroadcastReceiver
 			int LatitudeInt;
 			int LongitudeInt;
 			
-			LatitudeInt = (int)(Double.parseDouble(Latitude) * 1E6);
+			LatitudeInt = (int)(Double.parseDouble(Latitude) * 1E6);	//存储当前定位结果
 			LongitudeInt = (int)(Double.parseDouble(Longitude) * 1E6);
 			
-			IseekApplication.prefsEditor.putString(IseekApplication.prefOriginLatitudeKey, Integer.toString(LatitudeInt)).commit();
-			IseekApplication.prefsEditor.putString(IseekApplication.prefOriginLongitudeKey, Integer.toString(LongitudeInt)).commit();
+			PrefHolder.prefsEditor.putString(PrefHolder.prefLastLatitudeKey, Integer.toString(LatitudeInt)).commit();
+			PrefHolder.prefsEditor.putString(PrefHolder.prefLastLongitudeKey, Integer.toString(LongitudeInt)).commit();
 			
-			BaseMapMain.gpsLocate.alarmHandler.Stop();
+//			BaseMapMain.gpsPoint = new GeoPoint(LatitudeInt, LongitudeInt);		//校准存储用
 			
-			logDialog.dismissLog();
+			BaseMapMain.gpsLocate.alarmHandler.Stop();							//关闭闹钟
+			
+			logDialog.dismissLog();												//对话框处理
 			logDialog.disable();
 			
-			GeoPoint tmpPoint = new GeoPoint(LatitudeInt, LongitudeInt);
+			IseekApplication.GPS_LOCATE_OK = true;								//全局标志
 			
-			BaseMapMain.gpsLocate.animateTo(tmpPoint,StaticVar.GEO_WGS84);	//打开指定区域
+			GeoPoint tmpPoint = new GeoPoint(LatitudeInt, LongitudeInt);		//打开指定区域	
+			
+			BaseMapMain.gpsLocate.animateTo(tmpPoint,StaticVar.GEO_WGS84);	
 			
 		}
 	}

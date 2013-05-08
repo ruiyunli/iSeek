@@ -60,7 +60,7 @@ public class BottomMenu {
 	private void MenuPhoneCall()
 	{
 		//调用系统打电话程序
-		String targetPhone = IseekApplication.prefs.getString(IseekApplication.prefTargetPhoneKey, "unset");
+		String targetPhone = PrefHolder.prefs.getString(PrefHolder.prefTargetPhoneKey, "unset");
 		if(!targetPhone.equals("unset"))
 		{
 			Intent intent=new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+targetPhone));

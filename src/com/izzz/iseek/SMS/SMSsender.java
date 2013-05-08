@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.example.iseek.R;
 import com.izzz.iseek.app.IseekApplication;
+import com.izzz.iseek.tools.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
 
 public class SMSsender {
@@ -31,7 +32,7 @@ public class SMSsender {
 	{
 		if(destNumber == null)
 		{
-			destNumber = IseekApplication.prefs.getString(IseekApplication.prefTargetPhoneKey, "unset");
+			destNumber = PrefHolder.prefs.getString(PrefHolder.prefTargetPhoneKey, "unset");
 			if(destNumber.equals("unset"))
 			{
 				Toast.makeText(mContext, R.string.ToastTargetSetEmpty,	Toast.LENGTH_LONG).show();

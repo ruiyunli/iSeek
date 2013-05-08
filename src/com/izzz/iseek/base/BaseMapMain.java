@@ -22,7 +22,7 @@ import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.iseek.R;
 import com.izzz.iseek.SMS.SMSreceiver;
 import com.izzz.iseek.app.IseekApplication;
-import com.izzz.iseek.map.Correction;
+import com.izzz.iseek.corr.Correction;
 import com.izzz.iseek.map.GPSLocate;
 import com.izzz.iseek.map.LocalMapControl;
 import com.izzz.iseek.map.MapMKMapViewListener;
@@ -32,17 +32,20 @@ import com.izzz.iseek.map.PhoneLocation;
 import com.izzz.iseek.map.PluginChangeView;
 import com.izzz.iseek.map.PluginZoom;
 import com.izzz.iseek.tools.BottomMenu;
+import com.izzz.iseek.tools.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
 
 public class BaseMapMain extends Activity {
 
 	private IseekApplication app = null;
 
-	private MapView mMapView = null; 			// 百度地图
+	private MapView mMapView = null; 				// 百度地图
 
-	private MapController mMapController = null; // 百度地图
+	private MapController mMapController = null; 	// 百度地图
 	
-	private PhoneLocation mPLocation;
+	public static GeoPoint gpsPoint		= null;		//gps定位的百度坐标
+	
+	private PhoneLocation mPLocation;				//手机定位
 	
 	public static LocalMapControl localMapControl = null;	//本地地图管理
 	
@@ -145,8 +148,8 @@ public class BaseMapMain extends Activity {
 		mMapController = mMapView.getController();
 
 		// 打开上次保存的地点
-		latitude = IseekApplication.prefs.getString(IseekApplication.prefOriginLatitudeKey, "unset");
-		longitude = IseekApplication.prefs.getString(IseekApplication.prefOriginLongitudeKey, "unset");
+		latitude = PrefHolder.prefs.getString(PrefHolder.prefLastLatitudeKey, "unset");
+		longitude = PrefHolder.prefs.getString(PrefHolder.prefLastLongitudeKey, "unset");
 		if ((latitude != "unset") && (longitude != "unset")) 
 		{
 			centerpt = new GeoPoint(Integer.parseInt(latitude),	Integer.parseInt(longitude));	// 保存方式为1E6
@@ -158,22 +161,26 @@ public class BaseMapMain extends Activity {
 		}
 
 		mMapController.setCenter(centerpt);
-		mMapView.setLongClickable(true);
+		mMapView.setLongClickable(false);
 		mMapController.enableClick(true);
 		mMapController.setZoom(15);
-		// mMapView.setBuiltInZoomControls(true);
+//		mMapView.setBuiltInZoomControls(true);
 		mMapView.setTraffic(true);
-		// mMapView.setSatellite(true);
+//		mMapView.setSatellite(true);
 		mMapView.setDoubleClickZooming(true);
 		
 		localMapControl = new LocalMapControl(mMapController);//本地地图管理
 
 		// 注册响应函数
 		mMapView.regMapViewListener(IseekApplication.getInstance().mBMapManager, new MapMKMapViewListener(BaseMapMain.this));
-		// 注册onTouchListener响应函数
-		mMapView.setOnTouchListener(new MapOnTouchListener());
+		
+		mMapView.setOnTouchListener(new MapOnTouchListener());		// 注册onTouchListener响应函数
 		
 		mMapView.setOnLongClickListener(new MapOnLongClickListener(BaseMapMain.this));
+		
+		mMapView.setLongClickable(false);
+		
+		StaticVar.logPrint('D', "long clickable: " + mMapView.isLongClickable());
 
 	}
 	
@@ -217,10 +224,10 @@ public class BaseMapMain extends Activity {
 				btnMenuRefresh, btnMenuSettings);
 	}
 
+	/** 初始化缩放插件 */
 	private void InitPluginZoom() {
 		btnZoomIn = (ImageButton) findViewById(R.id.btnZoomIn);
 		btnZoomOut = (ImageButton) findViewById(R.id.btnZoomOut);
-
 		pluginZoom = new PluginZoom(mMapView, btnZoomIn, btnZoomOut);
 	}
 
@@ -242,8 +249,8 @@ public class BaseMapMain extends Activity {
 		}
 		super.onDestroy();
 		
-		if (StaticVar.DEBUG_ENABLE)
-			StaticVar.logPrint('D', "on Destroy");
+//		if (StaticVar.DEBUG_ENABLE)
+//			StaticVar.logPrint('D', "on Destroy");
 		
 		System.exit(0);
 	}
@@ -258,8 +265,8 @@ public class BaseMapMain extends Activity {
 			app.mBMapManager = null;
 		}
 		
-		if (StaticVar.DEBUG_ENABLE)
-			StaticVar.logPrint('D', "on Pause");
+//		if (StaticVar.DEBUG_ENABLE)
+//			StaticVar.logPrint('D', "on Pause");
 		
 		super.onPause();
 	}
@@ -276,8 +283,8 @@ public class BaseMapMain extends Activity {
 
 		bottomMenu.SetVisible(true);
 
-		if (StaticVar.DEBUG_ENABLE)
-			StaticVar.logPrint('D', "on Resume");
+//		if (StaticVar.DEBUG_ENABLE)
+//			StaticVar.logPrint('D', "on Resume");
 		super.onResume();
 	}
 

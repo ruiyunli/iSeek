@@ -1,19 +1,14 @@
 package com.izzz.iseek.app;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
 import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.MKGeneralListener;
 import com.baidu.mapapi.map.MKEvent;
 import com.example.iseek.R;
-import com.izzz.iseek.base.BaseMapMain;
 import com.izzz.iseek.map.PhoneLocation;
+import com.izzz.iseek.tools.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 public class IseekApplication extends Application {
@@ -24,53 +19,32 @@ public class IseekApplication extends Application {
     
     public BMapManager mBMapManager = null;				//地图相关
     
-    public PhoneLocation mPhoneLocation = null;		//定位相关
+    public PhoneLocation mPhoneLocation = null;			//定位相关
     
-  	public static String prefTargetPhoneKey  	= null;			//控件对应的key字符串声明
-  	
-  	public static String prefSosNumberKey    	= null;			//控件对应的key字符串声明
-  	
-  	public static String prefCorrEntryKey     	= null;			//控件对应的key字符串声明
-  	
-  	public static String prefCorrEnableKey		= null;			//控件对应的key字符串声明
-  	
-  	public static String prefOfflineKey			= null;			//控件对应的key字符串声明
-  	
-  	public static String prefGuideKey			= null;			//控件对应的key字符串声明
-  	
-  	public static String prefAboutKey        	= null;			//控件对应的key字符串声明
-  	
-  	public static String prefOriginLatitudeKey  = null;			//控件对应的key字符串声明
-  	
-  	public static String prefOriginLongitudeKey = null;			//控件对应的key字符串声明
-  	
-  	public static SharedPreferences prefs    	= null;			//控件对应的key字符串声明
-  	
-  	public static SharedPreferences.Editor prefsEditor = null;	//控件对应的key字符串声明
-  	
+    public PrefHolder prefHolder = null;				//sharedpreference管理
+    
   	public static int DOWNLOAD_CHANNEL = StaticVar.OFFLINE_NULL;	//离线下载页面的下载途径标志
   	
-  	public static boolean CORRECTION_ENABLE = false;
+  	public static boolean CORRECTION_ENABLE = false;	//允许使用校准功能
+  	
+  	public static boolean CORRECTION_USED 	= false;	//使用了校准功能
+  	
+  	public static boolean GPS_LOCATE_OK = false;		//gps定位成功
   	
   	
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		
-		mPhoneLocation = new PhoneLocation(this);
+//		mPhoneLocation = new PhoneLocation(this);
 		
 		super.onCreate();
 		
-		//this指针
-		mInstance = this;
+		mInstance = this;			//this指针
 		
-		//百度地图BMapManger对象
-		initEngineManager(this);
+		initEngineManager(this);	//百度地图BMapManger对象
 		
-		
-		
-		//初始化shareedPreference
-		InitPrefs();
+		InitPrefs();				//初始化shareedPreference
 	}
 
 	@Override
@@ -89,30 +63,18 @@ public class IseekApplication extends Application {
         }
 
         if (!mBMapManager.init(StaticVar.BaiduMapKey,new MyGeneralListener())) {
-            Toast.makeText(IseekApplication.getInstance().getApplicationContext(), 
-                    "BMapManager  初始化错误!", Toast.LENGTH_LONG).show();
+        	if(StaticVar.DEBUG_ENABLE)
+        		Toast.makeText(IseekApplication.getInstance().getApplicationContext(), R.string.ToastErrorMapManager, 
+        				Toast.LENGTH_LONG).show();
         }
 	}
 	
 	//用于初始化PreferenceActivity的相关key
 	private void InitPrefs()
 	{
-		//获取控件key字符串
-		prefTargetPhoneKey  	= getResources().getString(R.string.set_targetPhone_key);
-		prefSosNumberKey    	= getResources().getString(R.string.set_sosNumber_key);
-		prefCorrEntryKey   		= getResources().getString(R.string.set_correntry_key);
-		prefOfflineKey			= getResources().getString(R.string.set_offline_key);
-		prefGuideKey			= getResources().getString(R.string.set_guide_key);
-		prefCorrEnableKey 		= getResources().getString(R.string.set_correnable_key);
-		prefAboutKey        	= getResources().getString(R.string.set_about_key);
-		prefOriginLatitudeKey  	= getResources().getString(R.string.set_origin_latitude_key);
-		prefOriginLongitudeKey 	= getResources().getString(R.string.set_origin_longitude_key);
+		prefHolder = new PrefHolder(this);
 		
-		//获取prefs和editor
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		prefsEditor = prefs.edit();
-		
-		CORRECTION_ENABLE = prefs.getBoolean(prefCorrEnableKey,false); 
+		CORRECTION_ENABLE = PrefHolder.prefs.getBoolean(PrefHolder.prefCorrEnableKey,false); 
 		if(StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', "correction enable:" + CORRECTION_ENABLE);
 	}
@@ -127,12 +89,14 @@ public class IseekApplication extends Application {
         @Override
         public void onGetNetworkState(int iError) {
             if (iError == MKEvent.ERROR_NETWORK_CONNECT) {
-                Toast.makeText(IseekApplication.getInstance().getApplicationContext(), "您的网络出错啦！",
-                    Toast.LENGTH_LONG).show();
+            	if(StaticVar.DEBUG_ENABLE)
+            		Toast.makeText(IseekApplication.getInstance().getApplicationContext(), R.string.ToastErrorInternet,
+            				Toast.LENGTH_LONG).show();
             }
             else if (iError == MKEvent.ERROR_NETWORK_DATA) {
-                Toast.makeText(IseekApplication.getInstance().getApplicationContext(), "输入正确的检索条件！",
-                        Toast.LENGTH_LONG).show();
+            	if(StaticVar.DEBUG_ENABLE)
+            		Toast.makeText(IseekApplication.getInstance().getApplicationContext(), R.string.ToastErrorSearchData,
+            				Toast.LENGTH_LONG).show();
             }
             // ...
         }
@@ -141,8 +105,9 @@ public class IseekApplication extends Application {
         public void onGetPermissionState(int iError) {
             if (iError ==  MKEvent.ERROR_PERMISSION_DENIED) {
                 //授权Key错误：
-                Toast.makeText(IseekApplication.getInstance().getApplicationContext(), 
-                        "请在 DemoApplication.java文件输入正确的授权Key！", Toast.LENGTH_LONG).show();
+            	if(StaticVar.DEBUG_ENABLE)
+            		Toast.makeText(IseekApplication.getInstance().getApplicationContext(), R.string.ToastErrorMapKey, 
+            				Toast.LENGTH_LONG).show();
                 IseekApplication.getInstance().m_bKeyRight = false;
             }
         }

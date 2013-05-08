@@ -75,6 +75,19 @@ public class GPSLocate {
 		{
 			//插入校准变换
 			baiduPoint = CorrectionBaidu(baiduPoint);
+			IseekApplication.CORRECTION_USED = true;
+			
+			if(StaticVar.DEBUG_ENABLE)
+				StaticVar.logPrint('D', "corr used");
+			
+		}
+		else
+		{
+			BaseMapMain.gpsPoint = baiduPoint;
+			IseekApplication.CORRECTION_USED = false;
+			
+			if(StaticVar.DEBUG_ENABLE)
+				StaticVar.logPrint('D', "corr not used");
 		}
 		
 		if (StaticVar.DEBUG_ENABLE)
