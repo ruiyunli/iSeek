@@ -24,14 +24,14 @@ public class MapOnTouchListener implements OnTouchListener{
 		
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
         case MotionEvent.ACTION_DOWN:
-			if(BaseMapMain.correction.CORRECTION_START)
+			if(BaseMapMain.corrView.CORRECTION_START)
 			{				
 	            int x = (int) event.getX();
 	            int y = (int) event.getY();
 	
 	            // 将像素坐标转为地址坐标
 	            
-	            Projection getProjection = BaseMapMain.correction.mMapView.getProjection();
+	            Projection getProjection = BaseMapMain.corrView.mMapView.getProjection();
 	            GeoPoint pt = getProjection.fromPixels(x, y);
 	            
 	            String longitude = Integer.toString(pt.getLongitudeE6());
@@ -50,16 +50,16 @@ public class MapOnTouchListener implements OnTouchListener{
         		corrItem = new OverlayItem(corrPoint, "title", "snippet");
         		//corrItem.setMarker(getResources().getDrawable(R.drawable.icon_marka));
         		//初次调用，添加校准层
-        		if(!BaseMapMain.correction.ADD_LAYER_FLAG)	
+        		if(!BaseMapMain.corrView.ADD_LAYER_FLAG)	
         		{
-        			BaseMapMain.correction.AddOverlay();
-        			BaseMapMain.correction.ADD_LAYER_FLAG = true;
+        			BaseMapMain.corrView.AddOverlay();
+        			BaseMapMain.corrView.ADD_LAYER_FLAG = true;
         		}
-        		BaseMapMain.correction.correctionOverlay.refreshItem(corrItem);
-        		BaseMapMain.correction.mMapView.refresh();
+        		BaseMapMain.corrView.correctionOverlay.refreshItem(corrItem);
+        		BaseMapMain.corrView.mMapView.refresh();
         		
-        		BaseMapMain.correction.corrPoint = corrPoint;
-        		BaseMapMain.correction.corrItem = corrItem;
+        		BaseMapMain.corrView.corrPoint = corrPoint;
+        		BaseMapMain.corrView.corrItem = corrItem;
 				
 				if(StaticVar.DEBUG_ENABLE)
 					StaticVar.logPrint('D', "keyDown");

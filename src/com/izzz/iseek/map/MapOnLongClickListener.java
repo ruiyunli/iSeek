@@ -1,6 +1,6 @@
 package com.izzz.iseek.map;
 
-import com.example.iseek.R;
+import com.izzz.iseek.R;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.base.BaseMapMain;
 import com.izzz.iseek.vars.StaticVar;
@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.view.View;
 import android.view.View.OnLongClickListener;
-import android.widget.Toast;
 
 public class MapOnLongClickListener implements OnLongClickListener{
 
@@ -64,7 +63,7 @@ public class MapOnLongClickListener implements OnLongClickListener{
 		public void onClick(DialogInterface dialog, int which) {
 			// TODO Auto-generated method stub
 			
-			BaseMapMain.correction.EnterCorrection();
+			BaseMapMain.corrView.EnterCorrection();
 			
 			if(StaticVar.DEBUG_ENABLE)
 				StaticVar.logPrint('D', "Correction started!");

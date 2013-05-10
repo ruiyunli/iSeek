@@ -1,15 +1,15 @@
 package com.izzz.iseek.app;
 
-import com.baidu.mapapi.BMapManager;
-import com.baidu.mapapi.MKGeneralListener;
-import com.baidu.mapapi.map.MKEvent;
-import com.example.iseek.R;
-import com.izzz.iseek.map.PhoneLocation;
-import com.izzz.iseek.tools.PrefHolder;
-import com.izzz.iseek.vars.StaticVar;
 import android.app.Application;
 import android.content.Context;
 import android.widget.Toast;
+import com.baidu.mapapi.BMapManager;
+import com.baidu.mapapi.MKGeneralListener;
+import com.baidu.mapapi.map.MKEvent;
+import com.izzz.iseek.R;
+import com.izzz.iseek.map.PhoneLocation;
+import com.izzz.iseek.tools.PrefHolder;
+import com.izzz.iseek.vars.StaticVar;
 
 public class IseekApplication extends Application {
 
@@ -64,8 +64,7 @@ public class IseekApplication extends Application {
 
         if (!mBMapManager.init(StaticVar.BaiduMapKey,new MyGeneralListener())) {
         	if(StaticVar.DEBUG_ENABLE)
-        		Toast.makeText(IseekApplication.getInstance().getApplicationContext(), R.string.ToastErrorMapManager, 
-        				Toast.LENGTH_LONG).show();
+        		StaticVar.logPrint('D', "BMapManager ≥ı ºªØ¥ÌŒÛ!");
         }
 	}
 	
@@ -89,13 +88,11 @@ public class IseekApplication extends Application {
         @Override
         public void onGetNetworkState(int iError) {
             if (iError == MKEvent.ERROR_NETWORK_CONNECT) {
-            	if(StaticVar.DEBUG_ENABLE)
-            		Toast.makeText(IseekApplication.getInstance().getApplicationContext(), R.string.ToastErrorInternet,
+            	Toast.makeText(IseekApplication.getInstance().getApplicationContext(), R.string.ToastErrorInternet,
             				Toast.LENGTH_LONG).show();
             }
             else if (iError == MKEvent.ERROR_NETWORK_DATA) {
-            	if(StaticVar.DEBUG_ENABLE)
-            		Toast.makeText(IseekApplication.getInstance().getApplicationContext(), R.string.ToastErrorSearchData,
+            	Toast.makeText(IseekApplication.getInstance().getApplicationContext(), R.string.ToastErrorSearchData,
             				Toast.LENGTH_LONG).show();
             }
             // ...

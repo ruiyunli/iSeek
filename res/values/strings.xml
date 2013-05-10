@@ -51,16 +51,16 @@
 
     <!-- key-校准内容存储 -->
     <string name="corr_point_size_key">CorrPointSize</string>
-    <string name="corr_point_0_key">CorrPoint0</string>
-    <string name="corr_point_1_key">CorrPoint1</string>
-    <string name="corr_point_2_key">CorrPoint2</string>
-    <string name="corr_point_3_key">CorrPoint3</string>
-    <string name="corr_point_4_key">CorrPoint4</string>
-    <string name="corr_point_5_key">CorrPoint5</string>
-    <string name="corr_point_6_key">CorrPoint6</string>
-    <string name="corr_point_7_key">CorrPoint7</string>
-    <string name="corr_point_8_key">CorrPoint8</string>
-    <string name="corr_point_9_key">CorrPoint9</string>
+    <string name="target_point_0_key">TargetPoint0</string>
+    <string name="target_point_1_key">TargetPoint1</string>
+    <string name="target_point_2_key">TargetPoint2</string>
+    <string name="target_point_3_key">TargetPoint3</string>
+    <string name="target_point_4_key">TargetPoint4</string>
+    <string name="target_point_5_key">TargetPoint5</string>
+    <string name="target_point_6_key">TargetPoint6</string>
+    <string name="target_point_7_key">TargetPoint7</string>
+    <string name="target_point_8_key">TargetPoint8</string>
+    <string name="target_point_9_key">TargetPoint9</string>
     <string name="origin_point_0_key">OriginPoint0</string>
     <string name="origin_point_1_key">OriginPoint1</string>
     <string name="origin_point_2_key">OriginPoint2</string>
@@ -71,12 +71,13 @@
     <string name="origin_point_7_key">OriginPoint7</string>
     <string name="origin_point_8_key">OriginPoint8</string>
     <string name="origin_point_9_key">OriginPoint9</string>
+    <string name="corr_coef_a_key">CorrCoefA</string>
+    <string name="corr_coef_b_key">CorrCoefB</string>
 
     <!-- String in Toast -->
     <string name="ToastErrorInternet">网络连接出错</string>
     <string name="ToastErrorSearchData">搜索数据出错</string>
     <string name="ToastErrorMapKey">Invalid BaiduMapKey</string>
-    <string name="ToastErrorMapManager">BMapManager 初始化错误!</string>
     <string name="ToastTargetSetOK">目标GPS手机号码设置成功!</string>
     <string name="ToastSosSetOK">关联SOS号码设置成功!</string>
     <string name="ToastInvalidPhoneNumber">请输入有效地手机号码</string>
@@ -88,6 +89,11 @@
     <string name="ToastZoomInMin">已缩小到最小级别</string>
     <string name="ToastUnknowSMSheader">注意:不能识别的短信</string>
     <string name="ToastCorrPointFull">请先清除掉部分校准数据</string>
+    <string name="ToastCoefNull">不存在校准内容，请先生成校准量</string>
+    <string name="ToastCoefCreated">成功生成校准量</string>
+    <string name="ToastCoefCalcNull">请先勾选用于计算的数据组</string>
+    <string name="ToastCorrDeletedOK">删除成功</string>
+    <string name="ToastCorrDeletedNull">请先勾选要删除的数据组</string>
 
     <!-- logDialog中的文字 -->
     <string name="DialogTitle">iSeeking…</string>

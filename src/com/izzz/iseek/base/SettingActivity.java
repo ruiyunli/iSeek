@@ -2,9 +2,7 @@ package com.izzz.iseek.base;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.example.iseek.R;
-import com.example.iseek.R.string;
-import com.example.iseek.R.xml;
+import com.izzz.iseek.R;
 import com.izzz.iseek.SMS.SMSreceiver;
 import com.izzz.iseek.SMS.SMSsender;
 import com.izzz.iseek.app.IseekApplication;
@@ -12,27 +10,16 @@ import com.izzz.iseek.tools.AlarmControl;
 import com.izzz.iseek.tools.LogDialog;
 import com.izzz.iseek.tools.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
-
-import android.app.AlarmManager;
-import android.app.AlertDialog;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
-import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
-import android.telephony.SmsManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -206,6 +193,30 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		return false;
 	}
 	
+	private boolean ToogleCorrBox(Object newValue)
+	{
+		if(newValue.equals(true))
+		{
+			if(!BaseMapMain.gpsLocate.InitCoef())
+			{
+				Toast.makeText(SettingActivity.this, R.string.ToastCoefNull, Toast.LENGTH_LONG).show();
+				
+				if(StaticVar.DEBUG_ENABLE)
+					StaticVar.logPrint('D', "get corr failed!");
+				
+				return false;
+			}
+			else 
+				IseekApplication.CORRECTION_ENABLE = true;
+		}
+		else
+			IseekApplication.CORRECTION_ENABLE = false;
+		
+		if(StaticVar.DEBUG_ENABLE)
+			StaticVar.logPrint('D', "change:" + newValue);
+		return true;
+	}
+	
 	//值改变响应函数
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -226,13 +237,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		}
 		else if(preference.getKey() == PrefHolder.prefCorrEnableKey)
 		{
-			if(newValue.equals(true))
-				IseekApplication.CORRECTION_ENABLE = true;
-			else
-				IseekApplication.CORRECTION_ENABLE = false;
-			if(StaticVar.DEBUG_ENABLE)
-				StaticVar.logPrint('D', "change:" + newValue);
-			return true;
+			return ToogleCorrBox(newValue);
 		}
 		return false;		 
 	}

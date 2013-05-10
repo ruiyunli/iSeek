@@ -9,14 +9,13 @@ import android.widget.Toast;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.OverlayItem;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
-import com.example.iseek.R;
-import com.izzz.iseek.app.IseekApplication;
+import com.izzz.iseek.R;
 import com.izzz.iseek.base.BaseMapMain;
 import com.izzz.iseek.map.CorrectionOverlay;
 import com.izzz.iseek.tools.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
 
-public class Correction {
+public class CorrView {
 	
 	private Context mContext = null;
 	
@@ -46,7 +45,7 @@ public class Correction {
 	
 	private CorrPointManager corrPM = null;
 
-	public Correction(Context mContext, MapView mMapView, ImageButton btnMoveUp,
+	public CorrView(Context mContext, MapView mMapView, ImageButton btnMoveUp,
 			ImageButton btnMoveDown, ImageButton btnMoveLeft,
 			ImageButton btnMoveRight, Button btnCorrOk, Button btnCorrCancle) {
 		super();
@@ -136,8 +135,8 @@ public class Correction {
 	{
 		if(corrPM.isCorrEnable())
 		{
-			BaseMapMain.correction.CORRECTION_START = true;
-			BaseMapMain.correction.SetAllButtonVisible();
+			CORRECTION_START = true;
+			SetAllButtonVisible();
 		}
 		else
 			Toast.makeText(mContext, R.string.ToastCorrPointFull, Toast.LENGTH_LONG).show();

@@ -1,11 +1,9 @@
 package com.izzz.iseek.tools;
 
-import com.example.iseek.R;
-import com.izzz.iseek.vars.StaticVar;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import com.izzz.iseek.R;
 
 public class PrefHolder {
 	

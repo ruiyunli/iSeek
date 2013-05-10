@@ -1,10 +1,11 @@
 package com.izzz.iseek.base;
 
+import java.text.DecimalFormat;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -12,10 +13,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.iseek.R;
+import com.izzz.iseek.R;
+import com.izzz.iseek.corr.CorrCalcK;
 import com.izzz.iseek.corr.CorrListAdapter;
+import com.izzz.iseek.corr.CorrPointManager;
 import com.izzz.iseek.corr.CorrListAdapter.ViewHolder;
+import com.izzz.iseek.vars.StaticVar;
 
 public class CorrManage extends Activity{
 
@@ -38,10 +43,9 @@ public class CorrManage extends Activity{
 		btnCorrDelete 	= (Button)findViewById(R.id.btnCorrDelete);
 		
 		btnCorrDelete.setOnClickListener(new btnDeleteOnClickListener());
+		btnCorrCalc.setOnClickListener(new btnCalcOnClickListener());
 		
-		InitListView();
-		
-		
+		InitListView();	
 	}
 	
 	private void InitListView()
@@ -52,9 +56,23 @@ public class CorrManage extends Activity{
         CorrList.setItemsCanFocus(false);    
         CorrList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);    
         CorrList.setOnItemClickListener(new ListViewOnClickListener());
+        
+        setButtonUnable();
 	}	
 	
+	/**按钮不可用*/
+	public void setButtonUnable()
+	{
+		btnCorrCalc.setEnabled(false);
+		btnCorrDelete.setEnabled(false);
+	}
 	
+	/**按钮不可用*/
+	public void setButtonEnable()
+	{
+		btnCorrCalc.setEnabled(true);
+		btnCorrDelete.setEnabled(true);
+	}
 	
 	@Override
 	public void setContentView(int layoutResID) {
@@ -86,11 +104,71 @@ public class CorrManage extends Activity{
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			for(int i = 0; i<adapter.getCount(); i++)
+			
+			int[] arrDel = new int[CorrPointManager.MAX_POINT_SIZE];
+			int k = 0;
+			for(int i = adapter.getCount()-1; i>0; i--)
 				if(CorrListAdapter.isSelected.get(i))
-					adapter.remove(i);
+					{
+						arrDel[k++] = i;
+						if(StaticVar.DEBUG_ENABLE)
+							StaticVar.logPrint('D', "delete:" + i);
+					}
+			
+//			if(k == 0)
+//			{
+//				Toast.makeText(CorrManage.this, R.string.ToastCorrDeletedNull, Toast.LENGTH_LONG).show();
+//			}
+//			else
+//			{
+				adapter.remove(arrDel, k);
+				Toast.makeText(CorrManage.this, R.string.ToastCorrDeletedOK, Toast.LENGTH_LONG).show();
+//			}
 //			CorrList.updateViewLayout(v, null);
 		}		
+	}
+	
+	public class btnCalcOnClickListener implements OnClickListener{
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			double[] XX = new double[CorrPointManager.MAX_POINT_SIZE];
+			double[] YY = new double[CorrPointManager.MAX_POINT_SIZE];
+			
+			int k=0;
+			double[] AB = new double[2];
+			
+			for(int i=1; i<CorrListAdapter.isSelected.size(); i++)
+			{
+				if(CorrListAdapter.isSelected.get(i))
+				{
+					XX[k] 	= adapter.corrPM.getOriginData(i-1);
+					YY[k] = adapter.corrPM.getTargetData(i-1);
+					
+					if(StaticVar.DEBUG_ENABLE)
+					{
+						DecimalFormat df6 = new DecimalFormat("0.000000");
+						String str = "XX[" + k + "]:" + XX[k] + " YY[" + k + "]:" + YY[k];
+						StaticVar.logPrint('D', str);
+					}
+					
+					k++;
+				}
+			}
+			
+//			if(k == 0)
+//			{
+//				Toast.makeText(CorrManage.this, R.string.ToastCoefCalcNull, Toast.LENGTH_LONG).show();
+//			}
+//			else
+//			{
+				AB = CorrCalcK.from_xy_to_ab(XX, YY, k);	
+				adapter.corrPM.saveCoef(AB[0], AB[1]);
+				BaseMapMain.gpsLocate.InitCoef();
+				Toast.makeText(CorrManage.this, R.string.ToastCoefCreated, Toast.LENGTH_LONG).show();
+//			}
+		}
 	}
 	
 	public class ListViewOnClickListener implements OnItemClickListener{    
@@ -121,6 +199,11 @@ public class CorrManage extends Activity{
 	            }
 	            	
         	}
+        	
+        	if(isSelectedNull())
+        		setButtonUnable();
+        	else
+        		setButtonEnable();
             
         }  
         
@@ -130,6 +213,14 @@ public class CorrManage extends Activity{
         	for(int i = 0; i<adapter.getCount();i++)
         		CorrListAdapter.isSelected.put(i, isSelected);        	
         	CorrList.refreshDrawableState();        	
+        }
+        
+        public boolean isSelectedNull()
+        {
+        	for(int i = 1; i<adapter.getCount();i++)
+        		if(CorrListAdapter.isSelected.get(i))
+        			return false;
+        	return true;
         }
     }
 	

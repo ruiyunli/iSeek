@@ -1,8 +1,7 @@
 package com.izzz.iseek.corr;
 
-import java.util.Set;
-import java.util.TreeSet;
-import com.example.iseek.R;
+import com.izzz.iseek.R;
+import com.izzz.iseek.tools.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,13 +16,17 @@ public class CorrPointManager {
 	
 	private SharedPreferences.Editor prefsEditor = null;
 	
-	private final int  MAX_POINT_SIZE = 10;
+	public static final int  MAX_POINT_SIZE = 10;
 	
-	public  String prefCorrPointSizeKey 	= null;			//控件对应的key字符串声明
+	public String prefCorrPointSizeKey 	= null;			//控件对应的key字符串声明
   	
-  	public  String[] prefOriginPointKey 	= null;			//控件对应的key字符串声明
+  	public String[] prefOriginPointKey 	= null;			//控件对应的key字符串声明
   	
-  	public  String[] prefTargetPointKey 	= null;			//控件对应的key字符串声明
+  	public String[] prefTargetPointKey 	= null;			//控件对应的key字符串声明
+  	
+  	public static String prefCorrCoefAKey		= null;
+  	
+  	public static String prefCorrCoefBKey		= null;
 
 	public CorrPointManager(Context mContext, SharedPreferences prefs,	Editor prefsEditor) 
 	{
@@ -47,18 +50,21 @@ public class CorrPointManager {
 		prefOriginPointKey[8]		= mContext.getResources().getString(R.string.origin_point_8_key);
 		prefOriginPointKey[9]		= mContext.getResources().getString(R.string.origin_point_9_key);
 		
-		prefTargetPointKey[0]		= mContext.getResources().getString(R.string.corr_point_0_key);
-		prefTargetPointKey[1]		= mContext.getResources().getString(R.string.corr_point_1_key);
-		prefTargetPointKey[2]		= mContext.getResources().getString(R.string.corr_point_2_key);
-		prefTargetPointKey[3]		= mContext.getResources().getString(R.string.corr_point_3_key);
-		prefTargetPointKey[4]		= mContext.getResources().getString(R.string.corr_point_4_key);
-		prefTargetPointKey[5]		= mContext.getResources().getString(R.string.corr_point_5_key);
-		prefTargetPointKey[6]		= mContext.getResources().getString(R.string.corr_point_6_key);
-		prefTargetPointKey[7]		= mContext.getResources().getString(R.string.corr_point_7_key);
-		prefTargetPointKey[8]		= mContext.getResources().getString(R.string.corr_point_8_key);
-		prefTargetPointKey[9]		= mContext.getResources().getString(R.string.corr_point_9_key);
+		prefTargetPointKey[0]		= mContext.getResources().getString(R.string.target_point_0_key);
+		prefTargetPointKey[1]		= mContext.getResources().getString(R.string.target_point_1_key);
+		prefTargetPointKey[2]		= mContext.getResources().getString(R.string.target_point_2_key);
+		prefTargetPointKey[3]		= mContext.getResources().getString(R.string.target_point_3_key);
+		prefTargetPointKey[4]		= mContext.getResources().getString(R.string.target_point_4_key);
+		prefTargetPointKey[5]		= mContext.getResources().getString(R.string.target_point_5_key);
+		prefTargetPointKey[6]		= mContext.getResources().getString(R.string.target_point_6_key);
+		prefTargetPointKey[7]		= mContext.getResources().getString(R.string.target_point_7_key);
+		prefTargetPointKey[8]		= mContext.getResources().getString(R.string.target_point_8_key);
+		prefTargetPointKey[9]		= mContext.getResources().getString(R.string.target_point_9_key);
 		
 		prefCorrPointSizeKey	= mContext.getResources().getString(R.string.corr_point_size_key);
+		
+		prefCorrCoefAKey		= mContext.getResources().getString(R.string.corr_coef_a_key);
+		prefCorrCoefBKey		= mContext.getResources().getString(R.string.corr_coef_b_key);
 	}
 
 
@@ -127,6 +133,35 @@ public class CorrPointManager {
 		return corrPoint;
 	}
 	
+	/**获取第position个原始数据*/
+	public double getOriginData(int position)
+	{
+		double originData = 0.0;
+		int tmp = 0;
+		
+		tmp = prefs.getInt(prefOriginPointKey[position], 0);
+		
+		originData = tmp/1E6;
+		
+		if(StaticVar.DEBUG_ENABLE)
+			StaticVar.logPrint('D', "int:" + tmp + "originData:" + originData);
+		
+		return originData;
+	}
+	
+	/**获取第position个目标数据*/
+	public double getTargetData(int position)
+	{
+		double targetData = 0.0;
+		int tmp = 0;
+		
+		tmp = prefs.getInt(prefTargetPointKey[position], 0);
+		
+		targetData = tmp/1E6;
+		
+		return targetData;
+	}
+	
 	/**添加坐标组*/
 	public void add(int OriginValue, int CorrValue)
 	{
@@ -139,24 +174,28 @@ public class CorrPointManager {
 		}
 	}
 	
+	/**删除数据组*/
 	public void remove(int position)
 	{
 		int pointSize = getSize();
 		
+		//越界
 		if(position >pointSize)
 		{
 			if(StaticVar.DEBUG_ENABLE)
 				StaticVar.logPrint('D', "delete corr point error");
 		}
+		//最后一组数据
 		else if(position == pointSize)
 		{
-			prefsEditor.remove(prefOriginPointKey[position-1]);
+			prefsEditor.remove(prefOriginPointKey[position-1]);				//减一原因：在ArrayList中第0项为目录
 			prefsEditor.remove(prefTargetPointKey[position-1]);
 			prefsEditor.putInt(prefCorrPointSizeKey, getSize()-1).commit();
 			
 			if(StaticVar.DEBUG_ENABLE)
-				StaticVar.logPrint('D', "delete corr point ok");
+				StaticVar.logPrint('D', "delete corr point " + pointSize + "ok");
 		}
+		//不是最后一组数据
 		else
 		{
 			int tmp = 0;
@@ -180,11 +219,34 @@ public class CorrPointManager {
 			prefsEditor.remove(prefTargetPointKey[pointSize-1]);
 			prefsEditor.putInt(prefCorrPointSizeKey, getSize()-1).commit();
 			
-			
 			if(StaticVar.DEBUG_ENABLE)
 				StaticVar.logPrint('D', "delete corr point ok");
 		}
 		
+	}
+	
+	/**保存转换系数*/
+	public void saveCoef(double coefA, double coefB)
+	{
+		prefsEditor.putFloat(prefCorrCoefAKey, (float) coefA);
+		prefsEditor.putFloat(prefCorrCoefBKey, (float) coefB).commit();
+		
+		if(StaticVar.DEBUG_ENABLE)
+			StaticVar.logPrint('D', "save coef A and B ok!");
+	}
+	
+	
+	/**获取转换系数*/
+	
+	
+	public static double[] getCoef()
+	{
+		double[] AB = new double[]{0,0};
+		
+		AB[0] = (double)PrefHolder.prefs.getFloat(prefCorrCoefAKey, 1);
+		AB[1] = (double)PrefHolder.prefs.getFloat(prefCorrCoefBKey, 0);
+		
+		return AB;
 	}
 	
 }

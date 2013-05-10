@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.telephony.SmsManager;
 import android.widget.Toast;
-
-import com.example.iseek.R;
-import com.izzz.iseek.app.IseekApplication;
+import com.izzz.iseek.R;
 import com.izzz.iseek.tools.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
 

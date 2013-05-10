@@ -1,14 +1,14 @@
 package com.izzz.iseek.base;
 
 import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo.State;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.view.View;
@@ -23,14 +23,14 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.map.MKOLSearchRecord;
 import com.baidu.mapapi.map.MKOLUpdateElement;
 import com.baidu.mapapi.map.MKOfflineMap;
 import com.baidu.mapapi.map.MKOfflineMapListener;
-import com.example.iseek.R;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.vars.StaticVar;
+import com.izzz.iseek.R;
 
 public class OfflineManage extends Activity{
 	
@@ -78,6 +78,11 @@ public class OfflineManage extends Activity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
+		IseekApplication app = (IseekApplication)this.getApplication();
+        if (app.mBMapManager == null) {
+            app.mBMapManager = new BMapManager(this);
+            app.mBMapManager.init(StaticVar.BaiduMapKey, new IseekApplication.MyGeneralListener());
+        }
 		setContentView(R.layout.activity_offline);
 		
 		//¿Ø¼þ
@@ -103,7 +108,7 @@ public class OfflineManage extends Activity{
 		
 		btnDownload.setEnabled(false);
 		
-		InitNotification();
+//		InitNotification();
 		
 		UpdateLocal();
 	}	
@@ -132,16 +137,16 @@ public class OfflineManage extends Activity{
 		});
 	}
 	
-	private void InitNotification()
+	private void InitNotification(String cityName)
 	{
-		Intent resultIntent = new Intent(this, OfflineManage.class);				
-		PendingIntent resultPendingIntent=PendingIntent.getActivity(OfflineManage.this, 0, resultIntent, 0);
+//		Intent resultIntent = new Intent(this, OfflineManage.class);				
+		PendingIntent resultPendingIntent=PendingIntent.getActivity(OfflineManage.this, 0, null, 0);
 		
 		mBuilder =
 		        new NotificationCompat.Builder(this)
 		        .setSmallIcon(R.drawable.ic_launcher)
-		        .setContentTitle(getResources().getString(R.string.app_name))
-		        .setContentText(getResources().getString(R.string.OfflineDownloadEnd))
+//		        .setContentTitle(getResources().getString(R.string.app_name))
+		        .setContentText(cityName + " " + getResources().getString(R.string.OfflineDownloadEnd))
 		        .setAutoCancel(true)
 		        .setTicker(getResources().getString(R.string.OfflineDownloadEnd))
 		        .setWhen(System.currentTimeMillis())
@@ -152,8 +157,9 @@ public class OfflineManage extends Activity{
 		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 	}
 	
-	private void SendDownloadNotif()
+	private void SendDownloadNotif(String cityName)
 	{
+		InitNotification(cityName);
 		mNotificationManager.notify(mNotiId, mBuilder.build());
 	}
 	
@@ -205,7 +211,7 @@ public class OfflineManage extends Activity{
 				btnDownload.setEnabled(false);
 				return;
 			}
-			ArrayList<MKOLSearchRecord> records = BaseMapMain.localMapControl.searchCity(CityName.getText().toString());
+			ArrayList<MKOLSearchRecord> records = BaseMapMain.localMapControl.searchCity(CityName.getText().toString().trim());
 			
 			//±£ÏÕ²ßÂÔ
 			if(records != null && records.size() == 1)
@@ -297,6 +303,8 @@ public class OfflineManage extends Activity{
 				if(StaticVar.DEBUG_ENABLE)
 					StaticVar.logPrint('D', "download start");
 				requestDetail.setText(requestCityName + ":" + getResources().getString(R.string.OfflineDownloadStart));
+				
+				checkNetworkInfo();
 			}
 			else
 			{
@@ -433,9 +441,17 @@ public class OfflineManage extends Activity{
 					if ( update != null )
 					{
 						if(IseekApplication.DOWNLOAD_CHANNEL == StaticVar.OFFLINE_DOWNLOAD)
+						{
 							requestDetail.setText(String.format("%s : %d%%", update.cityName, update.ratio));
+							if(StaticVar.DEBUG_ENABLE)
+								StaticVar.logPrint('D', String.format("%s : %d%%", update.cityName, update.ratio));
+						}
 						else if(IseekApplication.DOWNLOAD_CHANNEL == StaticVar.OFFLINE_UPDATE)
+						{
 							localRatio.setText(String.format("%d%%", update.ratio));
+							if(StaticVar.DEBUG_ENABLE)
+								StaticVar.logPrint('D', String.format("%s : %d%%", update.cityName, update.ratio));
+						}
 					}
 					
 					if(update.ratio == 100)
@@ -445,12 +461,28 @@ public class OfflineManage extends Activity{
 							requestDetail.setText(R.string.OfflineRequestDownloadOK);
 						UpdateLocal();
 						
-						SendDownloadNotif();
+						SendDownloadNotif(update.cityName);
 					}
+					break;
 				}
-				break;
+//			case MKOfflineMap.
+				
 			}
 		}
 	}
+	
+	private void checkNetworkInfo()
+    {
+        ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        //mobile 3G Data Network
+        State mobile = conMan.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
+        if(StaticVar.DEBUG_ENABLE)
+        	StaticVar.logPrint('D', "mobile:" + mobile.toString());
+        //wifi
+        State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+        if(StaticVar.DEBUG_ENABLE)
+        	StaticVar.logPrint('D', "wifi:" + wifi.toString());
+    }
 	
 }

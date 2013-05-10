@@ -1,11 +1,9 @@
 package com.izzz.iseek.map;
 
 import com.baidu.mapapi.map.MapView;
-import com.example.iseek.R;
+import com.izzz.iseek.R;
 import com.izzz.iseek.app.IseekApplication;
-import com.izzz.iseek.base.BaseMapMain;
 import com.izzz.iseek.vars.StaticVar;
-
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;

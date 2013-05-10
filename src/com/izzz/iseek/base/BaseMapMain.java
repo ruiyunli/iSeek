@@ -1,28 +1,21 @@
 package com.izzz.iseek.base;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
-import com.example.iseek.R;
+import com.izzz.iseek.R;
 import com.izzz.iseek.SMS.SMSreceiver;
 import com.izzz.iseek.app.IseekApplication;
-import com.izzz.iseek.corr.Correction;
+import com.izzz.iseek.corr.CorrView;
 import com.izzz.iseek.map.GPSLocate;
 import com.izzz.iseek.map.LocalMapControl;
 import com.izzz.iseek.map.MapMKMapViewListener;
@@ -55,7 +48,7 @@ public class BaseMapMain extends Activity {
 
 	public static GPSLocate gpsLocate = null;
 
-	public static Correction correction = null; // 校正类实例
+	public static CorrView corrView = null; // 校正类实例
 
 	private ImageButton btnViewSelect = null; // 视图切换
 
@@ -208,10 +201,10 @@ public class BaseMapMain extends Activity {
 		btnMoveLeft = (ImageButton) findViewById(R.id.btnMoveLeft);
 		btnMoveRight = (ImageButton) findViewById(R.id.btnMoveRight);
 
-		correction = new Correction(BaseMapMain.this, mMapView, btnMoveUp,
+		corrView = new CorrView(BaseMapMain.this, mMapView, btnMoveUp,
 				btnMoveDown, btnMoveLeft, btnMoveRight, btnCorrOk, btnCorrCancle);
 
-		correction.SetAllButtonGone();
+		corrView.SetAllButtonGone();
 	}
 
 	/** 初始化自定义MenuView */

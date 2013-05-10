@@ -1,14 +1,8 @@
 package com.izzz.iseek.tools;
 
-import com.example.iseek.R;
-import com.izzz.iseek.SMS.SMSsender;
-import com.izzz.iseek.app.IseekApplication;
+import com.izzz.iseek.R;
 import com.izzz.iseek.base.BaseMapMain;
 import com.izzz.iseek.base.SettingActivity;
-import com.izzz.iseek.vars.StaticVar;
-
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;

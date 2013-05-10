@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.example.iseek.R;
-import com.izzz.iseek.base.CorrManage;
+import com.izzz.iseek.R;
 import com.izzz.iseek.tools.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
 
@@ -27,7 +26,7 @@ public class CorrListAdapter extends BaseAdapter {
     
     public static Map<Integer, Boolean> isSelected; 
     
-    private CorrPointManager corrPM = null;
+    public CorrPointManager corrPM = null;
     
     public CorrListAdapter(Context mContext) {    
     	
@@ -71,7 +70,7 @@ public class CorrListAdapter extends BaseAdapter {
 			Map<String, String> map = new HashMap<String, String>();    
             map.put("corr_origin", Integer.toString(originData[i]));    
             map.put("corr_target", Integer.toString(targetData[i]));
-            map.put("corr_diff", Integer.toString(Math.abs(originData[i]-targetData[i]))); 
+            map.put("corr_diff", Integer.toString(targetData[i]-originData[i])); 
             mData.add(map); 
             
             isSelected.put(i+1, false);  
@@ -137,9 +136,10 @@ public class CorrListAdapter extends BaseAdapter {
         public CheckBox corr_isSelect;    
     } 
     
-    public void remove(int position)
+    public void remove(int[] arrPos, int size)
     {
-    	corrPM.remove(position);
+    	for(int i = 0; i<size; i++)
+    		corrPM.remove(arrPos[i]);
     	InitData(); 
     	notifyDataSetChanged();
     }
