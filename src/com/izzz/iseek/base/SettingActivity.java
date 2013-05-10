@@ -186,7 +186,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			
 			prefSosNumber.setSummary((CharSequence) phoneNum);			
 			
-			alarmHandler.Start();			
+//			alarmHandler.Start();			
 						
 			return true;
 		}

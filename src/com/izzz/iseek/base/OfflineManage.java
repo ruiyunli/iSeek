@@ -85,30 +85,7 @@ public class OfflineManage extends Activity{
         }
 		setContentView(R.layout.activity_offline);
 		
-		//控件
-		CityName = (EditText)findViewById(R.id.OffCityName);
-		btnDownload = (Button)findViewById(R.id.OffBtnDownload);
-		btnRequest = (Button)findViewById(R.id.OffBtnRequest);
-		requestDetail = (TextView)findViewById(R.id.OffDetailText);
-		requestChildCity = (TextView)findViewById(R.id.OffChildCity);
-		localSize = (TextView)findViewById(R.id.OffLocalSize);
-		localRatio = (TextView)findViewById(R.id.OffLocalRatio);
-		btnUpdate = (Button)findViewById(R.id.OffBtnUpdate);
-		btnDelete = (Button)findViewById(R.id.OffBtnDelete);
-		spinLocalSelecter = (Spinner)findViewById(R.id.OffLocalSelecter);
-//		btnTitleBarOffline = (ImageButton)findViewById(R.id.btnTitleBarOffline);
-				
-		//响应函数
-		btnRequest.setOnClickListener(new RequestOnClickListener());
-		btnDownload.setOnClickListener(new DownloadOnClickListener());
-		BaseMapMain.localMapControl.Init(new OfflineMapListener());
-		btnUpdate.setOnClickListener(new UpdateOnClickListener());
-		btnDelete.setOnClickListener(new DeleteOnClickListener());
-		spinLocalSelecter.setOnItemSelectedListener(new spinnerItemSelectedListener());
-		
-		btnDownload.setEnabled(false);
-		
-//		InitNotification();
+		InitView();
 		
 		UpdateLocal();
 	}	
@@ -137,13 +114,38 @@ public class OfflineManage extends Activity{
 		});
 	}
 	
+	private void InitView()
+	{
+		//控件
+		CityName = (EditText)findViewById(R.id.OffCityName);
+		btnDownload = (Button)findViewById(R.id.OffBtnDownload);
+		btnRequest = (Button)findViewById(R.id.OffBtnRequest);
+		requestDetail = (TextView)findViewById(R.id.OffDetailText);
+		requestChildCity = (TextView)findViewById(R.id.OffChildCity);
+		localSize = (TextView)findViewById(R.id.OffLocalSize);
+		localRatio = (TextView)findViewById(R.id.OffLocalRatio);
+		btnUpdate = (Button)findViewById(R.id.OffBtnUpdate);
+		btnDelete = (Button)findViewById(R.id.OffBtnDelete);
+		spinLocalSelecter = (Spinner)findViewById(R.id.OffLocalSelecter);
+//				btnTitleBarOffline = (ImageButton)findViewById(R.id.btnTitleBarOffline);
+				
+		//响应函数
+		btnRequest.setOnClickListener(new RequestOnClickListener());
+		btnDownload.setOnClickListener(new DownloadOnClickListener());
+		BaseMapMain.localMapControl.Init(new OfflineMapListener());
+		btnUpdate.setOnClickListener(new UpdateOnClickListener());
+		btnDelete.setOnClickListener(new DeleteOnClickListener());
+		spinLocalSelecter.setOnItemSelectedListener(new spinnerItemSelectedListener());
+		
+		btnDownload.setEnabled(false);
+	}
+	
 	private void InitNotification(String cityName)
 	{
 //		Intent resultIntent = new Intent(this, OfflineManage.class);				
 		PendingIntent resultPendingIntent=PendingIntent.getActivity(OfflineManage.this, 0, null, 0);
 		
-		mBuilder =
-		        new NotificationCompat.Builder(this)
+		mBuilder = new NotificationCompat.Builder(this)
 		        .setSmallIcon(R.drawable.ic_launcher)
 //		        .setContentTitle(getResources().getString(R.string.app_name))
 		        .setContentText(cityName + " " + getResources().getString(R.string.OfflineDownloadEnd))
@@ -170,27 +172,34 @@ public class OfflineManage extends Activity{
 		
         if (updateInfo != null) 
         {
-        	//初始化城市字符包
-        	String[] localMap = new String[updateInfo.size()];
-        	if(StaticVar.DEBUG_ENABLE)
-        		StaticVar.logPrint('D', "info size:" + updateInfo.size());
-        	for ( int i=0; i<updateInfo.size(); i++)
-        	{
-        		localMap[i] = updateInfo.get(i).cityName;    
+        	try{
+	        	//初始化城市字符包
+	        	String[] localMap = new String[updateInfo.size()];
+	        	if(StaticVar.DEBUG_ENABLE)
+	        		StaticVar.logPrint('D', "info size:" + updateInfo.size());
+	        	for ( int i=0; i<updateInfo.size(); i++)
+	        	{
+	        		localMap[i] = updateInfo.get(i).cityName;    
+	        		if(StaticVar.DEBUG_ENABLE)
+	        			StaticVar.logPrint('D', "localmap:" + i + "--" + localMap[i]);
+	        	}
+	        	
+	        	//适配器
+	        	localAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,localMap);
+	        	localAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	        	spinLocalSelecter.setAdapter(localAdapter);
+        	}catch (Exception e) {
+				// TODO: handle exception
         		if(StaticVar.DEBUG_ENABLE)
-        			StaticVar.logPrint('D', "localmap:" + i + "--" + localMap[i]);
-        	}
-        	
-        	//适配器
-        	localAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,localMap);
-        	localAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        	spinLocalSelecter.setAdapter(localAdapter);
+        			StaticVar.logPrint('E', e.toString());
+			}        	
         }
+        
+        if(updateInfo.get(0).ratio < 100)
+        	IseekApplication.DOWNLOAD_CHANNEL = StaticVar.OFFLINE_UPDATE;
         else
-        {
-        	//如果是空的 如何处理
-        	
-        }
+        	IseekApplication.DOWNLOAD_CHANNEL = StaticVar.OFFLINE_NULL;
+        
 	}
 	
 	
@@ -462,6 +471,8 @@ public class OfflineManage extends Activity{
 						UpdateLocal();
 						
 						SendDownloadNotif(update.cityName);
+						
+						IseekApplication.DOWNLOAD_CHANNEL = StaticVar.OFFLINE_NULL;
 					}
 					break;
 				}

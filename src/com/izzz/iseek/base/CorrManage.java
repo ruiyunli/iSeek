@@ -181,8 +181,7 @@ public class CorrManage extends Activity{
 	            if(CorrListAdapter.isSelected.get(0)==true)
 	            	setAllCheckBox(false);
 	            else
-	            	setAllCheckBox(true);
-	            return;
+	            	setAllCheckBox(true);	            
             }
         	//单个选择
         	else
@@ -200,6 +199,7 @@ public class CorrManage extends Activity{
 	            	
         	}
         	
+        	//设置button的显示效果
         	if(isSelectedNull())
         		setButtonUnable();
         	else
