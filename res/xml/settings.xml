@@ -1,56 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-xmlns:android="http://schemas.android.com/apk/res/android">    
-    
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
     <!-- 手机号码设置 -->
-    
-    <PreferenceCategory android:title="@string/set_privateInfo_cate_title">    
-	    <EditTextPreference
-	        android:key="@string/set_targetPhone_key"
-	        android:title="@string/set_targetPhone_title"
-	        android:summary="@string/set_targetPhone_summary"
-	        android:dialogTitle="@string/set_targetPhone_dialogTitle"       
-	    />
-	    <EditTextPreference
-	        android:key="@string/set_sosNumber_key"
-	        android:title="@string/set_sosNumber_title"
-	        android:summary="@string/set_sosNumber_summary"
-	        android:dialogTitle="@string/set_sosNumber_dialogTitle"
-	    />   
-    </PreferenceCategory>   
-    
-    <!-- 离线地图管理 -->
-    <PreferenceCategory android:title="@string/set_tool_cate_title" > 
+
+    <PreferenceCategory android:title="@string/set_privateInfo_cate_title" >
+        <EditTextPreference
+            android:dialogTitle="@string/set_targetPhone_dialogTitle"
+            android:key="@string/set_targetPhone_key"
+            android:summary="@string/set_targetPhone_summary"
+            android:title="@string/set_targetPhone_title" />
+        <EditTextPreference
+            android:dialogTitle="@string/set_sosNumber_dialogTitle"
+            android:key="@string/set_sosNumber_key"
+            android:summary="@string/set_sosNumber_summary"
+            android:title="@string/set_sosNumber_title" />
+
         <PreferenceScreen
-            android:key="@string/set_correntry_key"
-            android:title="@string/set_correntry_title"
-            android:summary="@string/set_correntry_summary">            
-        </PreferenceScreen>
-        <CheckBoxPreference
-            android:key="@string/set_correnable_key"
-            android:title="@string/set_correnable_title"
-            android:summaryOn="@string/set_correnable_summary_on"
-            android:summaryOff="@string/set_correnable_summary_off"
-            android:defaultValue="false" >
-		</CheckBoxPreference>
-        <PreferenceScreen
-            android:key="@string/set_offline_key"
-            android:title="@string/set_offline_title"
-            android:summary="@string/set_offline_summary">            
+            android:key="@string/set_oneKeyNumber_key"
+            android:summary="@string/set_corrNumber_summary"
+            android:title="@string/set_corrNumber_title" >
+            
         </PreferenceScreen>
     </PreferenceCategory>
-    
+
+    <!-- 离线地图管理 -->
+    <PreferenceCategory android:title="@string/set_tool_cate_title" >
+        <PreferenceScreen
+            android:key="@string/set_correntry_key"
+            android:summary="@string/set_correntry_summary"
+            android:title="@string/set_correntry_title" >
+        </PreferenceScreen>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/set_correnable_key"
+            android:summaryOff="@string/set_correnable_summary_off"
+            android:summaryOn="@string/set_correnable_summary_on"
+            android:title="@string/set_correnable_title" >
+        </CheckBoxPreference>
+
+        <PreferenceScreen
+            android:key="@string/set_offline_key"
+            android:summary="@string/set_offline_summary"
+            android:title="@string/set_offline_title" >
+        </PreferenceScreen>
+    </PreferenceCategory>
+
     <!-- 关于 -->
-    <PreferenceCategory android:title="@string/set_about_cate_title" > 
+    <PreferenceCategory android:title="@string/set_about_cate_title" >
         <PreferenceScreen
             android:key="@string/set_guide_key"
-            android:title="@string/set_guide_title"
-            android:summary="@string/set_guide_summary">            
+            android:summary="@string/set_guide_summary"
+            android:title="@string/set_guide_title" >
         </PreferenceScreen>
         <PreferenceScreen
             android:key="@string/set_about_key"
-            android:title="@string/set_about_title"
-            android:summary="@string/set_about_summary">            
+            android:summary="@string/set_about_summary"
+            android:title="@string/set_about_title" >
         </PreferenceScreen>
     </PreferenceCategory>
+
 </PreferenceScreen>

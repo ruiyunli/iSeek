@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_vertical_margin" >
+
+    <!-- 解决EditText中焦点问题 -->
+
+    <LinearLayout
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:focusable="true"
+        android:focusableInTouchMode="true" >
+
+        <requestFocus />
+    </LinearLayout>
+    
+    <!-- 号码设置 -->
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_rounded"
+        android:orientation="vertical"
+        android:padding="@dimen/rounded_margin" >
+
+        <!-- 标题 -->
+
+        <TextView
+            style="@style/TextBlackRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/OKeySetTitle" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/seperate_line" />
+
+        <!-- 号码一设置 -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                style="@style/TextBlackRight"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="@string/OKeyNumber1" />
+
+            <EditText
+                android:id="@+id/editNumber1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/OKeyNumberHint" />
+        </LinearLayout>
+
+        <!-- 号码二设置 -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                style="@style/TextBlackRight"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="@string/OKeyNumber2" />
+
+            <EditText
+                android:id="@+id/editNumber2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/OKeyNumberHint" />
+        </LinearLayout>
+
+        <!-- 号码三设置 -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                style="@style/TextBlackRight"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="@string/OKeyNumber3" />
+
+            <EditText
+                android:id="@+id/editNumber3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/OKeyNumberHint" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnSetNumbers"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/OKeyBtnSetNumber"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <!-- 号码信息显示 -->
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/background_rounded"
+        android:orientation="vertical"
+        android:padding="@dimen/rounded_margin" >
+
+        <!-- 标题 -->
+
+        <TextView
+            style="@style/TextBlackRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/OKeyInfoTitle" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/seperate_line" />
+
+        <!-- 目标gps号码 -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="right"
+                android:text="@string/OKeyInfoTargetNumber" />
+
+            <TextView
+                android:id="@+id/textTargetNumber"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="@string/OKeyInfoNumberUnset" />
+        </LinearLayout>
+
+        <!-- SOS号码 -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/rounded_margin" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="right"
+                android:text="@string/OKeyInfoSOSNumber" />
+
+            <TextView
+                android:id="@+id/textSosNumber"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="@string/OKeyInfoNumberUnset" />
+        </LinearLayout>
+
+        <!-- 号码一 -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/rounded_margin" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="right"
+                android:text="@string/OKeyInfoNumber1" />
+
+            <TextView
+                android:id="@+id/textOkeyNumber1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="@string/OKeyInfoNumberUnset" />
+        </LinearLayout>
+
+        <!-- 号码二 -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/rounded_margin" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="right"
+                android:text="@string/OKeyInfoNumber2" />
+
+            <TextView
+                android:id="@+id/textOkeyNumber2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="@string/OKeyInfoNumberUnset" />
+        </LinearLayout>
+
+        <!-- 号码三 -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/rounded_margin" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="right"
+                android:text="@string/OKeyInfoNumber3" />
+
+            <TextView
+                android:id="@+id/textOkeyNumber3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="@string/OKeyInfoNumberUnset" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

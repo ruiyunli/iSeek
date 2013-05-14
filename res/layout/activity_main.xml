@@ -12,7 +12,8 @@
         android:id="@+id/logText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="log output" />
+        android:text="log output" 
+        android:visibility="visible"/>
 
     <!-- 百度地图 -->
 

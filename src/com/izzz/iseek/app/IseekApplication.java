@@ -7,8 +7,8 @@ import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.MKGeneralListener;
 import com.baidu.mapapi.map.MKEvent;
 import com.izzz.iseek.R;
-import com.izzz.iseek.map.PhoneLocation;
-import com.izzz.iseek.tools.PrefHolder;
+import com.izzz.iseek.maplocate.PhoneLocation;
+import com.izzz.iseek.vars.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
 
 public class IseekApplication extends Application {

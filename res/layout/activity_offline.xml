@@ -22,7 +22,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_rounded_big"
+        android:background="@drawable/background_rounded"
         android:orientation="vertical"
         android:padding="10dp" >
 
@@ -82,7 +82,7 @@
         <TextView
             android:id="@+id/OffChildCity"
             android:layout_width="fill_parent"
-            android:layout_height="60dp"
+            android:layout_height="75dp"
             android:text="@string/OfflineChildCityHint"
             android:textIsSelectable="false" />
     </LinearLayout>
@@ -92,7 +92,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:background="@drawable/background_rounded_big"
+        android:background="@drawable/background_rounded"
         android:orientation="vertical"
         android:padding="10dp" >
 
@@ -108,10 +108,25 @@
             android:layout_marginBottom="8dp"
             android:background="@color/seperate_line" />
 
-        <Spinner
-            android:id="@+id/OffLocalSelecter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Spinner
+                android:id="@+id/OffLocalSelecter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:spinnerMode="dialog" />
+
+            <Button
+                android:id="@+id/OffBtnUpdate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/OfflineBtnUpdate" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -122,7 +137,7 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="3" >
+                android:layout_weight="5" >
 
                 <TextView
                     android:id="@+id/text01"
@@ -144,7 +159,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/text01"
-                    android:layout_marginLeft="105dp"
+                    android:layout_marginLeft="94dp"
                     android:text="@string/OfflineTextRatio" />
 
                 <TextView
@@ -154,26 +169,29 @@
                     android:layout_alignBottom="@id/text02"
                     android:layout_toRightOf="@id/text02"
                     android:text="@string/OfflineTextSelectHint" />
+
+                <TextView
+                    android:id="@+id/text03"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/text01"
+                    android:text="@string/OfflineTextUpdate" />
+
+                <TextView
+                    android:id="@+id/OffLocalUpdate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/text03"
+                    android:layout_toRightOf="@id/text03"
+                    android:text="@string/OfflineTextSelectHint" />
             </RelativeLayout>
 
-            <LinearLayout
+            <Button
+                android:id="@+id/OffBtnDelete"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical" >
-
-                <Button
-                    android:id="@+id/OffBtnUpdate"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/OfflineBtnUpdate" />
-
-                <Button
-                    android:id="@+id/OffBtnDelete"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/OfflineBtnDelete" />
-            </LinearLayout>
+                android:layout_weight="2"
+                android:text="@string/OfflineBtnDelete" />
         </LinearLayout>
     </LinearLayout>
 

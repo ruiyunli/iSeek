@@ -1,12 +1,15 @@
 package com.izzz.iseek.SMS;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 import com.izzz.iseek.R;
-import com.izzz.iseek.tools.PrefHolder;
+import com.izzz.iseek.vars.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
 
 public class SMSsender {
@@ -30,12 +33,21 @@ public class SMSsender {
 	{
 		if(destNumber == null)
 		{
+			/*
 			destNumber = PrefHolder.prefs.getString(PrefHolder.prefTargetPhoneKey, "unset");
 			if(destNumber.equals("unset"))
 			{
 				Toast.makeText(mContext, R.string.ToastTargetSetEmpty,	Toast.LENGTH_LONG).show();
 				return false;
 			}
+			*/
+			destNumber = PrefHolder.getTargetPhone();
+			if(destNumber == null)
+			{
+				Toast.makeText(mContext, R.string.ToastTargetSetEmpty,	Toast.LENGTH_LONG).show();
+				return false;
+			}
+				
 		}
 		
 		return SendMessage(mContext, destNumber, mesContext, sentIntentStr, deliveryIntentStr);
@@ -72,6 +84,32 @@ public class SMSsender {
 	    }
 	    return false;
 	    //Toast.makeText(context, "送出成功!!" , Toast.LENGTH_SHORT).show();
+	}
+	
+	/**
+	 * 判断是否为有效手机号码
+	 * 1、130-139
+	 * 2、180,185-189
+	 * 3、150-153，155-159
+	 * 4、147
+	 * 5、10086--测试用
+	 * 6、10001--测试用
+	 * 7、5555--测试用
+	 * 8、6666--测试用
+	 * */
+	public static boolean isMobileNumber(String mobiles){
+		
+		boolean result = false;
+		
+		Pattern p=Pattern.compile(
+				"^(((13[0-9])|18[0,5-9]|15[0-3,5-9]|147)\\d{8})|(10086)|(10001)|(5555)|(5556)$");
+		Matcher m=p.matcher(mobiles);
+		
+		result = m.matches();
+		
+		if(StaticVar.DEBUG_ENABLE)
+			StaticVar.logPrint('D', "match result:" + result);
+		return result;
 	}
 
 }

@@ -28,7 +28,10 @@ public class StaticVar {
 	public static final String SMS_GEO_REQU = "w000000,051";//请求位置
 	public static final String SMS_TEST     = "CXGPRS";
 	public static final String SMS_SET_SOS  = "w000000,003,3,1,";//设置sos号码
-	public static final String SMS_SET_SOS_TAR  = "用户已经将您的号码绑定为SOS紧急呼叫号码<iSeek>";//设置sos号码
+	public static final String SMS_SET_ONE_KEY_1  	= "w000000,003,3,2,";//设置一键拨号号码一
+	public static final String SMS_SET_ONE_KEY_2  	= "w000000,003,3,3,";//设置一键拨号号码一
+	public static final String SMS_SET_ONE_KEY_3  	= "w000000,003,3,4,";//设置一键拨号号码一
+	public static final String SMS_SET_SOS_TAR  	= "用户已经将您的号码绑定为SOS紧急呼叫号码<iSeek>";//设置sos号码
 		
 	//接受短信权限设置-发送成功广播
 	public static final String SYSTEM_SMS_ACTION           	= "android.provider.Telephony.SMS_RECEIVED";
@@ -78,7 +81,9 @@ public class StaticVar {
 	public static final int CITYTYPE_PROVIENCE = 1;
 	public static final int CITYTYPE_CITY = 2;
 
-	
+	//短信接收优先级
+	public static final int SMS_RECEIVER_PRIORITY_1 = 2147483647;
+	public static final int SMS_RECEIVER_PRIORITY_2 = 2147483647;
 	
 	
 	

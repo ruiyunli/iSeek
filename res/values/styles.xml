@@ -1,14 +1,14 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="android:Theme.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
         -->
     </style>
 
@@ -16,22 +16,37 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-    
+
     <!-- 无标题栏的主题 -->
     <style name="AppThemeNoTitle" parent="@style/AppTheme">
         <item name="android:windowNoTitle">true</item>
-    </style> 
+    </style>
+
+    <style name="CustomTitleBackgroud">
+        <item name="android:background">@color/title_bar_background</item>
+    </style>
+
+    <style name="titlebar" parent="android:Theme.Light">
+        <item name="android:windowTitleSize">45dp</item>
+        <item name="android:windowTitleBackgroundStyle">@style/CustomTitleBackgroud</item>
+    </style>
+
+    <!-- 橄榄绿文字风格 -->
+    <style name="TextGreenLeft">
+        <item name="android:textColor">@color/guide_text</item>
+        <item name="android:gravity">left</item>        
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:singleLine">false</item>
+    </style>
     
-    
-    
-    
-    <style name="CustomTitleBackgroud" >
-    	<item name="android:background">@color/title_bar_background</item>
-	</style>
-    
-	<style name="titlebar" parent="android:Theme.Light">
-	    <item name="android:windowTitleSize">45dp</item> 
-	    <item name="android:windowTitleBackgroundStyle">@style/CustomTitleBackgroud</item> 
-	</style>
+    <!-- 黑色文字风格 -->
+    <style name="TextBlackRight">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">right</item>        
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:singleLine">true</item>
+    </style>
 
 </resources>

@@ -12,51 +12,42 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_rounded_big"
+        android:background="@drawable/background_rounded"
         android:padding="10dp" >
 
         <TextView
+            style="@style/TextGreenLeft"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/GuideTextApp"
-            android:textColor="@color/guide_text"
-            android:textIsSelectable="false"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:text="@string/GuideTextApp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:background="@drawable/background_rounded_big"
+        android:background="@drawable/background_rounded"
         android:padding="10dp" >
 
         <TextView
+            style="@style/TextGreenLeft"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/GuideTextCorr"
-            android:textColor="@color/guide_text"
-            android:textIsSelectable="false"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:text="@string/GuideTextCorr" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:background="@drawable/background_rounded_big"
+        android:background="@drawable/background_rounded"
         android:padding="10dp" >
 
         <TextView
+            style="@style/TextGreenLeft"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/GuideTextOffline"
-            android:textColor="@color/guide_text"
-            android:textIsSelectable="false"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:text="@string/GuideTextOffline" />
     </LinearLayout>
 
 </LinearLayout>

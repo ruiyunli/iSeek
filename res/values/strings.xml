@@ -22,6 +22,13 @@
     <string name="set_sosNumber_title">SOS 号码</string>
     <string name="set_sosNumber_summary">GPS关联的紧急联系号码</string>
     <string name="set_sosNumber_dialogTitle">SOS Phone</string>
+    <string name="set_oneKeyNumber_key">oneKeyNumber</string>
+    <string name="set_corrNumber_title">一键拨号</string>
+    <string name="set_corrNumber_summary">一键拨号号码设置</string>
+    <string name="set_corrNumber1_key">corrNumber1</string>
+    <string name="set_corrNumber1_title">号码一</string>
+    <string name="set_corrNumber1_summary">一键拨号-号码一</string>
+    <string name="set_corrNumber1_dialogTitle">号码一</string>
 
     <!-- Category Tool -->
     <string name="set_tool_cate_title">工具</string>
@@ -73,6 +80,11 @@
     <string name="origin_point_9_key">OriginPoint9</string>
     <string name="corr_coef_a_key">CorrCoefA</string>
     <string name="corr_coef_b_key">CorrCoefB</string>
+    
+    <!-- key-一键拨号 -->
+    <string name="onekey_number_1_key">oneKeyNum1</string>
+    <string name="onekey_number_2_key">oneKeyNum2</string>
+    <string name="onekey_number_3_key">oneKeyNum3</string>
 
     <!-- String in Toast -->
     <string name="ToastErrorInternet">网络连接出错</string>
@@ -87,24 +99,28 @@
     <string name="ToastCorrPressFirst">请先触摸屏幕选择一个点</string>
     <string name="ToastZoomInMax">已放大到最大级别</string>
     <string name="ToastZoomInMin">已缩小到最小级别</string>
-    <string name="ToastUnknowSMSheader">注意:不能识别的短信</string>
+<!--     <string name="ToastUnknowSMSheader">注意:不能识别的短信</string> -->
     <string name="ToastCorrPointFull">请先清除掉部分校准数据</string>
     <string name="ToastCoefNull">不存在校准内容，请先生成校准量</string>
     <string name="ToastCoefCreated">成功生成校准量</string>
     <string name="ToastCoefCalcNull">请先勾选用于计算的数据组</string>
     <string name="ToastCorrDeletedOK">删除成功</string>
     <string name="ToastCorrDeletedNull">请先勾选要删除的数据组</string>
+    <string name="ToastOneKeySetNum1Fail">号码一设置失败</string>
+    <string name="ToastOneKeySetNum2Fail">号码二设置失败</string>
+    <string name="ToastOneKeySetNum3Fail">号码三设置失败</string>
+    <string name="ToastOneKeySetNumOK">设置成功</string>
 
     <!-- logDialog中的文字 -->
     <string name="DialogTitle">iSeeking…</string>
     <string name="DialogMsgHeader">正在努力连接中…</string>
-    <string name="DialogSendOK">成功发送请求</string>
+    <string name="DialogSendOK">成功发送请求!</string>
     <string name="DialogDeliveryOK">目标成功接收请求，请耐心等待1–2分钟…</string>
     <string name="DialogGpsNotFix">GPS未能正常工作!</string>
-    <string name="DialogSosSendGpsOK">GPS:成功发送请求</string>
+    <string name="DialogSosSendGpsOK">GPS:成功发送请求!</string>
     <string name="DialogSosDeliveryGpsOK">GPS:成功接收请求!</string>
     <string name="DialogSosFeedBackGpsOK">GPS:设置成功!</string>
-    <string name="DialogSosSendTarOK">SOS:成功发送通知</string>
+    <string name="DialogSosSendTarOK">SOS:成功发送通知!</string>
     <string name="DialogSosDeliveryTarOK">SOS:成功接收通知!</string>
     <string name="DialogAlarmGot">连接超时，请重试</string>
 
@@ -136,9 +152,12 @@
     <string name="OfflineChildCityHeader">地图包:</string>
     <string name="OfflineTitleRequest">地图下载</string>
     <string name="OfflineTitleLocal">本地管理</string>
-    <string name="OfflineTextSize">大小：</string>
-    <string name="OfflineTextRatio">已下载：</string>
+    <string name="OfflineTextSize">大小:</string>
+    <string name="OfflineTextRatio">已下载:</string>
     <string name="OfflineTextSelectHint">请选择</string>
+    <string name="OfflineTextUpdate">更新:</string>
+    <string name="OfflineTextUpdateAvaliable">可更新</string>
+    <string name="OfflineTextUpdateNotAvaliable">无更新</string>
     <string name="OfflineCityNameEmpty">请输入需要查询的城市</string>
     <string name="OfflineBtnUpdate">更新</string>
     <string name="OfflineBtnDelete">删除</string>
@@ -158,6 +177,7 @@
     <string name="TitleBarAbout">关于</string>
     <string name="TitleBarOffline">离线管理</string>
     <string name="TitleBarSetting">设置</string>
+    <string name="TitleBarSetNumber">号码设置</string>
     <string name="TitleBarGuide">使用说明</string>
     <string name="TitleBarCorr">校准</string>
 
@@ -173,6 +193,28 @@
     <string name="CorrListOrigin">原始数据</string>
     <string name="CorrListTarget">手动校准</string>
     <string name="CorrListDiff">误差</string>
+    
+    <!-- onekey中的文字 -->
+    <string name="OKeySetTitle">一键设置</string>
+    <string name="OKeyNumber1">号码一：</string>
+    <string name="OKeyNumber2">号码二：</string>
+    <string name="OKeyNumber3">号码三：</string>
+    <string name="OKeyNumberHint">请输入号码</string>
+    <string name="OKeyBtnSetNumber">设置</string>
+    <string name="OKeyInfoTitle">信息</string>
+    <string name="OKeyInfoTargetNumber">GPS号码：</string>
+    <string name="OKeyInfoSOSNumber">SOS号码：</string>
+    <string name="OKeyInfoNumber1">号码一：</string>
+    <string name="OKeyInfoNumber2">号码二：</string>
+    <string name="OKeyInfoNumber3">号码三：</string>
+    <string name="OKeyInfoNumberUnset">未设置</string>
+    <string name="OKeyAlertTitle">号码设置</string>
+    <string name="OKeyAlertInvalidNum1">号码一无效！</string>
+    <string name="OKeyAlertInvalidNum2">号码二无效！</string>
+    <string name="OKeyAlertInvalidNum3">号码三无效！</string>
+    <string name="OKeyAlertInValidAll">请输入有效的手机号码</string>
+    <string name="OKeyAlertMsgHeader">是否设置号码：</string>
+    <string name="OKeyAlertValidAll">是否设置所有号码？\n(设置过程需要一定时间，请在两分钟后再测试是否成功)</string>
 
     <!-- 使用说明页面 -->
     <string name="GuideTextApp">关于应用：本应用可用于照看老人、小孩，达到实时看护，应用在手，时时刻刻都能够掌握他们的位置，随身携带可避免走失。</string>
@@ -185,5 +227,6 @@
     <string name="CANCLE">CANCLE</string>
     <string name="OK_CH">确认</string>
     <string name="CANCLE_CH">取消</string>
+    <string name="WarnDialogCheckBoxHint">勾选不再显示这条消息</string>
 
 </resources>
