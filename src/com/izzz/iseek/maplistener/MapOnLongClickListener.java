@@ -36,54 +36,38 @@ public class MapOnLongClickListener implements OnLongClickListener{
 		//确保在定位成功后再校准,并且定位过程中没有使用自动校准
 		if(IseekApplication.GPS_LOCATE_OK && !IseekApplication.CORRECTION_USED)
 		{
-			/*
+			
 			new AlertDialog.Builder(mContext) 
 			    .setTitle(R.string.CorrAlertTitle)
 			    .setMessage(R.string.CorrAlertMsgWarn)
 			    .setPositiveButton(R.string.OK_CH, new AlertCorrOnClickListener())
 			    .setNegativeButton(R.string.CANCLE_CH, null)
 			    .show();
-			    */
-			warnDialog = new WarnDialog(mContext, WarnDialog.THEME_NO_CHECKBOX);
+			    
+			/*warnDialog = new WarnDialog(mContext, WarnDialog.THEME_NO_CHECKBOX);
 			warnDialog.setTitle(R.string.CorrAlertTitle);
 			warnDialog.setMessage(R.string.CorrAlertMsgWarn);
 			warnDialog.setPositiveButton(new AlertCorrOnClickListener());
 			warnDialog.setNegativeButton();
-			warnDialog.show();
+			warnDialog.show();*/
 		}
 		//没有定位成功
-		else if(!IseekApplication.GPS_LOCATE_OK)
-		{
-			/*
-			new AlertDialog.Builder(mContext) 
-			    .setTitle(R.string.CorrAlertTitle)
-			    .setMessage(R.string.CorrAlertMsgNoLocate)
-			    .setPositiveButton(R.string.OK_CH, null)
-			    .show();
-			    */
-			if(FLAG_NOLOC_SHOW_ENABLE)
-			{
-				if(StaticVar.DEBUG_ENABLE)
-					StaticVar.logPrint('D', "FLAG_NOLOC_SHOW_ENABLE:" + FLAG_NOLOC_SHOW_ENABLE);
-				
-				warnDialog = new WarnDialog(mContext,WarnDialog.THEME_HAS_CHECKBOX);
-				warnDialog.setTitle(R.string.CorrAlertTitle);
-				warnDialog.setMessage(R.string.CorrAlertMsgNoLocate);
-				warnDialog.setPositiveButton(null);
-				warnDialog.show();
-			}
-		}
-		//使用了自动校准
-		else if(IseekApplication.CORRECTION_USED)
+		else if(IseekApplication.GPS_LOCATE_OK && IseekApplication.CORRECTION_USED)
 		{
 			if(StaticVar.DEBUG_ENABLE)
 				StaticVar.logPrint('D', "FLAG_USECORR_SHOW_ENABLE:" + FLAG_USECORR_SHOW_ENABLE);
 			
-			warnDialog = new WarnDialog(mContext,WarnDialog.THEME_NO_CHECKBOX);
+			new AlertDialog.Builder(mContext) 
+		    .setTitle(R.string.CorrAlertTitle)
+		    .setMessage(R.string.CorrAlertMsgCorrUsed)
+		    .setPositiveButton(R.string.OK_CH, null)
+		    .show();
+			
+			/*warnDialog = new WarnDialog(mContext,WarnDialog.THEME_NO_CHECKBOX);
 			warnDialog.setTitle(R.string.CorrAlertTitle);
 			warnDialog.setMessage(R.string.CorrAlertMsgCorrUsed);
 			warnDialog.setPositiveButton(null);
-			warnDialog.show();
+			warnDialog.show();*/
 			
 		}
 		
