@@ -1,5 +1,7 @@
 package com.izzz.iseek.activity;
 
+import java.util.Set;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import com.izzz.iseek.R;
+import com.izzz.iseek.vars.PrefHolder;
 
 public class AboutActivity extends Activity{
 
@@ -19,6 +22,8 @@ public class AboutActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_about);
+		
+//		PrefHolder.prefsEditor.putStringSet("sdf", new Set<String>("sdf","sdf"));
 	}
 
 	@Override
