@@ -117,7 +117,7 @@ public class BaseMapMain extends Activity {
 		InitBCRRegister(); 	// 注册BroadCastReceiver IntentFilter
 
 		if (StaticVar.DEBUG_ENABLE)
-			StaticVar.logPrint('D', "On Create");
+			StaticVar.logPrint('D', "lry:On Create");
 	}
 
 	/** 注册BroadcastReceiver,用于接收短信、回执及闹钟 */
