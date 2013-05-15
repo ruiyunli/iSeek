@@ -23,6 +23,8 @@ public class AboutActivity extends Activity{
 		
 		setContentView(R.layout.activity_about);
 		
+		
+		
 //		PrefHolder.prefsEditor.putStringSet("sdf", new Set<String>("sdf","sdf"));
 	}
 
