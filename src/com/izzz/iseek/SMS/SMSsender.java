@@ -101,6 +101,16 @@ public class SMSsender {
 		
 		boolean result = false;
 		
+		if("".equals(mobiles.trim()))
+			return false;
+		
+		if("+86".equals(mobiles.substring(0, 3)))
+		{
+			mobiles = mobiles.substring(3);
+			if(StaticVar.DEBUG_ENABLE)
+				StaticVar.logPrint('D', "remove:+86 mobiles:" + mobiles);
+		}
+		
 		Pattern p=Pattern.compile(
 				"^(((13[0-9])|18[0,5-9]|15[0-3,5-9]|147)\\d{8})|(10086)|(10001)|(5555)|(5556)$");
 		Matcher m=p.matcher(mobiles);
@@ -108,7 +118,7 @@ public class SMSsender {
 		result = m.matches();
 		
 		if(StaticVar.DEBUG_ENABLE)
-			StaticVar.logPrint('D', "match result:" + result);
+			StaticVar.logPrint('D', "mobiles:" + mobiles +" result:" + result);
 		return result;
 	}
 

@@ -3,7 +3,12 @@ package com.izzz.iseek.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -24,6 +29,10 @@ public class SetOneKeyNumber extends Activity{
 	private EditText editNumber2 = null;
 	private EditText editNumber3 = null;
 	
+	private ImageButton btnContactPicker1 = null;
+	private ImageButton btnContactPicker2 = null;
+	private ImageButton btnContactPicker3 = null;
+	
 	private Button btnSetNumbers = null;
 	
 	private TextView textTargetNumber 	= null;
@@ -41,6 +50,8 @@ public class SetOneKeyNumber extends Activity{
 	private boolean isNum3Valid = false;
 	
 	private SMSsender SetOneKeySender = null;
+	
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +96,10 @@ public class SetOneKeyNumber extends Activity{
 		editNumber2 = (EditText)findViewById(R.id.editNumber2);
 		editNumber3 = (EditText)findViewById(R.id.editNumber3);
 		
+		btnContactPicker1 = (ImageButton)findViewById(R.id.btnContactPicker1);
+		btnContactPicker2 = (ImageButton)findViewById(R.id.btnContactPicker2);
+		btnContactPicker3 = (ImageButton)findViewById(R.id.btnContactPicker3);
+		
 		btnSetNumbers = (Button)findViewById(R.id.btnSetNumbers);
 		
 		textTargetNumber	= (TextView)findViewById(R.id.textTargetNumber);
@@ -94,6 +109,10 @@ public class SetOneKeyNumber extends Activity{
 		textOkeyNumber3		= (TextView)findViewById(R.id.textOkeyNumber3);
 		
 		btnSetNumbers.setOnClickListener(new setNumOnClickListener());
+		
+		btnContactPicker1.setOnClickListener(new btnContactPickerListener(StaticVar.CONTACT_PICKE_REQUEST_ID_1));
+		btnContactPicker2.setOnClickListener(new btnContactPickerListener(StaticVar.CONTACT_PICKE_REQUEST_ID_2));
+		btnContactPicker3.setOnClickListener(new btnContactPickerListener(StaticVar.CONTACT_PICKE_REQUEST_ID_3));
 		
 		UpdateView();
 	}
@@ -240,5 +259,65 @@ public class SetOneKeyNumber extends Activity{
 				StaticVar.logPrint('D', "saved one key number ok!");
 		}
 	}
+	
+	/**从通讯录中选择联系人号码*/
+	public class btnContactPickerListener implements OnClickListener{
+
+		private int pickContactRequestId;
+		
+		public btnContactPickerListener(int pickContactRequestId) {
+			super();
+			this.pickContactRequestId = pickContactRequestId;
+		}
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent pickContactIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+		    pickContactIntent.setType(Phone.CONTENT_TYPE); // Show user only contacts w/ phone numbers
+		    startActivityForResult(pickContactIntent, pickContactRequestId);
+		}		
+	}
+
+	/**对选择的联系人号码处理*/
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		
+        if (resultCode == RESULT_OK) {
+            Uri contactUri = data.getData();
+            String[] projectionNumber = {Phone.NUMBER};
+            
+            Cursor cursor = getContentResolver().query(contactUri, projectionNumber, null, null, null);
+            cursor.moveToFirst();
+            int columnNumber = cursor.getColumnIndex(Phone.NUMBER);	            
+            String phoneNumber = cursor.getString(columnNumber);
+            
+            switch(requestCode)
+            {
+            case StaticVar.CONTACT_PICKE_REQUEST_ID_1:
+            	editNumber1.setText(phoneNumber);
+            	break;
+            case StaticVar.CONTACT_PICKE_REQUEST_ID_2:
+            	editNumber2.setText(phoneNumber);
+            	break;
+            case StaticVar.CONTACT_PICKE_REQUEST_ID_3:
+            	editNumber3.setText(phoneNumber);
+            	break;
+            }
+            
+			if(StaticVar.DEBUG_ENABLE)
+			{
+				StaticVar.logPrint('D', "requestCode:" + requestCode);
+				StaticVar.logPrint('D', "number:" + phoneNumber);
+			}
+
+        }
+	    
+	
+	}
+	
+	
 	
 }

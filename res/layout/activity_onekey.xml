@@ -16,7 +16,7 @@
 
         <requestFocus />
     </LinearLayout>
-    
+
     <!-- 号码设置 -->
 
     <LinearLayout
@@ -60,6 +60,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="@string/OKeyNumberHint" />
+
+            <ImageButton
+                android:id="@+id/btnContactPicker1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/icon_contact_picker" />
         </LinearLayout>
 
         <!-- 号码二设置 -->
@@ -82,6 +89,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="@string/OKeyNumberHint" />
+            
+            <ImageButton
+                android:id="@+id/btnContactPicker2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/icon_contact_picker" />
         </LinearLayout>
 
         <!-- 号码三设置 -->
@@ -104,6 +118,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="@string/OKeyNumberHint" />
+            
+            <ImageButton
+                android:id="@+id/btnContactPicker3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/icon_contact_picker" />
         </LinearLayout>
 
         <Button

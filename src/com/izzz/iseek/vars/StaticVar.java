@@ -83,7 +83,12 @@ public class StaticVar {
 
 	//短信接收优先级
 	public static final int SMS_RECEIVER_PRIORITY_1 = 2147483647;
-	public static final int SMS_RECEIVER_PRIORITY_2 = 2147483647;
+	public static final int SMS_RECEIVER_PRIORITY_2 = 2147483646;
+	
+	//联系人选择请求id
+	public static final int CONTACT_PICKE_REQUEST_ID_1 = 1;
+	public static final int CONTACT_PICKE_REQUEST_ID_2 = 2;
+	public static final int CONTACT_PICKE_REQUEST_ID_3 = 3;
 	
 	
 	

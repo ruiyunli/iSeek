@@ -202,9 +202,9 @@
     
     <!-- onekey中的文字 -->
     <string name="OKeySetTitle">一键设置</string>
-    <string name="OKeyNumber1">号码一：</string>
-    <string name="OKeyNumber2">号码二：</string>
-    <string name="OKeyNumber3">号码三：</string>
+    <string name="OKeyNumber1">No1:</string>
+    <string name="OKeyNumber2">No2:</string>
+    <string name="OKeyNumber3">No3:</string>
     <string name="OKeyNumberHint">请输入号码</string>
     <string name="OKeyBtnSetNumber">设置</string>
     <string name="OKeyInfoTitle">信息</string>

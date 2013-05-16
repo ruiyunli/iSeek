@@ -100,7 +100,7 @@ public class WarnDialog {
 			{
 				//未定位模式下关闭警告
 				
-				MapOnLongClickListener.FLAG_NOLOC_SHOW_ENABLE = false;
+//				MapOnLongClickListener.FLAG_NOLOC_SHOW_ENABLE = false;
 				if(StaticVar.DEBUG_ENABLE)	StaticVar.logPrint('D', "FLAG_NOLOC_SHOW_ENABLE:false");					
 				
 			}

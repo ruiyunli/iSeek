@@ -18,9 +18,6 @@ public class MapOnLongClickListener implements OnLongClickListener{
 	
 	private WarnDialog warnDialog  = null;
 	
-	public static boolean FLAG_NOLOC_SHOW_ENABLE 	= true;
-	public static boolean FLAG_USECORR_SHOW_ENABLE 	= true;
-	
 	public MapOnLongClickListener(Context mContext) {
 		super();
 		this.mContext = mContext;
@@ -43,31 +40,18 @@ public class MapOnLongClickListener implements OnLongClickListener{
 			    .setPositiveButton(R.string.OK_CH, new AlertCorrOnClickListener())
 			    .setNegativeButton(R.string.CANCLE_CH, null)
 			    .show();
-			    
-			/*warnDialog = new WarnDialog(mContext, WarnDialog.THEME_NO_CHECKBOX);
-			warnDialog.setTitle(R.string.CorrAlertTitle);
-			warnDialog.setMessage(R.string.CorrAlertMsgWarn);
-			warnDialog.setPositiveButton(new AlertCorrOnClickListener());
-			warnDialog.setNegativeButton();
-			warnDialog.show();*/
 		}
 		//没有定位成功
 		else if(IseekApplication.GPS_LOCATE_OK && IseekApplication.CORRECTION_USED)
 		{
 			if(StaticVar.DEBUG_ENABLE)
-				StaticVar.logPrint('D', "FLAG_USECORR_SHOW_ENABLE:" + FLAG_USECORR_SHOW_ENABLE);
+				StaticVar.logPrint('D', " used correction!");
 			
 			new AlertDialog.Builder(mContext) 
 		    .setTitle(R.string.CorrAlertTitle)
 		    .setMessage(R.string.CorrAlertMsgCorrUsed)
 		    .setPositiveButton(R.string.OK_CH, null)
 		    .show();
-			
-			/*warnDialog = new WarnDialog(mContext,WarnDialog.THEME_NO_CHECKBOX);
-			warnDialog.setTitle(R.string.CorrAlertTitle);
-			warnDialog.setMessage(R.string.CorrAlertMsgCorrUsed);
-			warnDialog.setPositiveButton(null);
-			warnDialog.show();*/
 			
 		}
 		
