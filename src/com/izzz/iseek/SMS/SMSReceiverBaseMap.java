@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.CursorJoiner.Result;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.widget.Toast;
@@ -43,12 +44,24 @@ public class SMSReceiverBaseMap extends BroadcastReceiver
 		//接收到refresh发送状态广播
 		else if (intent.getAction().equals(StaticVar.COM_SMS_SEND_REFRESH))
 		{
-			DialogRefresh(gpsLocate.DialogLocate, R.string.DialogSendOK, StaticVar.COM_SMS_SEND_REFRESH);
+			if( getResultCode() == Activity.RESULT_OK )
+				DialogRefresh(gpsLocate.DialogLocate, R.string.DialogSendOK, StaticVar.COM_SMS_SEND_REFRESH);
+			else
+			{
+				DialogRefresh(gpsLocate.DialogLocate, R.string.DialogSendFail, StaticVar.COM_SMS_SEND_REFRESH);
+				gpsLocate.alarmHandler.Stop();
+			}
 		}
 		//接收到refresh发送回执广播
 		else if (intent.getAction().equals(StaticVar.COM_SMS_DELIVERY_REFRESH))
 		{
-			DialogRefresh(gpsLocate.DialogLocate, R.string.DialogDeliveryOK, StaticVar.COM_SMS_DELIVERY_REFRESH);
+			if( getResultCode() == Activity.RESULT_OK )
+				DialogRefresh(gpsLocate.DialogLocate, R.string.DialogDeliveryOK, StaticVar.COM_SMS_DELIVERY_REFRESH);
+			else
+			{
+				DialogRefresh(gpsLocate.DialogLocate, R.string.DialogDeliveryFail, StaticVar.COM_SMS_DELIVERY_REFRESH);
+				gpsLocate.alarmHandler.Stop();
+			}
 		}
 		//接收到refresh闹钟广播
 		else if(intent.getAction().equals(StaticVar.COM_ALARM_REFRESH))
@@ -65,23 +78,14 @@ public class SMSReceiverBaseMap extends BroadcastReceiver
 	 */
 	private void DialogRefresh(LogDialog logDialog, int strAppendId, String strCase)
 	{
-		if( getResultCode() == Activity.RESULT_OK || 
-			strCase == StaticVar.COM_ALARM_REFRESH ||
-			strCase == StaticVar.COM_ALARM_SOS_SET )
-		{
-			if(StaticVar.DEBUG_ENABLE)
-				StaticVar.logPrint('D', "receive sucess in  " + strCase);
-			logDialog.DialogUpdate(strAppendId);
-		}
-		else
-		{
-			
 			if(StaticVar.DEBUG_ENABLE)
 			{
-				StaticVar.logPrint('D', "error in receive:" + strCase);
-				StaticVar.logPrint('D', "result:" + Activity.RESULT_OK);
+				if(getResultCode() == Activity.RESULT_OK || strCase == StaticVar.COM_ALARM_REFRESH)
+					StaticVar.logPrint('D', "receive sucess in  " + strCase);
+				else
+					StaticVar.logPrint('D', "receive fail in  " + strCase);
 			}
-		}
+			logDialog.DialogUpdate(strAppendId);		
 	}	
 	
 	

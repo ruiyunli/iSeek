@@ -115,13 +115,19 @@
     <string name="DialogTitle">iSeeking…</string>
     <string name="DialogMsgHeader">正在努力连接中…</string>
     <string name="DialogSendOK">成功发送请求!</string>
+    <string name="DialogSendFail">请求发送失败!</string>
     <string name="DialogDeliveryOK">目标成功接收请求，请耐心等待1–2分钟…</string>
+    <string name="DialogDeliveryFail">目标接收请求失败!</string>
     <string name="DialogGpsNotFix">GPS未能正常工作!</string>
     <string name="DialogSosSendGpsOK">GPS:成功发送请求!</string>
+    <string name="DialogSosSendGpsFail">GPS:请求发送失败!</string>
     <string name="DialogSosDeliveryGpsOK">GPS:成功接收请求!</string>
-    <string name="DialogSosFeedBackGpsOK">GPS:设置成功!</string>
+    <string name="DialogSosDeliveryGpsFail">GPS:请求接收失败!</string>
     <string name="DialogSosSendTarOK">SOS:成功发送通知!</string>
+    <string name="DialogSosSendTarFail">SOS:通知发送失败!</string>
     <string name="DialogSosDeliveryTarOK">SOS:成功接收通知!</string>
+    <string name="DialogSosDeliveryTarFail">SOS:通知接收失败!</string>
+    <string name="DialogSosFeedBackGpsOK">GPS:设置成功!</string>
     <string name="DialogAlarmGot">连接超时，请重试</string>
 
     <!-- imageButton ContextDescription -->

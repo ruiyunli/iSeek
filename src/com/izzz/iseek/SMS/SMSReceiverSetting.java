@@ -2,6 +2,7 @@ package com.izzz.iseek.SMS;
 
 import com.izzz.iseek.R;
 import com.izzz.iseek.activity.SettingActivity;
+import com.izzz.iseek.maplocate.GPSLocate;
 import com.izzz.iseek.vars.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
 import com.izzz.iseek.view.LogDialog;
@@ -19,7 +20,15 @@ import android.widget.Toast;
 /* 自定义继承自BroadcastReceiver类,监听系统服务广播的信息 */
 public class SMSReceiverSetting extends BroadcastReceiver 
 { 
+	private LogDialog logDialog = null;
 	
+	
+
+	public SMSReceiverSetting(LogDialog logDialog) {
+		super();
+		this.logDialog = logDialog;
+	}
+
 	@Override 
 	public void onReceive(Context context, Intent intent) 
 	{ 
@@ -33,23 +42,34 @@ public class SMSReceiverSetting extends BroadcastReceiver
 		//接收到sos设置发送状态广播
 		else if(intent.getAction().equals(StaticVar.COM_SMS_SEND_SOS_GPS))
 		{
-			DialogRefresh(SettingActivity.settingDialog, R.string.DialogSosSendGpsOK, StaticVar.COM_SMS_SEND_SOS_GPS);
-			
+			if(getResultCode() == Activity.RESULT_OK)
+				DialogRefresh(logDialog, R.string.DialogSosSendGpsOK, StaticVar.COM_SMS_SEND_SOS_GPS);
+			else
+				DialogRefresh(logDialog, R.string.DialogSosSendGpsFail, StaticVar.COM_SMS_SEND_SOS_GPS);
 		}
 		//接收到sos设置发送回执广播
 		else if(intent.getAction().equals(StaticVar.COM_SMS_DELIVERY_SOS_GPS))
 		{
-			DialogRefresh(SettingActivity.settingDialog, R.string.DialogSosDeliveryGpsOK, StaticVar.COM_SMS_DELIVERY_SOS_GPS);
+			if(getResultCode() == Activity.RESULT_OK)
+				DialogRefresh(logDialog, R.string.DialogSosDeliveryGpsOK, StaticVar.COM_SMS_DELIVERY_SOS_GPS);
+			else
+				DialogRefresh(logDialog, R.string.DialogSosDeliveryGpsFail, StaticVar.COM_SMS_DELIVERY_SOS_GPS);
 		}
 		//接收到sos手机号的通知发送状态广播
 		else if(intent.getAction().equals(StaticVar.COM_SMS_SEND_SOS_TAR))
 		{
-			DialogRefresh(SettingActivity.settingDialog, R.string.DialogSosSendTarOK, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
+			if(getResultCode() == Activity.RESULT_OK)
+				DialogRefresh(logDialog, R.string.DialogSosSendTarOK, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
+			else
+				DialogRefresh(logDialog, R.string.DialogSosSendTarFail, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
 		}
 		//接收到sos手机号的通知回执广播
 		else if(intent.getAction().equals(StaticVar.COM_SMS_DELIVERY_SOS_TAR))
 		{
-			DialogRefresh(SettingActivity.settingDialog, R.string.DialogSosDeliveryTarOK, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
+			if(getResultCode() == Activity.RESULT_OK)
+				DialogRefresh(logDialog, R.string.DialogSosDeliveryTarOK, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
+			else
+				DialogRefresh(logDialog, R.string.DialogSosDeliveryTarFail, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
 		}
 		
 	}
@@ -62,23 +82,14 @@ public class SMSReceiverSetting extends BroadcastReceiver
 	 */
 	private void DialogRefresh(LogDialog logDialog, int strAppendId, String strCase)
 	{
-		if( getResultCode() == Activity.RESULT_OK || 
-			strCase == StaticVar.COM_ALARM_REFRESH ||
-			strCase == StaticVar.COM_ALARM_SOS_SET )
-		{
-			if(StaticVar.DEBUG_ENABLE)
+		if(StaticVar.DEBUG_ENABLE)
+			if( getResultCode() == Activity.RESULT_OK)
 				StaticVar.logPrint('D', "receive sucess in " + strCase);
-			logDialog.DialogUpdate(strAppendId);
-		}
-		else
-		{
-			
-			if(StaticVar.DEBUG_ENABLE)
-			{
+			else
 				StaticVar.logPrint('D', "error in receive:" + strCase);
-				StaticVar.logPrint('D', "result:" + Activity.RESULT_OK);
-			}
-		}
+			
+		logDialog.DialogUpdate(strAppendId);
+		
 	}	
 	
 	
@@ -128,7 +139,7 @@ public class SMSReceiverSetting extends BroadcastReceiver
 				{
 					if(StaticVar.DEBUG_ENABLE)
 						StaticVar.logPrint('D', "set sos ok case!");
-					ReceiveMsgCaseSetSosOK(context, mesContext , SettingActivity.settingDialog );
+					ReceiveMsgCaseSetSosOK(context, mesContext , logDialog );
 				}
 				else
 				{
@@ -176,8 +187,8 @@ public class SMSReceiverSetting extends BroadcastReceiver
 				StaticVar.logPrint('D', "sos number set sucess!");
 			
 //			SettingActivity.alarmHandler.Stop();
-			DialogRefresh(SettingActivity.settingDialog, R.string.DialogSosFeedBackGpsOK, StaticVar.SMS_BODY_SET_SOS_OK);
-			SettingActivity.settingDialog.disable();
+			DialogRefresh(logDialog, R.string.DialogSosFeedBackGpsOK, StaticVar.SMS_BODY_SET_SOS_OK);
+			logDialog.disable();
 		}
 	}
 	

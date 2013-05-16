@@ -47,7 +47,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	
 	private PreferenceScreen   	prefAbout = null;
 	
-	public static LogDialog 	settingDialog = null;
+	public LogDialog settingDialog = null;
 	
 	private SMSsender 		settingSMSsender = null;		//发送短信接口
 	
@@ -55,7 +55,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	
 	private IntentFilter 	setFilter  = null;
 	
-	public static AlarmControl alarmHandler = null;
+//	public static AlarmControl alarmHandler = null;
 	
 	ImageButton btnTitleBarSetting = null;
 	
@@ -75,13 +75,15 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		
 		Initprefs();	//初始化prefs
 		
-		InitBCR();		//注册广播
+		
 		
 		settingDialog = new LogDialog(SettingActivity.this, R.string.DialogMsgHeader, R.string.DialogTitle);
 		
 		settingSMSsender = new SMSsender(SettingActivity.this);
 		
-		alarmHandler = new AlarmControl(SettingActivity.this, StaticVar.COM_ALARM_SOS_SET);
+//		alarmHandler = new AlarmControl(SettingActivity.this, StaticVar.COM_ALARM_SOS_SET);
+		
+		InitBCR();		//注册广播
 	}
 	
 	
@@ -135,7 +137,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	private void InitBCR()
 	{
 		//注册广播监听
-		setReceiver = new SMSReceiverSetting();
+		setReceiver = new SMSReceiverSetting(settingDialog);
 		setFilter = new IntentFilter();
 		setFilter.addAction(StaticVar.SYSTEM_SMS_ACTION);
 		setFilter.addAction(StaticVar.COM_SMS_DELIVERY_SOS_GPS);
