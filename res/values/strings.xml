@@ -16,7 +16,7 @@
     <string name="set_privateInfo_cate_title">号码设置</string>
     <string name="set_targetPhone_key">targetPhone</string>
     <string name="set_targetPhone_title">GPS 号码</string>
-    <string name="set_targetPhone_summary">目标GPS模块中的SIM卡</string>
+    <string name="set_targetPhone_summary">目标GPS模块中的SIM卡号码</string>
     <string name="set_targetPhone_dialogTitle">GPS Phone</string>
     <string name="set_sosNumber_key">sosNumber</string>
     <string name="set_sosNumber_title">SOS 号码</string>

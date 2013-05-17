@@ -13,7 +13,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="log output" 
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
     <!-- 百度地图 -->
 
@@ -41,7 +41,7 @@
             android:layout_weight="1"
             android:background="@drawable/btn_menu"
             android:contentDescription="@string/BtnMenuCall"
-            android:src="@android:drawable/ic_menu_call" />
+            android:src="@drawable/icon_call" />
 
         <View
             android:layout_width="1dp"
@@ -70,7 +70,7 @@
             android:layout_weight="1"
             android:background="@drawable/btn_menu"
             android:contentDescription="@string/BtnMenuSettings"
-            android:src="@android:drawable/ic_menu_preferences" />
+            android:src="@drawable/icon_settings" />
     </LinearLayout>
 
     <!-- 校准退出按钮 -->

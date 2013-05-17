@@ -21,7 +21,7 @@ public class IseekApplication extends Application {
     
     public PhoneLocation mPhoneLocation = null;			//定位相关
     
-    public PrefHolder prefHolder = null;				//sharedpreference管理
+    public PrefHolder prefHolder = null;				//sharedpreferences管理
     
   	public static int DOWNLOAD_CHANNEL = StaticVar.OFFLINE_NULL;	//离线下载页面的下载途径标志
   	

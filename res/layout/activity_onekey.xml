@@ -51,14 +51,16 @@
                 style="@style/TextBlackRight"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="5"
+                android:layout_gravity="center"
                 android:text="@string/OKeyNumber1" />
 
             <EditText
                 android:id="@+id/editNumber1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
+                android:layout_gravity="center"
                 android:hint="@string/OKeyNumberHint" />
 
             <ImageButton
@@ -66,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/icon_contact_picker" />
+                android:src="@drawable/icon_contact_picker" />
         </LinearLayout>
 
         <!-- 号码二设置 -->
@@ -80,14 +82,16 @@
                 style="@style/TextBlackRight"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="5"
+                android:layout_gravity="center"
                 android:text="@string/OKeyNumber2" />
 
             <EditText
                 android:id="@+id/editNumber2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
+                android:layout_gravity="center"
                 android:hint="@string/OKeyNumberHint" />
             
             <ImageButton
@@ -95,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/icon_contact_picker" />
+                android:src="@drawable/icon_contact_picker" />
         </LinearLayout>
 
         <!-- 号码三设置 -->
@@ -109,14 +113,16 @@
                 style="@style/TextBlackRight"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="5"
+                android:layout_gravity="center"
                 android:text="@string/OKeyNumber3" />
 
             <EditText
                 android:id="@+id/editNumber3"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
+                android:layout_gravity="center"
                 android:hint="@string/OKeyNumberHint" />
             
             <ImageButton
@@ -124,7 +130,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/icon_contact_picker" />
+                android:src="@drawable/icon_contact_picker" />
         </LinearLayout>
 
         <Button
