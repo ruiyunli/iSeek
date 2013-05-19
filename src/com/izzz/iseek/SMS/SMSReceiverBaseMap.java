@@ -176,12 +176,12 @@ public class SMSReceiverBaseMap extends BroadcastReceiver
 		//解析经纬度
 		
 		//For example:
-		//W00,051,34.234442N,108.913805E,1.574Km/h,13-03-21,16:04:43
+		//W00,051,34.234442N, 108.913805E,1.574Km/h,13-03-21,16:04:43
 		int indexTmp = msgContext.indexOf("N");
-		String Latitude = msgContext.substring(8, 16);//原来是8-17
+		String Latitude = msgContext.substring(8, 17);//原来是8-17
 		
 		//从N后面开始获取，即为经度
-		String Longitude = msgContext.substring(indexTmp+2, indexTmp+10);//原来是19-29
+		String Longitude = msgContext.substring(indexTmp+3, indexTmp+13);//原来是19-29
 		if(StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', "OnReceive--Latitude:" + Latitude + " Longitude:" + Longitude);
 		
@@ -191,11 +191,8 @@ public class SMSReceiverBaseMap extends BroadcastReceiver
 			int LatitudeInt;
 			int LongitudeInt;
 			
-			LatitudeInt = (int)(Double.parseDouble(Latitude) * 1E6);	//存储当前定位结果
+			LatitudeInt = (int)(Double.parseDouble(Latitude) * 1E6);	
 			LongitudeInt = (int)(Double.parseDouble(Longitude) * 1E6);
-			
-			PrefHolder.prefsEditor.putString(PrefHolder.prefLastLatitudeKey, Integer.toString(LatitudeInt)).commit();
-			PrefHolder.prefsEditor.putString(PrefHolder.prefLastLongitudeKey, Integer.toString(LongitudeInt)).commit();
 			
 			gpsLocate.alarmHandler.Stop();							//关闭闹钟
 			

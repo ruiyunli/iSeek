@@ -193,7 +193,7 @@
     <string name="CorrAlertMsgNoLocate">校准前请先定位成功！</string>
     <string name="CorrAlertMsgCorrUsed">进入校准模式，请先关闭自动校准再重新定位！</string>
     <string name="btnCorrDelete">删除</string>
-    <string name="btnCorrCalc">计算校准量</string>
+    <string name="btnCorrCalc">计算校准系数</string>
     <string name="CorrGuideTitle">校准步骤</string>
     <string name="CorrGuideContext">1、选择偏移量相对稳定的数据组\n2、点击计算校准量按钮\n3、在设置页面勾选使用校准</string>
     <string name="CorrListOrigin">原始数据</string>

@@ -72,7 +72,7 @@ public class BaseMapMain extends Activity {
 
 	private ImageButton btnMenuSettings = null; // 菜单
 
-	private BottomMenu bottomMenu = null; // 菜单类实例
+	public static BottomMenu bottomMenu = null; // 菜单类实例
 
 	private ImageButton btnZoomIn = null; // zoom按钮
 
@@ -105,10 +105,10 @@ public class BaseMapMain extends Activity {
 //		InitPhoneLocate();	//定位初始化
 		
 		InitGPSLocation();	//初始化GPSLocation
-
-		InitCorrection(); 	// 初始化imagebutton变量
-
+		
 		InitBottomMenu(); 	// 初始化自定义菜单
+		
+		InitCorrection(); 	// 初始化imagebutton变量		
 
 		InitPluginZoom(); 	// 初始化缩放插件
 
@@ -117,7 +117,9 @@ public class BaseMapMain extends Activity {
 		InitBCRRegister(); 	// 注册BroadCastReceiver IntentFilter
 
 		if (StaticVar.DEBUG_ENABLE)
+		{
 			StaticVar.logPrint('D', "lry:On Create");
+		}
 	}
 
 	/** 注册BroadcastReceiver,用于接收短信、回执及闹钟 */
@@ -153,9 +155,12 @@ public class BaseMapMain extends Activity {
 			// 北京--39.914492,116.403406, 西安--34.128064，108.847287
 			centerpt = new GeoPoint((int) (39.914492 * 1E6), (int) (116.40340 * 1E6));
 		}
+		
+		if (StaticVar.DEBUG_ENABLE)
+			StaticVar.logPrint('D', "init_posi--latitude:" + latitude + " longitude" + longitude);
 
 		mMapController.setCenter(centerpt);
-		mMapView.setLongClickable(false);
+		mMapView.setLongClickable(true);
 		mMapController.enableClick(true);
 		mMapController.setZoom(15);
 //		mMapView.setBuiltInZoomControls(true);
@@ -172,10 +177,6 @@ public class BaseMapMain extends Activity {
 		
 		mMapView.setOnLongClickListener(new MapOnLongClickListener(BaseMapMain.this));
 		
-		mMapView.setLongClickable(false);
-		
-		StaticVar.logPrint('D', "long clickable: " + mMapView.isLongClickable());
-
 	}
 	
 	private void InitPhoneLocate()
@@ -202,7 +203,7 @@ public class BaseMapMain extends Activity {
 		btnMoveLeft = (ImageButton) findViewById(R.id.btnMoveLeft);
 		btnMoveRight = (ImageButton) findViewById(R.id.btnMoveRight);
 
-		corrView = new CorrView(BaseMapMain.this, mMapView, btnMoveUp,
+		corrView = new CorrView(BaseMapMain.this, mMapView,bottomMenu, btnMoveUp,
 				btnMoveDown, btnMoveLeft, btnMoveRight, btnCorrOk, btnCorrCancle);
 
 		corrView.SetAllButtonGone();
@@ -232,6 +233,7 @@ public class BaseMapMain extends Activity {
 				btnViewSelect, mMapView);
 	}
 	
+		
 	// 百度地图重载
 	@Override
 	protected void onDestroy() {

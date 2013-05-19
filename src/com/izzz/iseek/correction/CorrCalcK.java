@@ -12,8 +12,8 @@ public class CorrCalcK {
 	 * */
 	public static double[] from_xy_to_ab(double[] XX, double[] YY, int size)
 	{
-		double A[]=new double [500];
-		double B[]=new double [500];
+		double A[]=new double [CorrPointManager.MAX_POINT_SIZE * (CorrPointManager.MAX_POINT_SIZE -1)/2 +5];
+		double B[]=new double [CorrPointManager.MAX_POINT_SIZE * (CorrPointManager.MAX_POINT_SIZE -1)/2 +5];
 		double AB[]=new double[2];
 		
 //		int len=0;

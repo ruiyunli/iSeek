@@ -14,12 +14,15 @@ import com.izzz.iseek.activity.BaseMapMain;
 import com.izzz.iseek.mapcontrol.CorrectionOverlay;
 import com.izzz.iseek.vars.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
+import com.izzz.iseek.view.BottomMenu;
 
 public class CorrView {
 	
 	private Context mContext = null;
 	
 	public MapView mMapView = null;
+	
+	private BottomMenu bottomMenu = null;
 
 	public CorrectionOverlay correctionOverlay = null;	//校准用变量
 	
@@ -45,12 +48,13 @@ public class CorrView {
 	
 	private CorrPointManager corrPM = null;
 
-	public CorrView(Context mContext, MapView mMapView, ImageButton btnMoveUp,
+	public CorrView(Context mContext, MapView mMapView, BottomMenu bottomMenu,ImageButton btnMoveUp,
 			ImageButton btnMoveDown, ImageButton btnMoveLeft,
 			ImageButton btnMoveRight, Button btnCorrOk, Button btnCorrCancle) {
 		super();
 		this.mContext = mContext;
 		this.mMapView = mMapView;
+		this.bottomMenu = bottomMenu;
 		this.btnMoveUp = btnMoveUp;
 		this.btnMoveDown = btnMoveDown;
 		this.btnMoveLeft = btnMoveLeft;
@@ -137,6 +141,7 @@ public class CorrView {
 		{
 			CORRECTION_START = true;
 			SetAllButtonVisible();
+			bottomMenu.SetVisible(false);
 		}
 		else
 			Toast.makeText(mContext, R.string.ToastCorrPointFull, Toast.LENGTH_LONG).show();
@@ -152,6 +157,8 @@ public class CorrView {
 		
 		ADD_LAYER_FLAG = false;
 		CORRECTION_START = false;
+		
+		bottomMenu.SetVisible(true);
 		
 	}
 	

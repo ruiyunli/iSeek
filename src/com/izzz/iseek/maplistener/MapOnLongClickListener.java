@@ -66,6 +66,7 @@ public class MapOnLongClickListener implements OnLongClickListener{
 			// TODO Auto-generated method stub
 			
 			BaseMapMain.corrView.EnterCorrection();
+//			BaseMapMain.bottomMenu.SetVisible(false);
 			
 			if(StaticVar.DEBUG_ENABLE)
 				StaticVar.logPrint('D', "Correction started!");
