@@ -4,8 +4,6 @@ import com.izzz.iseek.R;
 import com.izzz.iseek.activity.BaseMapMain;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.vars.StaticVar;
-import com.izzz.iseek.view.WarnDialog;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,8 +13,6 @@ import android.view.View.OnLongClickListener;
 public class MapOnLongClickListener implements OnLongClickListener{
 
 	private Context mContext = null;
-	
-	private WarnDialog warnDialog  = null;
 	
 	public MapOnLongClickListener(Context mContext) {
 		super();

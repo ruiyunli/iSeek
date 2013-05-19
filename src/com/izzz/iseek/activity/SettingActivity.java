@@ -4,12 +4,11 @@ import com.izzz.iseek.R;
 import com.izzz.iseek.SMS.SMSReceiverSetting;
 import com.izzz.iseek.SMS.SMSsender;
 import com.izzz.iseek.app.IseekApplication;
-import com.izzz.iseek.correction.AlarmControl;
 import com.izzz.iseek.maplocate.GPSLocate;
 import com.izzz.iseek.vars.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
 import com.izzz.iseek.view.LogDialog;
-
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -20,10 +19,13 @@ import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +59,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	
 //	public static AlarmControl alarmHandler = null;
 	
-	ImageButton btnTitleBarSetting = null;
+	private ImageButton btnTitleBarSetting = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +76,6 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		InitTitleBar();		
 		
 		Initprefs();	//初始化prefs
-		
 		
 		
 		settingDialog = new LogDialog(SettingActivity.this, R.string.DialogMsgHeader, R.string.DialogTitle);
@@ -120,6 +121,8 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		//绑定监听器
 		prefTargetPhone.setOnPreferenceChangeListener(this);
 		prefSosNumber.setOnPreferenceChangeListener(this);
+//		prefTargetPhone.setOnPreferenceClickListener(this);
+//		prefSosNumber.setOnPreferenceClickListener(this);
 		prefCorrNumber.setOnPreferenceClickListener(this);
 		prefCorrection.setOnPreferenceClickListener(this);
 		prefCorrEnable.setOnPreferenceChangeListener(this);
@@ -131,7 +134,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 				(String) this.getResources().getText(R.string.set_targetPhone_summary)));
 		prefSosNumber.setSummary(PrefHolder.prefs.getString(PrefHolder.prefSosNumberKey, 
 				(String) this.getResources().getText(R.string.set_sosNumber_summary)));
-				
+		
 	}
 	
 	private void InitBCR()
@@ -157,6 +160,9 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 
 	private boolean ChangeTargetPhone(String phoneNum)
 	{
+		if(StaticVar.DEBUG_ENABLE)
+			StaticVar.logPrint('D', "phone number:" + phoneNum);
+		
 		//正则表达式判断是否合法手机号码
 		if(SMSsender.isMobileNumber(phoneNum))
 		{
@@ -169,6 +175,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			Toast.makeText(SettingActivity.this, R.string.ToastInvalidPhoneNumber, Toast.LENGTH_SHORT).show();
 			return false;
 		}
+		
 	}
 	
 	private boolean ChangeSosPhone(String phoneNum)
@@ -240,7 +247,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		
 		if(StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', "Change--key:" + preference.getKey() + "--newValue:" + newValue);
-			
+		
 		//TargetPhone设置
 		if(preference.getKey() == PrefHolder.prefTargetPhoneKey)
 		{
@@ -308,6 +315,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			startActivity(intent);
 			return true;
 		}
+		
 		
 		return false;
 	}	

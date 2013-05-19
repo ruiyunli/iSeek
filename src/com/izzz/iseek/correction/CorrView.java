@@ -137,7 +137,7 @@ public class CorrView {
 	/** 进入校准 */
 	public void EnterCorrection()
 	{
-		if(corrPM.isCorrEnable())
+		if(corrPM.isCorrEnable() && (CORRECTION_START == false))
 		{
 			CORRECTION_START = true;
 			SetAllButtonVisible();

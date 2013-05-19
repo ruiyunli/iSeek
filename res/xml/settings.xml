@@ -19,7 +19,6 @@
             android:key="@string/set_oneKeyNumber_key"
             android:summary="@string/set_corrNumber_summary"
             android:title="@string/set_corrNumber_title" >
-            
         </PreferenceScreen>
     </PreferenceCategory>
 
