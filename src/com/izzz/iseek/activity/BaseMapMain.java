@@ -21,7 +21,6 @@ import com.izzz.iseek.maplistener.MapMKMapViewListener;
 import com.izzz.iseek.maplistener.MapOnLongClickListener;
 import com.izzz.iseek.maplistener.MapOnTouchListener;
 import com.izzz.iseek.maplocate.GPSLocate;
-import com.izzz.iseek.maplocate.PhoneLocation;
 import com.izzz.iseek.mapplugin.PluginChangeView;
 import com.izzz.iseek.mapplugin.PluginZoom;
 import com.izzz.iseek.vars.PrefHolder;
@@ -38,7 +37,7 @@ public class BaseMapMain extends Activity {
 	
 	public static GeoPoint gpsPoint		= null;		//gps定位的百度坐标
 	
-	private PhoneLocation mPLocation;				//手机定位
+//	private PhoneLocation mPLocation;				//手机定位
 	
 	public static LocalMapControl localMapControl = null;	//本地地图管理
 	
@@ -179,14 +178,7 @@ public class BaseMapMain extends Activity {
 		
 	}
 	
-	private void InitPhoneLocate()
-	{
-		mPLocation = ((IseekApplication)getApplication()).mPhoneLocation;
-		mPLocation.InitLocationClient();
-		mPLocation.Start();
-	}
-	
-	
+		
 	/** 初始化GPS定位类*/
 	private void InitGPSLocation()
 	{

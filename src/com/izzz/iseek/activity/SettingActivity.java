@@ -7,18 +7,24 @@ import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.maplocate.GPSLocate;
 import com.izzz.iseek.vars.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
+import com.izzz.iseek.view.EditTextPref;
 import com.izzz.iseek.view.LogDialog;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,9 +39,9 @@ import android.widget.Toast;
 public class SettingActivity extends PreferenceActivity implements OnPreferenceClickListener,
 		OnPreferenceChangeListener{
 
-	private EditTextPreference 	prefTargetPhone 	= null;
+	private PreferenceScreen 	prefTargetPhone 	= null;
 	
-	private EditTextPreference 	prefSosNumber   	= null;
+	private PreferenceScreen 	prefSosNumber   	= null;
 	
 	private PreferenceScreen	prefCorrNumber	= null;
 	
@@ -59,7 +65,15 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	
 //	public static AlarmControl alarmHandler = null;
 	
+	private EditTextPref editPrefTarget = null;
+	
+	private EditTextPref editPrefSos = null;
+	
 	private ImageButton btnTitleBarSetting = null;
+	
+	private final int PICK_CONTACT_REQUEST_TAR = 1;
+	
+	private final int PICK_CONTACT_REQUEST_SOS = 2;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +90,8 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		InitTitleBar();		
 		
 		Initprefs();	//初始化prefs
+		
+		InitEditPrefs();
 		
 		
 		settingDialog = new LogDialog(SettingActivity.this, R.string.DialogMsgHeader, R.string.DialogTitle);
@@ -109,8 +125,8 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	private void Initprefs()
 	{
 		//获取控件
-		prefTargetPhone = (EditTextPreference)findPreference(PrefHolder.prefTargetPhoneKey);
-		prefSosNumber   = (EditTextPreference)findPreference(PrefHolder.prefSosNumberKey);
+		prefTargetPhone = (PreferenceScreen)findPreference(PrefHolder.prefTargetPhoneKey);
+		prefSosNumber   = (PreferenceScreen)findPreference(PrefHolder.prefSosNumberKey);
 		prefCorrNumber	= (PreferenceScreen)findPreference(PrefHolder.prefOneKeyNumberKey);
 		prefCorrection	= (PreferenceScreen)findPreference(PrefHolder.prefCorrEntryKey);
 		prefCorrEnable  = (CheckBoxPreference)findPreference(PrefHolder.prefCorrEnableKey);
@@ -119,10 +135,8 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		prefAbout       = (PreferenceScreen)findPreference(PrefHolder.prefAboutKey);
 		
 		//绑定监听器
-		prefTargetPhone.setOnPreferenceChangeListener(this);
-		prefSosNumber.setOnPreferenceChangeListener(this);
-//		prefTargetPhone.setOnPreferenceClickListener(this);
-//		prefSosNumber.setOnPreferenceClickListener(this);
+		prefTargetPhone.setOnPreferenceClickListener(this);
+		prefSosNumber.setOnPreferenceClickListener(this);
 		prefCorrNumber.setOnPreferenceClickListener(this);
 		prefCorrection.setOnPreferenceClickListener(this);
 		prefCorrEnable.setOnPreferenceChangeListener(this);
@@ -134,6 +148,21 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 				(String) this.getResources().getText(R.string.set_targetPhone_summary)));
 		prefSosNumber.setSummary(PrefHolder.prefs.getString(PrefHolder.prefSosNumberKey, 
 				(String) this.getResources().getText(R.string.set_sosNumber_summary)));
+		
+	}
+	
+	private void InitEditPrefs()
+	{
+		editPrefTarget = new EditTextPref(SettingActivity.this);
+		editPrefSos = new EditTextPref(SettingActivity.this);
+		
+		editPrefTarget.setTitle(R.string.set_targetPhone_dialogTitle);
+		editPrefTarget.setContactPickerListener(new DialogContactPickerListener(PICK_CONTACT_REQUEST_TAR));
+		editPrefTarget.setPositiveButton(new TargetNumberClickListener());
+		
+		editPrefSos.setTitle(R.string.set_sosNumber_dialogTitle);
+		editPrefSos.setContactPickerListener(new DialogContactPickerListener(PICK_CONTACT_REQUEST_SOS));
+		editPrefSos.setPositiveButton(new SosNumberClickListener());
 		
 	}
 	
@@ -158,64 +187,6 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		SettingActivity.this.unregisterReceiver(setReceiver);
 	}
 
-	private boolean ChangeTargetPhone(String phoneNum)
-	{
-		if(StaticVar.DEBUG_ENABLE)
-			StaticVar.logPrint('D', "phone number:" + phoneNum);
-		
-		//正则表达式判断是否合法手机号码
-		if(SMSsender.isMobileNumber(phoneNum))
-		{
-			Toast.makeText(SettingActivity.this, R.string.ToastTargetSetOK, Toast.LENGTH_SHORT).show();
-			prefTargetPhone.setSummary((CharSequence) phoneNum);
-			return true;			
-		}
-		else
-		{
-			Toast.makeText(SettingActivity.this, R.string.ToastInvalidPhoneNumber, Toast.LENGTH_SHORT).show();
-			return false;
-		}
-		
-	}
-	
-	private boolean ChangeSosPhone(String phoneNum)
-	{
-		//判断符合手机号码，则打开dialog，确认发送短信	
-		
-		if(!SMSsender.isMobileNumber(phoneNum))
-		{
-			Toast.makeText(SettingActivity.this, R.string.ToastInvalidPhoneNumber, Toast.LENGTH_SHORT).show();
-			return false;
-		}
-		
-		if(PrefHolder.getTargetPhone() == null)
-		{
-			Toast.makeText(SettingActivity.this, R.string.ToastTargetSetEmpty,	Toast.LENGTH_LONG).show();
-			return false;
-		}
-		
-		settingDialog.enable();
-		settingDialog.proMessage = (String) getResources().getText(R.string.DialogMsgHeader);
-		settingDialog.proLogDialog.setMessage(settingDialog.proMessage);
-		settingDialog.showLog();
-		
-		//给gps发送短信
-		if(settingSMSsender.SendMessage(null, StaticVar.SMS_SET_SOS + phoneNum, 
-				StaticVar.COM_SMS_SEND_SOS_GPS, StaticVar.COM_SMS_DELIVERY_SOS_GPS))
-		{
-			//给关联sos号码发送短信
-			settingSMSsender.SendMessage(phoneNum, prefTargetPhone.getSummary() + StaticVar.SMS_SET_SOS_TAR , 
-					StaticVar.COM_SMS_SEND_SOS_TAR, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
-			
-			prefSosNumber.setSummary((CharSequence) phoneNum);			
-			
-//			alarmHandler.Start();			
-						
-			return true;
-		}
-		return false;
-	}
-	
 	private boolean ToogleCorrBox(Object newValue)
 	{
 		if(newValue.equals(true))
@@ -247,18 +218,8 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		
 		if(StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', "Change--key:" + preference.getKey() + "--newValue:" + newValue);
-		
-		//TargetPhone设置
-		if(preference.getKey() == PrefHolder.prefTargetPhoneKey)
-		{
-			return ChangeTargetPhone((String) newValue);
-		}
-		//SOSphone设置
-		else if(preference.getKey() == PrefHolder.prefSosNumberKey)
-		{
-			return ChangeSosPhone((String)newValue);		
-		}
-		else if(preference.getKey() == PrefHolder.prefCorrEnableKey)
+
+		if(preference.getKey() == PrefHolder.prefCorrEnableKey)
 		{
 			return ToogleCorrBox(newValue);
 		}
@@ -315,9 +276,131 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			startActivity(intent);
 			return true;
 		}
-		
-		
+		else if(preference.getKey() == PrefHolder.prefTargetPhoneKey)
+		{
+			editPrefTarget.RefreshView();
+			editPrefTarget.show();
+			return true;
+		}
+		else if(preference.getKey() == PrefHolder.prefSosNumberKey)
+		{
+			editPrefSos.RefreshView();
+			editPrefSos.show();
+			return true;
+		}
 		return false;
+	}
+
+
+	public class DialogContactPickerListener implements OnClickListener {
+		
+		private int contactRequestId;
+		
+		public DialogContactPickerListener(int contactRequestId) {
+			super();
+			this.contactRequestId = contactRequestId;
+		}
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent pickContactIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+		    pickContactIntent.setType(Phone.CONTENT_TYPE); // Show user only contacts w/ phone numbers
+		    startActivityForResult(pickContactIntent, contactRequestId);
+		}
+	}
+	
+	public class TargetNumberClickListener implements DialogInterface.OnClickListener{
+
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			// TODO Auto-generated method stub
+			
+			String phoneNum = editPrefTarget.getText();
+			
+			if(StaticVar.DEBUG_ENABLE)
+				StaticVar.logPrint('D', "phone number:" + phoneNum);
+			
+			//正则表达式判断是否合法手机号码
+			if(SMSsender.isMobileNumber(phoneNum))
+			{
+				PrefHolder.prefsEditor.putString(PrefHolder.prefTargetPhoneKey, phoneNum).commit();
+				Toast.makeText(SettingActivity.this, R.string.ToastTargetSetOK, Toast.LENGTH_SHORT).show();
+				prefTargetPhone.setSummary((CharSequence) phoneNum);
+			}
+			else
+			{
+				Toast.makeText(SettingActivity.this, R.string.ToastInvalidPhoneNumber, Toast.LENGTH_SHORT).show();
+			}
+			
+		}	
+	}
+	
+	public class SosNumberClickListener implements DialogInterface.OnClickListener{
+
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			// TODO Auto-generated method stub
+			//判断符合手机号码，则打开dialog，确认发送短信	
+			
+			String phoneNum = editPrefSos.getText();
+			
+			if(!SMSsender.isMobileNumber(phoneNum))
+			{
+				Toast.makeText(SettingActivity.this, R.string.ToastInvalidPhoneNumber, Toast.LENGTH_SHORT).show();
+				return ;
+			}
+			
+			if(PrefHolder.getTargetPhone() == null)
+			{
+				Toast.makeText(SettingActivity.this, R.string.ToastTargetSetEmpty,	Toast.LENGTH_LONG).show();
+				return ;
+			}
+			
+			settingDialog.enable();
+			settingDialog.proMessage = (String) getResources().getText(R.string.DialogMsgHeader);
+			settingDialog.proLogDialog.setMessage(settingDialog.proMessage);
+			settingDialog.showLog();
+			
+			//给gps发送短信
+			if(settingSMSsender.SendMessage(null, StaticVar.SMS_SET_SOS + phoneNum, 
+					StaticVar.COM_SMS_SEND_SOS_GPS, StaticVar.COM_SMS_DELIVERY_SOS_GPS))
+			{
+				//给关联sos号码发送短信
+				settingSMSsender.SendMessage(phoneNum, prefTargetPhone.getSummary() + StaticVar.SMS_SET_SOS_TAR , 
+						StaticVar.COM_SMS_SEND_SOS_TAR, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
+				
+				PrefHolder.prefsEditor.putString(PrefHolder.prefSosNumberKey, phoneNum);
+				prefSosNumber.setSummary((CharSequence) phoneNum);			
+				
+//				alarmHandler.Start();	
+				
+			}
+		}
+		
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		if (resultCode == RESULT_OK) {
+            Uri contactUri = data.getData();
+            String[] projectionNumber = {Phone.NUMBER};
+
+            Cursor cursor = getContentResolver().query(contactUri, projectionNumber, null, null, null);
+            cursor.moveToFirst();
+            int columnNumber = cursor.getColumnIndex(Phone.NUMBER);	            
+            String phoneNumber = cursor.getString(columnNumber);
+           
+            editPrefTarget.setText(phoneNumber);
+
+        }
+		
 	}	
+	
+	
+	
 	
 }

@@ -8,41 +8,27 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="14" />
 
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />  <!-- 貌似可去掉 -->
-	
-	<!-- 使用定位功能所需权限,demo已集成百度定位SDK,不使用定位功能可去掉以下6项 -->
-	 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
-<!-- 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission> -->
-<!-- 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission> -->
-<!-- 	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission> -->
-<!-- 	<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission> -->
-<!-- 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission> -->
-<!-- 	<uses-permission android:name="android.permission.INTERNET" /> -->
-	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"></uses-permission>
-	<uses-permission android:name="android.permission.READ_LOGS"></uses-permission>
-	
-	<uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
-	
-	<uses-permission android:name="android.permission.CALL_PHONE" />
-	<uses-permission android:name="android.permission.SEND_SMS" />
-	<uses-permission android:name="android.permission.RECEIVE_SMS" />	
-	<uses-permission android:name="android.permission.VIBRATE"  />
-	
-	
-	
-	    
-    <supports-screens android:largeScreens="true"
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 貌似可去掉 -->
+
+    <uses-permission android:name="android.permission.READ_CONTACTS" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
         android:normalScreens="true"
-        android:smallScreens="true"
         android:resizeable="true"
-        android:anyDensity="true"/>
-    
+        android:smallScreens="true" />
+
     <application
         android:name="com.izzz.iseek.app.IseekApplication"
         android:allowBackup="true"
@@ -50,32 +36,53 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.izzz.iseek.activity.BaseMapMain"       
-            android:label="@string/app_name" 
+            android:name="com.izzz.iseek.activity.BaseMapMain"
+            android:configChanges="keyboardHidden"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
-        	android:configChanges="keyboardHidden"
-			android:theme="@style/AppThemeNoTitle" >
+            android:theme="@style/AppThemeNoTitle" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.izzz.iseek.activity.SettingActivity"
-            android:theme="@style/titlebar" android:label="" ></activity>
-        <activity android:name="com.izzz.iseek.activity.SetOneKeyNumber"
-		    android:theme="@style/titlebar" android:label=""></activity>
-        <activity android:name="com.izzz.iseek.activity.OfflineManage"
-		    android:theme="@style/titlebar" android:label=""></activity>
-		<activity android:name="com.izzz.iseek.activity.AboutActivity"
-		    android:theme="@style/titlebar" android:label=""></activity>
-		<activity android:name="com.izzz.iseek.activity.AppGuide"
-		    android:theme="@style/titlebar" android:label=""></activity>
-		<activity android:name="com.izzz.iseek.activity.CorrManage"
-		    android:theme="@style/titlebar" android:label=""></activity>
-		
-		<service android:name="com.baidu.location.f" android:enabled="true"
-			android:process=":remote">
-		</service>
+        <activity
+            android:name="com.izzz.iseek.activity.SettingActivity"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/titlebar" >
+        </activity>
+        <activity
+            android:name="com.izzz.iseek.activity.SetOneKeyNumber"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/titlebar" >
+        </activity>
+        <activity
+            android:name="com.izzz.iseek.activity.OfflineManage"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/titlebar" >
+        </activity>
+        <activity
+            android:name="com.izzz.iseek.activity.AboutActivity"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/titlebar" >
+        </activity>
+        <activity
+            android:name="com.izzz.iseek.activity.AppGuide"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/titlebar" >
+        </activity>
+        <activity
+            android:name="com.izzz.iseek.activity.CorrManage"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/titlebar" >
+        </activity>
     </application>
 
 </manifest>

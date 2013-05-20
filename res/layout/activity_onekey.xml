@@ -61,6 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:layout_gravity="center"
+                android:inputType="number"
                 android:hint="@string/OKeyNumberHint" />
 
             <ImageButton
@@ -84,6 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:layout_gravity="center"
+                android:inputType="number"
                 android:text="@string/OKeyNumber2" />
 
             <EditText
@@ -123,6 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:layout_gravity="center"
+                android:inputType="number"
                 android:hint="@string/OKeyNumberHint" />
             
             <ImageButton

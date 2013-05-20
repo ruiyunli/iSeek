@@ -276,7 +276,7 @@ public class OfflineManage extends Activity{
 						{
 							StaticVar.logPrint('D', "childCities:" + e.cityName);
 						}
-						recordInfo = recordInfo + e.cityName + " ";
+						recordInfo = recordInfo + "\t" + e.cityName ;
 					}
 					requestChildCity.setText(recordInfo);
 				}

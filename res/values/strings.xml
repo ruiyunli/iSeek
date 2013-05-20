@@ -223,9 +223,35 @@
     <string name="OKeyAlertValidAll">是否设置所有号码？\n(设置过程需要一定时间，请在两分钟后再测试是否成功)</string>
 
     <!-- 使用说明页面 -->
-    <string name="GuideTextApp">关于应用：本应用可用于照看老人、小孩，达到实时看护，应用在手，时时刻刻都能够掌握他们的位置，随身携带可避免走失。</string>
-    <string name="GuideTextCorr">关于校准：在设置页面中开启校准功能，将更进一步精确GPS的位置，实现更快速，方便的寻找，如需停止自动校准，请在设置页面中关闭。</string>
-    <string name="GuideTextOffline">关于地图：离线管理是对本地地图的管理，可以进行更新、删除，以及搜索下载指定区域的地图等操作。</string>
+    <string name="GuideTextApp">
+        关于应用：\n\t
+        1.可以照看老人、小孩\n\t
+        2.可以用于汽车防盗\n\t
+        3.可以监控贵重物品\n\t
+        4.应用在手，时刻掌握位置
+        </string>
+   
+    <string name="GuideTextNumber">
+        关于号码：\n\t
+        1.在[设置]中绑定GPS模块号码\n\t
+        2.在[设置]中设置GPS的SOS号码\n\t
+        3.还能设置GPS的报警号码
+        </string>
+    
+    <string name="GuideTextOffline">
+        关于地图：\n\t
+        1.可以查询城市并下载地图\n\t
+        2.可以删除、更新本地地图\n\t
+        3.无需联网，也能定位
+        </string>
+        
+     <string name="GuideTextCorr">
+        关于校准：\n\t
+        1.在无校准情况下定位成功\n\t
+        2.选择部分数据组计算校准系数\n\t
+        3.在[设置]->[使用校准]处勾选\n\t
+        4.如需禁用，请去掉勾选
+        </string>
 
     <!-- 其他 -->
     <string name="hello_world">Hello world!</string>
