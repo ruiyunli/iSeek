@@ -13,7 +13,7 @@ import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.izzz.iseek.R;
-import com.izzz.iseek.SMS.SMSReceiverBaseMap;
+import com.izzz.iseek.SMS.SMSReceiver;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.correction.CorrView;
 import com.izzz.iseek.mapcontrol.LocalMapControl;
@@ -41,7 +41,7 @@ public class BaseMapMain extends Activity {
 	
 	public static LocalMapControl localMapControl = null;	//本地地图管理
 	
-	private SMSReceiverBaseMap mainReceiver = null; // BroadCastReceiver的相关变量
+	private SMSReceiver mainReceiver = null; // BroadCastReceiver的相关变量
 
 	private IntentFilter mainFilter = null; // BroadCastReceiver的相关变量
 
@@ -123,7 +123,7 @@ public class BaseMapMain extends Activity {
 
 	/** 注册BroadcastReceiver,用于接收短信、回执及闹钟 */
 	private void InitBCRRegister() {
-		mainReceiver = new SMSReceiverBaseMap(gpsLocate);
+		mainReceiver = new SMSReceiver(gpsLocate);
 		mainFilter = new IntentFilter();
 		mainFilter.addAction(StaticVar.SYSTEM_SMS_ACTION);
 		mainFilter.addAction(StaticVar.COM_SMS_SEND_REFRESH);
@@ -174,7 +174,8 @@ public class BaseMapMain extends Activity {
 		
 		mMapView.setOnTouchListener(new MapOnTouchListener());		// 注册onTouchListener响应函数
 		
-		mMapView.setOnLongClickListener(new MapOnLongClickListener(BaseMapMain.this));
+//		if(StaticVar.DEBUG_ENABLE)
+//			mMapView.setOnLongClickListener(new MapOnLongClickListener(BaseMapMain.this));
 		
 	}
 	

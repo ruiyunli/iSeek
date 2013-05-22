@@ -18,13 +18,13 @@ import android.widget.Toast;
 
 
 /* 自定义继承自BroadcastReceiver类,监听系统服务广播的信息 */
-public class SMSReceiverSetting extends BroadcastReceiver 
+public class SMSReceiverSettingDelete extends BroadcastReceiver 
 { 
 	private LogDialog logDialog = null;
 	
 	
 
-	public SMSReceiverSetting(LogDialog logDialog) {
+	public SMSReceiverSettingDelete(LogDialog logDialog) {
 		super();
 		this.logDialog = logDialog;
 	}

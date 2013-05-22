@@ -3,17 +3,14 @@ package com.izzz.iseek.SMS;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.izzz.iseek.R;
 import com.izzz.iseek.app.IseekApplication;
-import com.izzz.iseek.correction.AlarmControl;
 import com.izzz.iseek.maplocate.GPSLocate;
 import com.izzz.iseek.vars.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
 import com.izzz.iseek.view.LogDialog;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.CursorJoiner.Result;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.widget.Toast;
@@ -21,13 +18,21 @@ import android.widget.Toast;
 
 
 /* 自定义继承自BroadcastReceiver类,监听系统服务广播的信息 */
-public class SMSReceiverBaseMap extends BroadcastReceiver 
+public class SMSReceiver extends BroadcastReceiver 
 { 
 	private GPSLocate  gpsLocate = null;
+	
+	private LogDialog logDialog = null;
 
-	public SMSReceiverBaseMap(GPSLocate gpsLocate) {
+	public SMSReceiver(GPSLocate gpsLocate) {
 		super();
 		this.gpsLocate = gpsLocate;
+		this.logDialog = gpsLocate.DialogLocate;
+	}
+	
+	public SMSReceiver(LogDialog logDialog) {
+		super();
+		this.logDialog = logDialog;
 	}
 
 	@Override 
@@ -45,10 +50,10 @@ public class SMSReceiverBaseMap extends BroadcastReceiver
 		else if (intent.getAction().equals(StaticVar.COM_SMS_SEND_REFRESH))
 		{
 			if( getResultCode() == Activity.RESULT_OK )
-				DialogRefresh(gpsLocate.DialogLocate, R.string.DialogSendOK, StaticVar.COM_SMS_SEND_REFRESH);
+				DialogRefresh(logDialog, R.string.DialogSendOK, StaticVar.COM_SMS_SEND_REFRESH);
 			else
 			{
-				DialogRefresh(gpsLocate.DialogLocate, R.string.DialogSendFail, StaticVar.COM_SMS_SEND_REFRESH);
+				DialogRefresh(logDialog, R.string.DialogSendFail, StaticVar.COM_SMS_SEND_REFRESH);
 				gpsLocate.alarmHandler.Stop();
 			}
 		}
@@ -56,17 +61,49 @@ public class SMSReceiverBaseMap extends BroadcastReceiver
 		else if (intent.getAction().equals(StaticVar.COM_SMS_DELIVERY_REFRESH))
 		{
 			if( getResultCode() == Activity.RESULT_OK )
-				DialogRefresh(gpsLocate.DialogLocate, R.string.DialogDeliveryOK, StaticVar.COM_SMS_DELIVERY_REFRESH);
+				DialogRefresh(logDialog, R.string.DialogDeliveryOK, StaticVar.COM_SMS_DELIVERY_REFRESH);
 			else
 			{
-				DialogRefresh(gpsLocate.DialogLocate, R.string.DialogDeliveryFail, StaticVar.COM_SMS_DELIVERY_REFRESH);
+				DialogRefresh(logDialog, R.string.DialogDeliveryFail, StaticVar.COM_SMS_DELIVERY_REFRESH);
 				gpsLocate.alarmHandler.Stop();
 			}
 		}
 		//接收到refresh闹钟广播
 		else if(intent.getAction().equals(StaticVar.COM_ALARM_REFRESH))
 		{
-			DialogRefresh(gpsLocate.DialogLocate, R.string.DialogAlarmGot, StaticVar.COM_ALARM_REFRESH);
+			DialogRefresh(logDialog, R.string.DialogAlarmGot, StaticVar.COM_ALARM_REFRESH);
+		}
+		//接收到sos设置发送状态广播
+		else if(intent.getAction().equals(StaticVar.COM_SMS_SEND_SOS_GPS))
+		{
+			if(getResultCode() == Activity.RESULT_OK)
+				DialogRefresh(logDialog, R.string.DialogSosSendGpsOK, StaticVar.COM_SMS_SEND_SOS_GPS);
+			else
+				DialogRefresh(logDialog, R.string.DialogSosSendGpsFail, StaticVar.COM_SMS_SEND_SOS_GPS);
+		}
+		//接收到sos设置发送回执广播
+		else if(intent.getAction().equals(StaticVar.COM_SMS_DELIVERY_SOS_GPS))
+		{
+			if(getResultCode() == Activity.RESULT_OK)
+				DialogRefresh(logDialog, R.string.DialogSosDeliveryGpsOK, StaticVar.COM_SMS_DELIVERY_SOS_GPS);
+			else
+				DialogRefresh(logDialog, R.string.DialogSosDeliveryGpsFail, StaticVar.COM_SMS_DELIVERY_SOS_GPS);
+		}
+		//接收到sos手机号的通知发送状态广播
+		else if(intent.getAction().equals(StaticVar.COM_SMS_SEND_SOS_TAR))
+		{
+			if(getResultCode() == Activity.RESULT_OK)
+				DialogRefresh(logDialog, R.string.DialogSosSendTarOK, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
+			else
+				DialogRefresh(logDialog, R.string.DialogSosSendTarFail, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
+		}
+		//接收到sos手机号的通知回执广播
+		else if(intent.getAction().equals(StaticVar.COM_SMS_DELIVERY_SOS_TAR))
+		{
+			if(getResultCode() == Activity.RESULT_OK)
+				DialogRefresh(logDialog, R.string.DialogSosDeliveryTarOK, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
+			else
+				DialogRefresh(logDialog, R.string.DialogSosDeliveryTarFail, StaticVar.COM_SMS_DELIVERY_SOS_TAR);
 		}
 	}
 		
@@ -133,20 +170,34 @@ public class SMSReceiverBaseMap extends BroadcastReceiver
 				//短信头--定位成功短信
 				if(mesContext.substring(0, 7).equals(StaticVar.SMS_Header_LOC_SUCCESS))
 				{					
-					ReceiveMsgCaseLocOK(mesContext, gpsLocate.DialogLocate);
+					ReceiveMsgCaseLocOK(mesContext, logDialog);
 				}
 				//短信头--gps没有正常工作
 				else if(mesContext.substring(0, 7).equals(StaticVar.SMS_Header_GPS_NOT_FIX))
 				{
-					ReceiveMstCaseGpsNotFix(context,mesContext,gpsLocate.DialogLocate);
+					ReceiveMstCaseGpsNotFix(context,mesContext,logDialog);
+				}
+				//短信头--设置sos号码的gps回复短息
+				else if(mesContext.substring(0,7).equals(StaticVar.SMS_Header_SET_SOS_OK))
+				{
+					if(StaticVar.DEBUG_ENABLE)
+						StaticVar.logPrint('D', "set sos ok case!");
+					ReceiveMsgCaseSetSosOK(context, mesContext , logDialog );
 				}
 				else
 				{
 					//短信头不匹配--为了调试方便，后期将要删掉
-					//main中的删掉，留下setting中的报错
-//					if(StaticVar.DEBUG_ENABLE)
-//						Toast.makeText(context, "main:unknown sms", Toast.LENGTH_SHORT).show();
+					if(StaticVar.DEBUG_ENABLE)
+					{
+						StaticVar.logPrint('D', "set sos error case!");
+					
+						Toast.makeText(context, context.toString() + "unknown sms", Toast.LENGTH_SHORT).show();
+					}
 				}
+				
+				//不再广播消息，取消保存
+				if(!StaticVar.DEBUG_ENABLE)
+					abortBroadcast();
 				
 			}
 			else
@@ -218,21 +269,36 @@ public class SMSReceiverBaseMap extends BroadcastReceiver
 		}
 	}
 	
-	//用于经纬度的合法性检测
-		public boolean isValidGeo(String geoStr)
-		{
-			boolean isValid = false;
-			
-			double tmp;
-			tmp = Double.parseDouble(geoStr);
-			
+	//设置sos号码成功
+	private void ReceiveMsgCaseSetSosOK(Context context, String msgContext, LogDialog logDialog)
+	{
+		
+		//if(msgContext.substring(8).equals(StaticVar.SMS_BODY_SET_SOS_OK))
+		//{
 			if(StaticVar.DEBUG_ENABLE)
-				StaticVar.logPrint('D', "isValidGeo--str:" + geoStr + " tmp:" + tmp);
+				StaticVar.logPrint('D', "sos number set sucess!");
 			
-			if((tmp>0) && (tmp<140) )
-				isValid = true;		
-			return isValid;
-		}
+//				SettingActivity.alarmHandler.Stop();
+			DialogRefresh(logDialog, R.string.DialogSosFeedBackGpsOK, StaticVar.SMS_BODY_SET_SOS_OK);
+			logDialog.disable();
+	//	}
+	}
+	
+	//用于经纬度的合法性检测
+	public boolean isValidGeo(String geoStr)
+	{
+		boolean isValid = false;
+		
+		double tmp;
+		tmp = Double.parseDouble(geoStr);
+		
+		if(StaticVar.DEBUG_ENABLE)
+			StaticVar.logPrint('D', "isValidGeo--str:" + geoStr + " tmp:" + tmp);
+		
+		if((tmp>0) && (tmp<140) )
+			isValid = true;		
+		return isValid;
+	}
 	
 	
 } 

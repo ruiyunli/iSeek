@@ -1,7 +1,7 @@
 package com.izzz.iseek.activity;
 
 import com.izzz.iseek.R;
-import com.izzz.iseek.SMS.SMSReceiverSetting;
+import com.izzz.iseek.SMS.SMSReceiver;
 import com.izzz.iseek.SMS.SMSsender;
 import com.izzz.iseek.app.IseekApplication;
 import com.izzz.iseek.maplocate.GPSLocate;
@@ -9,8 +9,6 @@ import com.izzz.iseek.vars.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
 import com.izzz.iseek.view.EditTextPref;
 import com.izzz.iseek.view.LogDialog;
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -25,13 +23,10 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +54,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	
 	private SMSsender 		settingSMSsender = null;		//发送短信接口
 	
-	private SMSReceiverSetting 	setReceiver = null;
+	private SMSReceiver 	setReceiver = null;
 	
 	private IntentFilter 	setFilter  = null;
 	
@@ -169,7 +164,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	private void InitBCR()
 	{
 		//注册广播监听
-		setReceiver = new SMSReceiverSetting(settingDialog);
+		setReceiver = new SMSReceiver(settingDialog);
 		setFilter = new IntentFilter();
 		setFilter.addAction(StaticVar.SYSTEM_SMS_ACTION);
 		setFilter.addAction(StaticVar.COM_SMS_DELIVERY_SOS_GPS);
@@ -221,7 +216,9 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 
 		if(preference.getKey() == PrefHolder.prefCorrEnableKey)
 		{
-			return ToogleCorrBox(newValue);
+			//暂且不开放校准功能
+			Toast.makeText(SettingActivity.this, R.string.ToastCoefWait, Toast.LENGTH_SHORT).show();
+//			return ToogleCorrBox(newValue);
 		}
 		return false;		 
 	}
@@ -260,10 +257,17 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		//校准设置
 		else if(preference.getKey() == PrefHolder.prefCorrEntryKey)
 		{
+			
+			//暂且不开放校准功能
+			Toast.makeText(SettingActivity.this, R.string.ToastCoefWait, Toast.LENGTH_SHORT).show();
+			
+			/*
 			Intent intent = new Intent();
 			intent.setClass(SettingActivity.this, CorrManage.class);
 			startActivity(intent);
+			*/
 			return true;
+			
 		}
 		//设置一键拨号号码
 		else if(preference.getKey() == PrefHolder.prefOneKeyNumberKey)
@@ -394,8 +398,10 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
             int columnNumber = cursor.getColumnIndex(Phone.NUMBER);	            
             String phoneNumber = cursor.getString(columnNumber);
            
-            editPrefTarget.setText(phoneNumber);
-
+            if(requestCode == PICK_CONTACT_REQUEST_TAR)
+            	editPrefTarget.setText(phoneNumber);
+            if(requestCode == PICK_CONTACT_REQUEST_SOS)
+            	editPrefSos.setText(phoneNumber);
         }
 		
 	}	

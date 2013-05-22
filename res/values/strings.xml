@@ -102,6 +102,7 @@
 <!--     <string name="ToastUnknowSMSheader">注意:不能识别的短信</string> -->
     <string name="ToastCorrPointFull">请先清除掉部分校准数据</string>
     <string name="ToastCoefNull">不存在校准内容，请先生成校准量</string>
+    <string name="ToastCoefWait">校准功能目前未开放</string>
     <string name="ToastCoefCreated">成功生成校准量</string>
     <string name="ToastCoefCalcNull">请先勾选用于计算的数据组</string>
     <string name="ToastCorrDeletedOK">删除成功</string>
@@ -144,7 +145,7 @@
     <string name="BtnMoveDown">v</string>
 
     <!-- 关于页面 -->
-    <string name="AboutCopyRight0">iSeek for Android V0.1</string>
+    <string name="AboutCopyRight0">iSeek for Android V1.1</string>
     <string name="AboutCopyRight1">西安电子科技大学</string>
     <string name="AboutCopyRight2">版权所有©CopyRight，2013–2014</string>
     <string name="AboutCopyRight3">保留所有权利</string>
