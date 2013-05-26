@@ -28,11 +28,15 @@ import com.baidu.mapapi.map.MKOLSearchRecord;
 import com.baidu.mapapi.map.MKOLUpdateElement;
 import com.baidu.mapapi.map.MKOfflineMap;
 import com.baidu.mapapi.map.MKOfflineMapListener;
+import com.baidu.mapapi.map.MapController;
 import com.izzz.iseek.app.IseekApplication;
+import com.izzz.iseek.mapcontrol.LocalMapControl;
 import com.izzz.iseek.vars.StaticVar;
 import com.izzz.iseek.R;
 
 public class OfflineManage extends Activity{
+	
+	private  LocalMapControl localMapControl = null;
 	
 	private EditText CityName 			= null;
 	
@@ -84,6 +88,8 @@ public class OfflineManage extends Activity{
         }
 		setContentView(R.layout.activity_offline);
 		
+		localMapControl = new LocalMapControl(BaseMapMain.mMapController);
+		
 		InitView();
 		
 		UpdateLocal();
@@ -127,12 +133,11 @@ public class OfflineManage extends Activity{
 		btnUpdate = (Button)findViewById(R.id.OffBtnUpdate);
 		btnDelete = (Button)findViewById(R.id.OffBtnDelete);
 		spinLocalSelecter = (Spinner)findViewById(R.id.OffLocalSelecter);
-//				btnTitleBarOffline = (ImageButton)findViewById(R.id.btnTitleBarOffline);
 				
 		//响应函数
 		btnRequest.setOnClickListener(new RequestOnClickListener());
 		btnDownload.setOnClickListener(new DownloadOnClickListener());
-		BaseMapMain.localMapControl.Init(new OfflineMapListener());
+		localMapControl.Init(new OfflineMapListener());
 		btnUpdate.setOnClickListener(new UpdateOnClickListener());
 		btnDelete.setOnClickListener(new DeleteOnClickListener());
 		spinLocalSelecter.setOnItemSelectedListener(new spinnerItemSelectedListener());
@@ -168,10 +173,14 @@ public class OfflineManage extends Activity{
 	private void UpdateLocal()
 	{
 		
-		updateInfo = BaseMapMain.localMapControl.getAllUpdateInfo();
+		updateInfo = localMapControl.getAllUpdateInfo();
 		
         if (updateInfo != null) 
         {
+        	//使能
+        	spinLocalSelecter.setEnabled(true);
+        	btnDelete.setEnabled(true);
+        	
         	try{
 	        	//初始化城市字符包
 	        	String[] localMap = new String[updateInfo.size()];
@@ -188,17 +197,38 @@ public class OfflineManage extends Activity{
 	        	localAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,localMap);
 	        	localAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	        	spinLocalSelecter.setAdapter(localAdapter);
+	        	
+	        	//按钮使能
+	        	btnRequest.setEnabled(true);
+	        	
         	}catch (Exception e) {
 				// TODO: handle exception
         		if(StaticVar.DEBUG_ENABLE)
         			StaticVar.logPrint('E', e.toString());
-			}        	
+			} 
+        	
+        	if(updateInfo.get(0).ratio < 100)
+            	IseekApplication.DOWNLOAD_CHANNEL = StaticVar.OFFLINE_UPDATE;
+            else
+            	IseekApplication.DOWNLOAD_CHANNEL = StaticVar.OFFLINE_NULL;
+        }
+        else
+        {
+        	//清空spinner
+        	localAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item);
+        	localAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        	spinLocalSelecter.setAdapter(localAdapter);
+        	//不使能
+        	spinLocalSelecter.setEnabled(false);
+        	btnUpdate.setEnabled(false);
+        	btnDelete.setEnabled(false);
+        	//设置默认字符串
+        	localSize.setText(R.string.OfflineTextSelectHint);
+        	localRatio.setText(R.string.OfflineTextSelectHint);
+        	localUpdate.setText(R.string.OfflineTextSelectHint);
         }
         
-        if(updateInfo.get(0).ratio < 100)
-        	IseekApplication.DOWNLOAD_CHANNEL = StaticVar.OFFLINE_UPDATE;
-        else
-        	IseekApplication.DOWNLOAD_CHANNEL = StaticVar.OFFLINE_NULL;
+        
         
 	}
 	
@@ -221,7 +251,7 @@ public class OfflineManage extends Activity{
 				btnDownload.setEnabled(false);
 				return;
 			}
-			ArrayList<MKOLSearchRecord> records = BaseMapMain.localMapControl.searchCity(CityName.getText().toString().trim());
+			ArrayList<MKOLSearchRecord> records = localMapControl.searchCity(CityName.getText().toString().trim());
 			
 			//保险策略
 			if(records != null && records.size() == 1)
@@ -308,13 +338,21 @@ public class OfflineManage extends Activity{
 			// TODO Auto-generated method stub
 			
 			IseekApplication.DOWNLOAD_CHANNEL = StaticVar.OFFLINE_DOWNLOAD;
-			if(BaseMapMain.localMapControl.download(requestCityId))
+			if(localMapControl.download(requestCityId))
 			{
+				if(!checkNetworkInfo())
+				{
+					Toast.makeText(OfflineManage.this, R.string.ToastErrorInternet, Toast.LENGTH_SHORT).show();
+					return;
+				}
+				
+				requestDetail.setText(requestCityName + ":" + getResources().getString(R.string.OfflineDownloadStart));
+				btnDownload.setEnabled(false);
+				btnRequest.setEnabled(false);
+				
 				if(StaticVar.DEBUG_ENABLE)
 					StaticVar.logPrint('D', "download start");
-				requestDetail.setText(requestCityName + ":" + getResources().getString(R.string.OfflineDownloadStart));
-				
-				checkNetworkInfo();
+					
 			}
 			else
 			{
@@ -334,8 +372,13 @@ public class OfflineManage extends Activity{
 			//更新--怎么更新
 			
 			IseekApplication.DOWNLOAD_CHANNEL = StaticVar.OFFLINE_UPDATE;
-			if(BaseMapMain.localMapControl.download(updateInfo.get(spinIndex).cityID))
+			if(localMapControl.download(updateInfo.get(spinIndex).cityID))
 			{
+				
+				if(!checkNetworkInfo())
+					Toast.makeText(OfflineManage.this, R.string.ToastErrorInternet, Toast.LENGTH_SHORT).show();
+				btnUpdate.setEnabled(false);
+				
 				if(StaticVar.DEBUG_ENABLE)
 					StaticVar.logPrint('D', "update start");
 			}
@@ -373,7 +416,7 @@ public class OfflineManage extends Activity{
 		public void onClick(DialogInterface dialog, int which) {
 			// TODO Auto-generated method stub
 			String toastStr; 
-			if(BaseMapMain.localMapControl.remove(updateInfo.get(spinIndex).cityID))
+			if(localMapControl.remove(updateInfo.get(spinIndex).cityID))
 				toastStr = getResources().getString(R.string.OfflineDeleteOK);
 			else
 				toastStr = getResources().getString(R.string.OfflineDeleteFail);
@@ -420,7 +463,8 @@ public class OfflineManage extends Activity{
 			{
 				if(StaticVar.DEBUG_ENABLE)
 					StaticVar.logPrint('D',"download not done");
-				btnUpdate.setEnabled(true);
+				if(updateInfo.get(spinIndex).status != MKOLUpdateElement.DOWNLOADING)
+					btnUpdate.setEnabled(true);
 				localUpdate.setText(R.string.OfflineTextUpdateAvaliable);
 			}
 			//有更新
@@ -451,7 +495,7 @@ public class OfflineManage extends Activity{
 			switch (type) {	
 			case MKOfflineMap.TYPE_DOWNLOAD_UPDATE:
 				{
-					MKOLUpdateElement update = BaseMapMain.localMapControl.getUpdateInfo(state);
+					MKOLUpdateElement update = localMapControl.getUpdateInfo(state);
 					if ( update != null )
 					{
 						if(IseekApplication.DOWNLOAD_CHANNEL == StaticVar.OFFLINE_DOWNLOAD)
@@ -472,7 +516,7 @@ public class OfflineManage extends Activity{
 					{
 						//更新视图
 						if(IseekApplication.DOWNLOAD_CHANNEL == StaticVar.OFFLINE_DOWNLOAD)
-							requestDetail.setText(R.string.OfflineRequestDownloadOK);
+							requestDetail.setText(R.string.OfflineDownloadEnd);
 						UpdateLocal();
 						
 						SendDownloadNotif(update.cityName);
@@ -487,7 +531,7 @@ public class OfflineManage extends Activity{
 		}
 	}
 	
-	private void checkNetworkInfo()
+	private boolean checkNetworkInfo()
     {
         ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -499,6 +543,11 @@ public class OfflineManage extends Activity{
         State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
         if(StaticVar.DEBUG_ENABLE)
         	StaticVar.logPrint('D', "wifi:" + wifi.toString());
+        
+        if((mobile != State.CONNECTED)&&(wifi != State.CONNECTED))
+        	return false;
+        
+        return true;
     }
 	
 }

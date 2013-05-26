@@ -31,14 +31,7 @@
     <string name="set_corrNumber1_dialogTitle">号码一</string>
 
     <!-- Category Tool -->
-    <string name="set_tool_cate_title">工具</string>
-    <string name="set_correntry_key">correntry</string>
-    <string name="set_correntry_title">校准</string>
-    <string name="set_correntry_summary">用于校准小范围定位误差</string>
-    <string name="set_correnable_key">correnable</string>
-    <string name="set_correnable_title">使用校准</string>
-    <string name="set_correnable_summary_on">已启用校准</string>
-    <string name="set_correnable_summary_off">未启用校准</string>
+    <string name="set_map_cate_title">地图管理</string>
     <string name="set_offline_key">OfflineManage</string>
     <string name="set_offline_title">离线管理</string>
     <string name="set_offline_summary">管理离线地图</string>
@@ -145,7 +138,7 @@
     <string name="BtnMoveDown">v</string>
 
     <!-- 关于页面 -->
-    <string name="AboutCopyRight0">iSeek for Android V1.1</string>
+    <string name="AboutCopyRight0">iSeek for Android V1.2</string>
     <string name="AboutCopyRight1">西安电子科技大学</string>
     <string name="AboutCopyRight2">版权所有©CopyRight，2013–2014</string>
     <string name="AboutCopyRight3">保留所有权利</string>
@@ -170,12 +163,11 @@
     <string name="OfflineBtnDelete">删除</string>
     <string name="OfflineDeleteOK">地图删除成功</string>
     <string name="OfflineDeleteFail">地图删除失败</string>
-    <string name="OfflineDownloadStart">地图开始下载</string>
+    <string name="OfflineDownloadStart">地图开始下载,请稍等...</string>
     <string name="OfflineRequestNull">对不起，没有查询到地图</string>
     <string name="OfflineRequestDownload">可下载</string>
     <string name="OfflineRequestNewest">已最新</string>
     <string name="OfflineRequestUpdate">可更新</string>
-    <string name="OfflineRequestDownloadOK">可更新</string>
     <string name="OfflineDownloadEnd">地图下载完成</string>
     <string name="OfflineAlertDeleteTitle">删除</string>
     <string name="OfflineAlertDeleteHint">确定删除本地地图？</string>
@@ -187,19 +179,6 @@
     <string name="TitleBarSetNumber">号码设置</string>
     <string name="TitleBarGuide">使用说明</string>
     <string name="TitleBarCorr">校准</string>
-
-    <!-- 校准中文字 -->
-    <string name="CorrAlertTitle">校准</string>
-    <string name="CorrAlertMsgWarn">确定对这个点进行校准吗？</string>
-    <string name="CorrAlertMsgNoLocate">校准前请先定位成功！</string>
-    <string name="CorrAlertMsgCorrUsed">进入校准模式，请先关闭自动校准再重新定位！</string>
-    <string name="btnCorrDelete">删除</string>
-    <string name="btnCorrCalc">计算校准系数</string>
-    <string name="CorrGuideTitle">校准步骤</string>
-    <string name="CorrGuideContext">1、选择偏移量相对稳定的数据组\n2、点击计算校准量按钮\n3、在设置页面勾选使用校准</string>
-    <string name="CorrListOrigin">原始数据</string>
-    <string name="CorrListTarget">手动校准</string>
-    <string name="CorrListDiff">误差</string>
     
     <!-- onekey中的文字 -->
     <string name="OKeySetTitle">一键设置</string>
@@ -245,21 +224,11 @@
         2.可以删除、更新本地地图\n\t
         3.无需联网，也能定位
         </string>
-        
-     <string name="GuideTextCorr">
-        关于校准：\n\t
-        1.在无校准情况下定位成功\n\t
-        2.选择部分数据组计算校准系数\n\t
-        3.在[设置]->[使用校准]处勾选\n\t
-        4.如需禁用，请去掉勾选
-        </string>
 
     <!-- 其他 -->
-    <string name="hello_world">Hello world!</string>
     <string name="OK">OK</string>
     <string name="CANCLE">CANCLE</string>
     <string name="OK_CH">确认</string>
     <string name="CANCLE_CH">取消</string>
-    <string name="WarnDialogCheckBoxHint">勾选不再显示这条消息</string>
 
 </resources>

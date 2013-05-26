@@ -15,11 +15,8 @@ import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.izzz.iseek.R;
 import com.izzz.iseek.SMS.SMSReceiver;
 import com.izzz.iseek.app.IseekApplication;
-import com.izzz.iseek.correction.CorrView;
 import com.izzz.iseek.mapcontrol.LocalMapControl;
 import com.izzz.iseek.maplistener.MapMKMapViewListener;
-import com.izzz.iseek.maplistener.MapOnLongClickListener;
-import com.izzz.iseek.maplistener.MapOnTouchListener;
 import com.izzz.iseek.maplocate.GPSLocate;
 import com.izzz.iseek.mapplugin.PluginChangeView;
 import com.izzz.iseek.mapplugin.PluginZoom;
@@ -33,37 +30,19 @@ public class BaseMapMain extends Activity {
 
 	private MapView mMapView = null; 				// 百度地图
 
-	private MapController mMapController = null; 	// 百度地图
+	public static MapController mMapController = null; 	// 百度地图
 	
-	public static GeoPoint gpsPoint		= null;		//gps定位的百度坐标
-	
-//	private PhoneLocation mPLocation;				//手机定位
-	
-	public static LocalMapControl localMapControl = null;	//本地地图管理
+	private  LocalMapControl localMapControl = null;	//本地地图管理
 	
 	private SMSReceiver mainReceiver = null; // BroadCastReceiver的相关变量
 
 	private IntentFilter mainFilter = null; // BroadCastReceiver的相关变量
 
-	public GPSLocate gpsLocate = null;
-
-	public static CorrView corrView = null; // 校正类实例
+	private GPSLocate gpsLocate = null;
 
 	private ImageButton btnViewSelect = null; // 视图切换
 
 	private PluginChangeView pluginChangeView = null; // 视图切换插件
-
-	private ImageButton btnMoveUp = null; // 微调button
-
-	private ImageButton btnMoveDown = null; // 微调button
-
-	private ImageButton btnMoveLeft = null; // 微调button
-
-	private ImageButton btnMoveRight = null; // 微调button
-
-	private Button btnCorrOk = null; // 校准的两个按钮
-
-	private Button btnCorrCancle = null; // 校准的两个按钮
 
 	private ImageButton btnMenuCall = null; // 菜单
 
@@ -71,7 +50,7 @@ public class BaseMapMain extends Activity {
 
 	private ImageButton btnMenuSettings = null; // 菜单
 
-	public static BottomMenu bottomMenu = null; // 菜单类实例
+	private BottomMenu bottomMenu = null; // 菜单类实例
 
 	private ImageButton btnZoomIn = null; // zoom按钮
 
@@ -79,7 +58,7 @@ public class BaseMapMain extends Activity {
 
 	private PluginZoom pluginZoom = null; // zoom插件
 
-	long lastTime = 0; // 用于退出时间记录
+	private long lastTime = 0; // 用于退出时间记录
 
 	public static TextView logText = null; // 测试用输出testView
 
@@ -101,14 +80,10 @@ public class BaseMapMain extends Activity {
 
 		InitMap();			// 百度地图初始化
 		
-//		InitPhoneLocate();	//定位初始化
-		
 		InitGPSLocation();	//初始化GPSLocation
 		
 		InitBottomMenu(); 	// 初始化自定义菜单
 		
-		InitCorrection(); 	// 初始化imagebutton变量		
-
 		InitPluginZoom(); 	// 初始化缩放插件
 
 		InitPluginChangeView(); // 初始化切换视图插件
@@ -163,42 +138,24 @@ public class BaseMapMain extends Activity {
 		mMapController.enableClick(true);
 		mMapController.setZoom(15);
 //		mMapView.setBuiltInZoomControls(true);
-		mMapView.setTraffic(true);
+//		mMapView.setTraffic(true);
 //		mMapView.setSatellite(true);
 		mMapView.setDoubleClickZooming(true);
 		
-		localMapControl = new LocalMapControl(mMapController);//本地地图管理
+//		localMapControl = new LocalMapControl(mMapController);//本地地图管理
 
 		// 注册响应函数
 		mMapView.regMapViewListener(IseekApplication.getInstance().mBMapManager, new MapMKMapViewListener(BaseMapMain.this));
 		
-		mMapView.setOnTouchListener(new MapOnTouchListener());		// 注册onTouchListener响应函数
-		
-//		mMapView.setOnLongClickListener(new MapOnLongClickListener(BaseMapMain.this));
-		
 	}
+	
+	
 	
 		
 	/** 初始化GPS定位类*/
 	private void InitGPSLocation()
 	{
 		gpsLocate = new GPSLocate(BaseMapMain.this, mMapView);
-	}
-
-	// 校准微调按钮初始化
-	public void InitCorrection() {
-		// 获取
-		btnCorrOk = (Button) findViewById(R.id.btnCorrOk);
-		btnCorrCancle = (Button) findViewById(R.id.btnCorrCancle);
-		btnMoveUp = (ImageButton) findViewById(R.id.btnMoveUp);
-		btnMoveDown = (ImageButton) findViewById(R.id.btnMoveDown);
-		btnMoveLeft = (ImageButton) findViewById(R.id.btnMoveLeft);
-		btnMoveRight = (ImageButton) findViewById(R.id.btnMoveRight);
-
-		corrView = new CorrView(BaseMapMain.this, mMapView,bottomMenu, btnMoveUp,
-				btnMoveDown, btnMoveLeft, btnMoveRight, btnCorrOk, btnCorrCancle);
-
-		corrView.SetAllButtonGone();
 	}
 
 	/** 初始化自定义MenuView */
@@ -230,6 +187,7 @@ public class BaseMapMain extends Activity {
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
+		mMapView.destroy();
 		IseekApplication app = (IseekApplication) this.getApplication();
 		if (app.mBMapManager != null) {
 			app.mBMapManager.destroy();
@@ -250,11 +208,11 @@ public class BaseMapMain extends Activity {
 	@Override
 	protected void onPause() {
 		mMapView.onPause();
-		IseekApplication app = (IseekApplication) this.getApplication();
-		if (app.mBMapManager != null) {
-			app.mBMapManager.stop();
-			app.mBMapManager = null;
-		}
+//		IseekApplication app = (IseekApplication) this.getApplication();
+//		if (app.mBMapManager != null) {
+//			app.mBMapManager.stop();
+//			app.mBMapManager = null;
+//		}
 		
 //		if (StaticVar.DEBUG_ENABLE)
 //			StaticVar.logPrint('D', "on Pause");
@@ -266,13 +224,13 @@ public class BaseMapMain extends Activity {
 	@Override
 	protected void onResume() {
 		mMapView.onResume();
-		IseekApplication app = (IseekApplication) this.getApplication();
-		if (app.mBMapManager != null) {
-			app.mBMapManager.start();
-			app.mBMapManager = null;
-		}
+//		IseekApplication app = (IseekApplication) this.getApplication();
+//		if (app.mBMapManager != null) {
+//			app.mBMapManager.start();
+//			app.mBMapManager = null;
+//		}
 
-		bottomMenu.SetVisible(true);
+//		bottomMenu.SetVisible(true);
 
 //		if (StaticVar.DEBUG_ENABLE)
 //			StaticVar.logPrint('D', "on Resume");

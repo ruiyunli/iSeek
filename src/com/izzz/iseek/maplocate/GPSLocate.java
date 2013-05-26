@@ -1,6 +1,10 @@
 package com.izzz.iseek.maplocate;
 
+import android.app.Activity;
+import android.app.Service;
 import android.content.Context;
+import android.os.Vibrator;
+
 import com.baidu.mapapi.map.LocationData;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
@@ -9,9 +13,7 @@ import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.izzz.iseek.R;
 import com.izzz.iseek.SMS.SMSsender;
 import com.izzz.iseek.activity.BaseMapMain;
-import com.izzz.iseek.app.IseekApplication;
-import com.izzz.iseek.correction.AlarmControl;
-import com.izzz.iseek.correction.CorrPointManager;
+import com.izzz.iseek.tools.AlarmControl;
 import com.izzz.iseek.vars.PrefHolder;
 import com.izzz.iseek.vars.StaticVar;
 import com.izzz.iseek.view.LogDialog;
@@ -32,10 +34,6 @@ public class GPSLocate {
 	
 	public AlarmControl alarmHandler = null;
 	
-	private static double CorrCoefA = 1.0;
-	
-	private static double CorrCoefB = 0.0;
-	
 	public boolean isHanCoef = false;
 	
 	public GPSLocate(Context mContext, MapView mMapView) {
@@ -47,9 +45,7 @@ public class GPSLocate {
 	
 		InitMap();
 		
-		InitPlugin();
-		
-		isHanCoef = InitCoef();
+		InitPlugin();		
 		
 	}
 	
@@ -77,19 +73,6 @@ public class GPSLocate {
 		alarmHandler = new AlarmControl(mContext, StaticVar.COM_ALARM_REFRESH);
 	}
 	
-	public static boolean InitCoef()
-	{
-		double[] AB = new double[]{1.0, 0.0};
-		AB = CorrPointManager.getCoef();
-		CorrCoefA = AB[0];
-		CorrCoefB = AB[1];
-		
-		if((CorrCoefA == 1.0) && (CorrCoefB == 0.0))
-			return false;
-		else
-			return true;
-		
-	}
 
 	// 设置新的坐标
 	public void animateTo(GeoPoint newPoint, boolean GEO_TYPE) {
@@ -111,30 +94,7 @@ public class GPSLocate {
 		PrefHolder.prefsEditor.putString(PrefHolder.prefLastLatitudeKey, Integer.toString(baiduPoint.getLatitudeE6()));
 		PrefHolder.prefsEditor.putString(PrefHolder.prefLastLongitudeKey, Integer.toString(baiduPoint.getLongitudeE6())).commit();
 		
-		if(IseekApplication.CORRECTION_ENABLE)
-		{
-			//插入校准变换
-			baiduPoint = CorrectionBaidu(baiduPoint);
-			IseekApplication.CORRECTION_USED = true;
-			
-			if(StaticVar.DEBUG_ENABLE)
-			{
-				logStr = "corr - ";
-				StaticVar.logPrint('D', "corr used");
-			}
-			
-		}
-		else
-		{
-			BaseMapMain.gpsPoint = baiduPoint;
-			IseekApplication.CORRECTION_USED = false;
-			
-			if(StaticVar.DEBUG_ENABLE)
-			{
-				logStr = "uncorr - ";
-				StaticVar.logPrint('D', "corr not used");
-			}
-		}
+//		BaseMapMain.gpsPoint = baiduPoint;
 		
 		if (StaticVar.DEBUG_ENABLE)
 		{
@@ -152,6 +112,9 @@ public class GPSLocate {
 		mMapView.getController().setZoom(19);
 		mMapView.refresh();
 		mMapView.getController().animateTo(baiduPoint);
+		
+		Vibrator  vv=(Vibrator) ((Activity) mContext).getApplication().getSystemService(Service.VIBRATOR_SERVICE);  
+		vv.vibrate(500);//震半秒钟  
 
 	}
 	
@@ -174,22 +137,7 @@ public class GPSLocate {
 		}
 	}
 	
-	private GeoPoint CorrectionBaidu(GeoPoint pt)
-	{
-		double longOrigin =  pt.getLongitudeE6()/1E6;
-		
-		double longNew =  CorrCoefA*longOrigin + CorrCoefB*longOrigin*longOrigin;
-		
-		if(StaticVar.DEBUG_ENABLE)
-		{
-			StaticVar.logPrint('D', "CorrCoefA:" + CorrCoefA + "CorrCoefB:" + CorrCoefB);
-			StaticVar.logPrint('D', "long origin:" + longOrigin + " long new:" + longNew);
-		}
-		
-		pt.setLongitudeE6((int)(longNew * 1E6));
-		
-		return pt;
-	}
+	
 
 	
 	

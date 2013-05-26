@@ -13,10 +13,6 @@ public class PrefHolder {
   	
   	public static String prefSosNumberKey    	= null;			//sos关联号码
   	
-  	public static String prefCorrEntryKey     	= null;			//校准页面入口
-  	
-  	public static String prefCorrEnableKey		= null;			//校准使能
-  	
   	public static String prefOfflineKey			= null;			//离线管理入口
   	
   	public static String prefGuideKey			= null;			//应用介绍入口
@@ -47,10 +43,8 @@ public class PrefHolder {
 		prefTargetPhoneKey  	= mcontext.getResources().getString(R.string.set_targetPhone_key);
 		prefSosNumberKey    	= mcontext.getResources().getString(R.string.set_sosNumber_key);
 		prefOneKeyNumberKey		= mcontext.getResources().getString(R.string.set_oneKeyNumber_key);
-		prefCorrEntryKey   		= mcontext.getResources().getString(R.string.set_correntry_key);
 		prefOfflineKey			= mcontext.getResources().getString(R.string.set_offline_key);
 		prefGuideKey			= mcontext.getResources().getString(R.string.set_guide_key);
-		prefCorrEnableKey 		= mcontext.getResources().getString(R.string.set_correnable_key);
 		prefAboutKey        	= mcontext.getResources().getString(R.string.set_about_key);
 		
 		//上次定位位置

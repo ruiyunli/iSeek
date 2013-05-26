@@ -40,10 +40,6 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	
 	private PreferenceScreen	prefCorrNumber	= null;
 	
-	private PreferenceScreen   	prefCorrection 	= null;
-	
-	private CheckBoxPreference 	prefCorrEnable	= null;
-	
 	private PreferenceScreen   	prefOffline 	= null;
 	
 	private PreferenceScreen   	prefGuide 	= null;
@@ -123,8 +119,6 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		prefTargetPhone = (PreferenceScreen)findPreference(PrefHolder.prefTargetPhoneKey);
 		prefSosNumber   = (PreferenceScreen)findPreference(PrefHolder.prefSosNumberKey);
 		prefCorrNumber	= (PreferenceScreen)findPreference(PrefHolder.prefOneKeyNumberKey);
-		prefCorrection	= (PreferenceScreen)findPreference(PrefHolder.prefCorrEntryKey);
-		prefCorrEnable  = (CheckBoxPreference)findPreference(PrefHolder.prefCorrEnableKey);
 		prefOffline		= (PreferenceScreen)findPreference(PrefHolder.prefOfflineKey);
 		prefGuide 		= (PreferenceScreen)findPreference(PrefHolder.prefGuideKey);
 		prefAbout       = (PreferenceScreen)findPreference(PrefHolder.prefAboutKey);
@@ -133,8 +127,6 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		prefTargetPhone.setOnPreferenceClickListener(this);
 		prefSosNumber.setOnPreferenceClickListener(this);
 		prefCorrNumber.setOnPreferenceClickListener(this);
-		prefCorrection.setOnPreferenceClickListener(this);
-		prefCorrEnable.setOnPreferenceChangeListener(this);
 		prefOffline.setOnPreferenceClickListener(this);
 		prefGuide.setOnPreferenceClickListener(this);
 		prefAbout.setOnPreferenceClickListener(this);
@@ -182,30 +174,6 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		SettingActivity.this.unregisterReceiver(setReceiver);
 	}
 
-	private boolean ToogleCorrBox(Object newValue)
-	{
-		if(newValue.equals(true))
-		{
-			if(!GPSLocate.InitCoef())
-			{
-				Toast.makeText(SettingActivity.this, R.string.ToastCoefNull, Toast.LENGTH_LONG).show();
-				
-				if(StaticVar.DEBUG_ENABLE)
-					StaticVar.logPrint('D', "get corr failed!");
-				
-				return false;
-			}
-			else 
-				IseekApplication.CORRECTION_ENABLE = true;
-		}
-		else
-			IseekApplication.CORRECTION_ENABLE = false;
-		
-		if(StaticVar.DEBUG_ENABLE)
-			StaticVar.logPrint('D', "change:" + newValue);
-		return true;
-	}
-	
 	//值改变响应函数
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -214,12 +182,6 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		if(StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', "Change--key:" + preference.getKey() + "--newValue:" + newValue);
 
-		if(preference.getKey() == PrefHolder.prefCorrEnableKey)
-		{
-			//暂且不开放校准功能
-			Toast.makeText(SettingActivity.this, R.string.ToastCoefWait, Toast.LENGTH_SHORT).show();
-//			return ToogleCorrBox(newValue);
-		}
 		return false;		 
 	}
 	
@@ -253,21 +215,6 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			intent.setClass(SettingActivity.this, AppGuide.class);
 			startActivity(intent);
 			return true;
-		}
-		//校准设置
-		else if(preference.getKey() == PrefHolder.prefCorrEntryKey)
-		{
-			
-			//暂且不开放校准功能
-			Toast.makeText(SettingActivity.this, R.string.ToastCoefWait, Toast.LENGTH_SHORT).show();
-			
-			/*
-			Intent intent = new Intent();
-			intent.setClass(SettingActivity.this, CorrManage.class);
-			startActivity(intent);
-			*/
-			return true;
-			
 		}
 		//设置一键拨号号码
 		else if(preference.getKey() == PrefHolder.prefOneKeyNumberKey)

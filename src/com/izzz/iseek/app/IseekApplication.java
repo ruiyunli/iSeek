@@ -18,15 +18,9 @@ public class IseekApplication extends Application {
     
     public BMapManager mBMapManager = null;				//地图相关
     
-//    public PhoneLocation mPhoneLocation = null;			//定位相关
-    
     public PrefHolder prefHolder = null;				//sharedpreferences管理
     
   	public static int DOWNLOAD_CHANNEL = StaticVar.OFFLINE_NULL;	//离线下载页面的下载途径标志
-  	
-  	public static boolean CORRECTION_ENABLE = false;	//允许使用校准功能
-  	
-  	public static boolean CORRECTION_USED 	= false;	//使用了校准功能
   	
   	public static boolean GPS_LOCATE_OK = false;		//gps定位成功
   	
@@ -34,8 +28,6 @@ public class IseekApplication extends Application {
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
-		
-//		mPhoneLocation = new PhoneLocation(this);
 		
 		super.onCreate();
 		
@@ -71,10 +63,6 @@ public class IseekApplication extends Application {
 	private void InitPrefs()
 	{
 		prefHolder = new PrefHolder(this);
-		
-		CORRECTION_ENABLE = PrefHolder.prefs.getBoolean(PrefHolder.prefCorrEnableKey,false); 
-		if(StaticVar.DEBUG_ENABLE)
-			StaticVar.logPrint('D', "correction enable:" + CORRECTION_ENABLE);
 	}
 	
 	public static IseekApplication getInstance() {
