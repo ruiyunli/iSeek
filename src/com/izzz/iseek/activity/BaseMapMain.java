@@ -174,8 +174,7 @@ public class BaseMapMain extends Activity {
 		
 		mMapView.setOnTouchListener(new MapOnTouchListener());		// ×¢²áonTouchListenerÏìÓ¦º¯Êý
 		
-//		if(StaticVar.DEBUG_ENABLE)
-//			mMapView.setOnLongClickListener(new MapOnLongClickListener(BaseMapMain.this));
+//		mMapView.setOnLongClickListener(new MapOnLongClickListener(BaseMapMain.this));
 		
 	}
 	

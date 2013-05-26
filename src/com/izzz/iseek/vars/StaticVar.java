@@ -8,7 +8,7 @@ public class StaticVar {
 	
 	public static final String BaiduMapKey = "3200A096EA79B20773CAB5CBD68C2E1ADDDE22BB";	//百度Map Key
 	
-	public static boolean DEBUG_ENABLE = false;		//调试设置
+	public static boolean DEBUG_ENABLE = true;		//调试设置
 	
 	//菜单order
 	public static final int MENU_REFRESH   = 100;
@@ -31,7 +31,7 @@ public class StaticVar {
 	public static final String SMS_SET_ONE_KEY_1  	= "w000000,003,3,2,";//设置一键拨号号码一
 	public static final String SMS_SET_ONE_KEY_2  	= "w000000,003,3,3,";//设置一键拨号号码一
 	public static final String SMS_SET_ONE_KEY_3  	= "w000000,003,3,4,";//设置一键拨号号码一
-	public static final String SMS_SET_SOS_TAR  	= "用户已经将您的号码绑定为SOS紧急呼叫号码<iSeek>";//设置sos号码
+	public static final String SMS_SET_SOS_TAR  	= "用户已经将您的号码绑定为SOS紧急呼叫号码<此短信由iSeek软件自动发送>";//设置sos号码
 		
 	//接受短信权限设置-发送成功广播
 	public static final String SYSTEM_SMS_ACTION           	= "android.provider.Telephony.SMS_RECEIVED";

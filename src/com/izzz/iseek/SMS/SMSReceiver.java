@@ -229,7 +229,7 @@ public class SMSReceiver extends BroadcastReceiver
 		//For example:
 		//W00,051,34.234442N, 108.913805E,1.574Km/h,13-03-21,16:04:43
 		int indexTmp = msgContext.indexOf("N");
-		String Latitude = msgContext.substring(8, 17);//原来是8-17
+		String Latitude = msgContext.substring(indexTmp-9, indexTmp);//原来是8-17
 		
 		//从N后面开始获取，即为经度
 		String Longitude = msgContext.substring(indexTmp+3, indexTmp+13);//原来是19-29

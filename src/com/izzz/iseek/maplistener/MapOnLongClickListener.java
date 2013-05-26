@@ -29,13 +29,15 @@ public class MapOnLongClickListener implements OnLongClickListener{
 		//确保在定位成功后再校准,并且定位过程中没有使用自动校准
 		if(IseekApplication.GPS_LOCATE_OK && !IseekApplication.CORRECTION_USED)
 		{
-			
-			new AlertDialog.Builder(mContext) 
-			    .setTitle(R.string.CorrAlertTitle)
-			    .setMessage(R.string.CorrAlertMsgWarn)
-			    .setPositiveButton(R.string.OK_CH, new AlertCorrOnClickListener())
-			    .setNegativeButton(R.string.CANCLE_CH, null)
-			    .show();
+			if(BaseMapMain.corrView.CORRECTION_START == false)
+			{
+				new AlertDialog.Builder(mContext) 
+				    .setTitle(R.string.CorrAlertTitle)
+				    .setMessage(R.string.CorrAlertMsgWarn)
+				    .setPositiveButton(R.string.OK_CH, new AlertCorrOnClickListener())
+				    .setNegativeButton(R.string.CANCLE_CH, null)
+				    .show();
+			}
 		}
 		//没有定位成功
 		else if(IseekApplication.GPS_LOCATE_OK && IseekApplication.CORRECTION_USED)

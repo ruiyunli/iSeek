@@ -50,9 +50,9 @@ public class BottomMenu {
 		}
 		else
 		{
-			btnMenuCall.setVisibility(View.INVISIBLE);
-			btnMenuRefresh.setVisibility(View.INVISIBLE);
-			btnMenuSettings.setVisibility(View.INVISIBLE);
+			btnMenuCall.setVisibility(View.GONE);
+			btnMenuRefresh.setVisibility(View.GONE);
+			btnMenuSettings.setVisibility(View.GONE);
 		}
 	}
 	
