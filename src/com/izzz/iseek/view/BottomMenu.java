@@ -62,7 +62,7 @@ public class BottomMenu {
 		String targetPhone = PrefHolder.prefs.getString(PrefHolder.prefTargetPhoneKey, "unset");
 		if(!targetPhone.equals("unset"))
 		{
-			Intent intent=new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+targetPhone));
+			Intent intent=new Intent(Intent.ACTION_CALL,Uri.parse("tel:"+targetPhone));
 			mContext.startActivity(intent);
 		}
 		else

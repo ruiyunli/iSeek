@@ -205,23 +205,22 @@
     <!-- 使用说明页面 -->
     <string name="GuideTextApp">
         关于应用：\n\t
-        1.可以照看老人、小孩\n\t
-        2.可以用于汽车防盗\n\t
-        3.可以监控贵重物品\n\t
-        4.应用在手，时刻掌握位置
+        1.陪护老人、看护小孩\n\t
+        2.宠物追踪\n\t
+        3.汽车等贵重物品定位\n\t
+        4.一机在手，帮助您的生活
         </string>
    
     <string name="GuideTextNumber">
         关于号码：\n\t
-        1.在[设置]中绑定GPS模块号码\n\t
-        2.在[设置]中设置GPS的SOS号码\n\t
-        3.还能设置GPS的报警号码
+        1.绑定GPS定位模块号码\n\t
+        2.设置追踪GPS定位模块号码
         </string>
     
     <string name="GuideTextOffline">
         关于地图：\n\t
-        1.可以查询城市并下载地图\n\t
-        2.可以删除、更新本地地图\n\t
+        1.下载城市离线地图\n\t
+        2.删除、更新离线地图\n\t
         3.无需联网，也能定位
         </string>
 

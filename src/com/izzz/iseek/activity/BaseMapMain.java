@@ -89,7 +89,7 @@ public class BaseMapMain extends Activity {
 		InitPluginChangeView(); // 初始化切换视图插件
 		
 		InitBCRRegister(); 	// 注册BroadCastReceiver IntentFilter
-
+		
 		if (StaticVar.DEBUG_ENABLE)
 		{
 			StaticVar.logPrint('D', "lry:On Create");

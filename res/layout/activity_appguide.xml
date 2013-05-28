@@ -31,7 +31,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/background_rounded"
             android:padding="10dp" >
 
@@ -45,7 +45,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/background_rounded"
             android:padding="10dp" >
 
@@ -55,20 +55,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/GuideTextOffline" />
         </LinearLayout>
-
-        <!-- <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/background_rounded"
-            android:padding="10dp" >
-
-            <TextView
-                style="@style/TextGreenLeft"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/GuideTextCorr" />
-        </LinearLayout> -->
     </LinearLayout>
 
 </ScrollView>

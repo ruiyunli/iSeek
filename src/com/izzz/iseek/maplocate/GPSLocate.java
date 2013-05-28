@@ -89,12 +89,9 @@ public class GPSLocate {
 		if(StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', "OnReceive--LatitudeInt:" + baiduPoint.getLatitudeE6() + " LongitudeInt:" + baiduPoint.getLongitudeE6());
 		
-		
 		//存储百度坐标系下的坐标经纬度
 		PrefHolder.prefsEditor.putString(PrefHolder.prefLastLatitudeKey, Integer.toString(baiduPoint.getLatitudeE6()));
 		PrefHolder.prefsEditor.putString(PrefHolder.prefLastLongitudeKey, Integer.toString(baiduPoint.getLongitudeE6())).commit();
-		
-//		BaseMapMain.gpsPoint = baiduPoint;
 		
 		if (StaticVar.DEBUG_ENABLE)
 		{
