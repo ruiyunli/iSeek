@@ -8,7 +8,7 @@ public class StaticVar {
 	
 	public static final String BaiduMapKey = "3200A096EA79B20773CAB5CBD68C2E1ADDDE22BB";	//百度Map Key
 	
-	public static boolean DEBUG_ENABLE = false;		//调试设置
+	public static boolean DEBUG_ENABLE = true;		//调试设置
 	
 	//菜单order
 	public static final int MENU_REFRESH   = 100;

@@ -226,6 +226,7 @@ public class SMSReceiver extends BroadcastReceiver
 	{
 		//解析经纬度
 		
+		/*
 		//For example:
 		//W00,051,34.234442N, 108.913805E,1.574Km/h,13-03-21,16:04:43
 		int indexTmp = msgContext.indexOf("N");
@@ -236,14 +237,37 @@ public class SMSReceiver extends BroadcastReceiver
 		if(StaticVar.DEBUG_ENABLE)
 			StaticVar.logPrint('D', "OnReceive--Latitude:" + Latitude + " Longitude:" + Longitude);
 		
-		//调用MainActivity中的静态函数，设置地图
-		if(isValidGeo(Longitude) && isValidGeo(Latitude))
+		//检测有效性
+		double LatitudeDou = Double.parseDouble(Latitude);
+		double LongitudeDou = Double.parseDouble(Longitude);
+		*/
+		
+		
+		//以下针对单片机内容解析
+		String[] gprmc = msgContext.split(",");
+//		System.out.println(gprmc[5]+":"+gprmc[7]);
+		double latitudeData = Double.parseDouble(gprmc[5])/100;
+		
+		double LatitudeDou = (double) (Math.floor(latitudeData)+(latitudeData-Math.floor(latitudeData))*100/60);
+//		System.out.println(LatitudeDou);
+		
+		double longitudeData=Double.parseDouble(gprmc[7])/100;
+		double LongitudeDou = (double) (Math.floor(longitudeData)+(longitudeData-Math.floor(longitudeData))*100/60);
+//		System.out.println(LongitudeDou);
+		
+		if(StaticVar.DEBUG_ENABLE)
+		{
+			StaticVar.logPrint('D', "latitude:" + LatitudeDou + " longitude:" + LongitudeDou);
+		}
+		
+		
+		if(isValidGeo(LatitudeDou) && isValidGeo(LongitudeDou))
 		{
 			int LatitudeInt;
 			int LongitudeInt;
 			
-			LatitudeInt = (int)(Double.parseDouble(Latitude) * 1E6);	
-			LongitudeInt = (int)(Double.parseDouble(Longitude) * 1E6);
+			LatitudeInt = (int)(LatitudeDou * 1E6);	
+			LongitudeInt = (int)(LongitudeDou * 1E6);
 			
 			gpsLocate.alarmHandler.Stop();							//关闭闹钟
 			
@@ -285,19 +309,21 @@ public class SMSReceiver extends BroadcastReceiver
 	}
 	
 	//用于经纬度的合法性检测
-	public boolean isValidGeo(String geoStr)
+	public boolean isValidGeo(double geoPt)
 	{
-		boolean isValid = false;
+//		boolean isValid = false;
 		
-		double tmp;
-		tmp = Double.parseDouble(geoStr);
+		//double tmp;
+//		tmp = Double.parseDouble(geoStr);
 		
+//		if(StaticVar.DEBUG_ENABLE)
+//			StaticVar.logPrint('D', "isValidGeo--str:" + geoStr + " tmp:" + tmp);
+		
+		if((geoPt>0) && (geoPt<140) )
+			return true;
 		if(StaticVar.DEBUG_ENABLE)
-			StaticVar.logPrint('D', "isValidGeo--str:" + geoStr + " tmp:" + tmp);
-		
-		if((tmp>0) && (tmp<140) )
-			isValid = true;		
-		return isValid;
+			StaticVar.logPrint('D', "not valid pt:" + geoPt);
+		return false;
 	}
 	
 	
