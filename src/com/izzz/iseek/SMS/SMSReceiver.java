@@ -168,7 +168,7 @@ public class SMSReceiver extends BroadcastReceiver
 					StaticVar.logPrint('D', "SMS header:" + mesContext.substring(0, 7));
 				}
 				//短信头--定位成功短信
-				if(mesContext.substring(0, 7).equals(StaticVar.SMS_Header_LOC_SUCCESS))
+				if(mesContext.substring(0, 6).equals(StaticVar.SMS_Header_LOC_SUCCESS))
 				{					
 					ReceiveMsgCaseLocOK(mesContext, logDialog);
 				}
@@ -246,12 +246,12 @@ public class SMSReceiver extends BroadcastReceiver
 		//以下针对单片机内容解析
 		String[] gprmc = msgContext.split(",");
 //		System.out.println(gprmc[5]+":"+gprmc[7]);
-		double latitudeData = Double.parseDouble(gprmc[5])/100;
+		double latitudeData = Double.parseDouble(gprmc[3])/100;
 		
 		double LatitudeDou = (double) (Math.floor(latitudeData)+(latitudeData-Math.floor(latitudeData))*100/60);
 //		System.out.println(LatitudeDou);
 		
-		double longitudeData=Double.parseDouble(gprmc[7])/100;
+		double longitudeData=Double.parseDouble(gprmc[5])/100;
 		double LongitudeDou = (double) (Math.floor(longitudeData)+(longitudeData-Math.floor(longitudeData))*100/60);
 //		System.out.println(LongitudeDou);
 		
